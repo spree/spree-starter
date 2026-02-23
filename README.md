@@ -29,6 +29,25 @@ Please follow [Spree Quickstart guide](https://spreecommerce.org/docs/developer/
 ## Deployment
 
 Please follow [Deployment guide](https://spreecommerce.org/docs/developer/deployment/render) to quickly deploy your production-ready Spree application.
+## Deploy on Railway
+
+Spree Starter can be deployed on Railway using the built-in Nixpacks support.
+
+### Steps
+
+1. Go to https://railway.app
+2. Click **New Project → Deploy from GitHub Repo**
+3. Select this repository
+4. Add a **PostgreSQL** plugin
+5. Add a **Redis** plugin
+6. Set environment variables:
+   - RAILS_ENV=production
+   - RAILS_SERVE_STATIC_FILES=true
+   - RAILS_LOG_TO_STDOUT=true
+   - SECRET_KEY_BASE=(generate using `rails secret`)
+7. Deploy 🚀
+
+> Note: Sidekiq runs in the same service by default. For production workloads, you may create a separate Railway service running `bundle exec sidekiq`.
 
 ## Customizing
 

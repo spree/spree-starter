@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["libvips", "postgresql"]
+
+[phases.build]
+cmds = ["bundle install"]
