@@ -1,71 +1,23 @@
-envVarGroups:
-  - name: spree-envs
+services:
+  - type: web
+    name: spree-storefront
+    env: ruby
+    plan: free
+    buildCommand: |
+      bundle install &&
+      RAILS_ENV=production bundle exec rails assets:precompile &&
+      RAILS_ENV=production bundle exec rails db:migrate
+    startCommand: bundle exec rails server -b 0.0.0.0
     envVars:
-      - key: DB_POOL
-        value: 10
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: RAILS_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spree-db
+          property: connectionString
 
 databases:
   - name: spree-db
-    databaseName: spree
-    user: spree
-    plan: basic-1gb
-    diskSizeGB: 10
-
-services:
-  - type: web
-    name: spree-web
-    runtime: ruby
-    plan: standard
-    buildCommand: bin/render-build.sh
-    preDeployCommand: bin/rails db:migrate && bin/rails db:seed
-    startCommand: "bundle exec puma -C config/puma.rb"
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: spree-db
-          property: connectionString
-      - key: SECRET_KEY_BASE
-        sync: false
-      - key: WEB_CONCURRENCY
-        value: 2 # sensible default
-      - key: REDIS_URL
-        fromService:
-          type: keyvalue
-          name: keyvalue
-          property: connectionString
-  - type: worker
-    name: spree-worker
-    runtime: ruby
-    plan: standard
-    buildCommand: bin/render-build.sh
-    startCommand: bundle exec sidekiq
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: spree-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: keyvalue
-          name: keyvalue
-          property: connectionString
-      - key: SECRET_KEY_BASE
-        sync: false
-      - key: REDIS_CACHE_URL
-        fromService:
-          type: keyvalue
-          name: keyvalue-cache
-          property: connectionString
-      - fromGroup: spree-envs
-  
-  - type: keyvalue
-    name: keyvalue
-    ipAllowList: []
-    plan: starter
-    maxmemoryPolicy: noeviction
-
-  - type: keyvalue
-    name: keyvalue-cache
-    ipAllowList: []
-    plan: starter
-    maxmemoryPolicy: allkeys-lru
+    plan: free
