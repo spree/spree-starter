@@ -43,3 +43,6 @@ Gemfile.lock
 
 # macOS
 .DS_Store
+
+# prebuilt assets
+app/assets/builds/*
