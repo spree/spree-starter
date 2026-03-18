@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Configure Spree Preferences
 #
 # Note: Initializing preferences available within the Admin will overwrite any changes that were made through the user interface when you restart.
@@ -16,10 +18,6 @@ Spree.config do |config|
   # Example:
   # Uncomment to stop tracking inventory levels in the application
   # config.track_inventory_levels = false
-
-  # Silence engine migration warnings - migrations live in engines and are
-  # copied to db/migrate on demand, not checked into the backend app
-  config.disable_migration_check = true
 end
 
 # Configure Spree Dependencies
@@ -36,18 +34,36 @@ Spree.dependencies do |dependencies|
 end
 
 Rails.application.config.after_initialize do
+  # Spree.shipping_methods << Spree::ShippingMethods::SuperExpensiveNotVeryFastShipping
+  # Spree.payment_methods << Spree::PaymentMethods::VerySafeAndReliablePaymentMethod
+
+  # Spree.calculators.tax_rates << Spree::TaxRates::FinanceTeamForcedMeToCodeThis
+
+  # Spree.stock_splitters << Spree::Stock::Splitters::SecretLogicSplitter
+
+  # Spree.adjusters << Spree::Adjustable::Adjuster::TaxTheRich
+
+  # Custom promotions
+  # Spree.calculators.promotion_actions_create_adjustments << Spree::Calculators::PromotionActions::CreateAdjustments::AddDiscountForFriends
+  # Spree.calculators.promotion_actions_create_item_adjustments << Spree::Calculators::PromotionActions::CreateItemAdjustments::FinanceTeamForcedMeToCodeThis
+  # Spree.promotions.rules << Spree::Promotions::Rules::OnlyForVIPCustomers
+  # Spree.promotions.actions << Spree::Promotions::Actions::GiftWithPurchase
+
+  # Spree.taxon_rules << Spree::TaxonRules::ProductsWithColor
+
+  # Spree.exports << Spree::Exports::Payments
+  # Spree.reports << Spree::Reports::MassivelyOvercomplexReportForCfo
+
   # Role-based permissions
   Spree.permissions.assign(:default, [Spree::PermissionSets::DefaultCustomer])
   Spree.permissions.assign(:admin, [Spree::PermissionSets::SuperUser])
 end
 
-Spree.user_class = "Spree::User"
-Spree.admin_user_class = "Spree::AdminUser"
+Spree.user_class = 'Spree::User'
+Spree.admin_user_class = 'Spree::AdminUser'
 
 Rails.application.config.to_prepare do
   require_dependency 'spree/authentication_helpers'
 end
 
-if defined?(Devise) && Devise.respond_to?(:parent_controller)
-  Devise.parent_controller = "Spree::BaseController"
-end
+Devise.parent_controller = 'Spree::BaseController' if defined?(Devise) && Devise.respond_to?(:parent_controller)
