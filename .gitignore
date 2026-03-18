@@ -45,6 +45,7 @@ Gemfile.lock
 .DS_Store
 
 # prebuilt assets
-app/assets/builds/*
+/app/assets/builds/*
+!/app/assets/builds/.keep
 
 coverage/*
