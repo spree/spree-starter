@@ -4,7 +4,7 @@ A Rails application pre-configured with [Spree Commerce](https://spreecommerce.o
 
 ## Quick Start
 
-The fastest way to get started is with [create-spree-app](https://github.com/spree/spree):
+The fastest way to get started is with [create-spree-app](https://github.com/spree/spree/packages/create-spree-app):
 
 ```bash
 npx create-spree-app my-store
@@ -21,6 +21,8 @@ This scaffolds a full project with Docker, a Next.js storefront, and this backen
 - Redis
 
 ### Install & Run
+
+`bin/setup` will use [Mise](https://mise.jdx.dev/) to install all dependencies.
 
 ```bash
 bin/setup
