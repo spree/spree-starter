@@ -1,8 +1,6 @@
-class Spree::AdminUser < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :trackable
+class Spree::AdminUser < Spree.base_class
+  include Spree::AdminUserMethods
 
-  include Spree::UserMethods
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
 end

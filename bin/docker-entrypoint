@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 # If running the rails server then create or migrate existing database
-if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-  AUTO_ACCEPT=1 ./bin/rails db:prepare
+if [[ "$*" == *"./bin/rails server"* ]]; then
+  ./bin/rails db:prepare
 fi
 
 exec "${@}"

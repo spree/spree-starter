@@ -1,60 +1,93 @@
-> [!WARNING]
->
-> This starter is deprecated, please don't use it. 
->
-> Please follow the [Getting Started guide](https://spreecommerce.org/docs/developer/getting-started/quickstart)
-
 # Spree Starter
 
-This was starter kit for [Spree Commerce](https://spreecommerce.org) - the [open-source eCommerce platform](https://spreecommerce.org). It has now been replaced by Spree CLI.
+A Rails application pre-configured with [Spree Commerce](https://spreecommerce.org). Use it as a starting point for your own store, or as the backend for a headless storefront.
 
-## Local Installation
+## Quick Start
 
-Please follow [Spree Quickstart guide](https://spreecommerce.org/docs/developer/getting-started/quickstart) to setup your Spree application using the Spree starter.
+The fastest way to get started is with [create-spree-app](https://github.com/spree/spree):
 
-## Deployment
+```bash
+npx create-spree-app my-store
+```
 
-Please follow [Deployment guide](https://spreecommerce.org/docs/developer/deployment) to quickly deploy your production-ready Spree application.
+This scaffolds a full project with Docker, a Next.js storefront, and this backend — all configured and ready to run.
 
-## Customizing
+## Manual Setup
 
-Please follow [Customization guide](https://spreecommerce.org/docs/developer/customization/quickstart) to learn how to customize and extend your Spree application.
+### Prerequisites
 
-## Join the Community 
+- Ruby (see `.ruby-version`)
+- PostgreSQL
+- Redis
 
-[Join our Slack](https://slack.spreecommerce.org) to meet other 6k+ community members and get some support.
+### Install & Run
 
-## Need more support?
+```bash
+bin/setup
+bin/dev
+```
 
-[Contact us](https://spreecommerce.org/contact/) for enterprise support and custom development services. We offer:
-  * migrations and upgrades,
-  * delivering your Spree application,
-  * optimizing your Spree stack.
+The app starts at [http://localhost:3000](http://localhost:3000).
 
-## Enterprise Edition 
+- **Admin:** [http://localhost:3000/admin](http://localhost:3000/admin)
+- **API:** [http://localhost:3000/api/v3/store/products](http://localhost:3000/api/v3/store/products)
+- **Health check:** [http://localhost:3000/up](http://localhost:3000/up)
 
-Besides enterprise support we also offer the Spree Commerce [Enterprise Edition](https://spreecommerce.org/spree-commerce-version-comparison-community-edition-vs-enterprise-edition/) that gives you all the tools you need to launch your store or marketplace and provides you with ready-to-use integrations that will reduce your project's development time and cost.
+Default admin credentials are created during `db:seed`.
 
-With the Enterprise Edition you could build:
+## Docker
 
-### A [B2B eCommerce](https://spreecommerce.org/use-cases/headless-b2b-ecommerce/)
-With support for customer segmentation, per customer or segment pricing logic, organizational user roles, and gated storefronts, Spree enables you to deliver tailored experiences across many storefronts, all with a single admin panel.
-- [B2B eCommerce Capabilities](https://spreecommerce.org/docs/use-case/b2b/b2b-capabilities)
-- [B2B eCommerce Admin Capabilities](https://spreecommerce.org/docs/use-case/b2b/b2b-admin-capabilities)
-- [B2B eCommerce Buyer Experience](https://spreecommerce.org/docs/use-case/b2b/b2b-buyer-capabilities)
-<img alt="Spree Commerce - B2B eCommerce" src="https://github.com/spree/spree/assets/12614496/e0a184f6-31ad-4f7f-b30b-6f8a501b6f63">
+Build and run with Docker:
 
-### A [white-label SaaS or multi-tenant eCommerce](https://spreecommerce.org/multi-tenant-white-label-ecommerce/) platform
-Launch a [multi-tenant eCommerce platform](https://spreecommerce.org/multi-tenant-white-label-ecommerce/) for your customers, resellers, affiliates in any configuration, eg. B2B2B, B2B2C, B2B2E
-- [Multi-Tenant Capabilities](https://spreecommerce.org/docs/use-case/multi-tenant/multi-tenant-capabilities)
-- [Multi-Tenant Super Admin Capabilities](https://spreecommerce.org/docs/use-case/multi-tenant/super-admin-capabilities)
-- [Tenant Capabilities](https://spreecommerce.org/docs/use-case/multi-tenant/tenant-capabilities)
-<img alt="Spree Commerce - Multi-store" src="https://github.com/spree/spree/assets/12614496/cf651354-6180-4927-973f-c650b80ccdb0">
+```bash
+docker build -t my-spree .
+docker run -p 3000:3000 \
+  -e DATABASE_URL=postgres://user:pass@host:5432/spree \
+  -e REDIS_URL=redis://localhost:6379/0 \
+  -e SECRET_KEY_BASE=$(bin/rails secret) \
+  my-spree
+```
 
-### A [Multi-vendor marketplace](https://spreecommerce.org/marketplace-ecommerce/)
-Run your own marketplace with multiple suppliers, each with a dedicated supplier dashboard
-- [Marketplace eCommerce Capabilities](https://spreecommerce.org/docs/use-case/marketplace/capabilities)
-- [Marketplace eCommerce Admin Panel](https://spreecommerce.org/docs/use-case/marketplace/admin-dashboard)
-- [Marketplace eCommerce Vendor Panel](https://spreecommerce.org/docs/use-case/marketplace/vendor-dashboard)
-- [Marketplace eCommerce Customer Experience](https://spreecommerce.org/docs/use-case/marketplace/customer-ux)
-<img alt="Spree Commerce - Marketplace" src="https://github.com/spree/spree/assets/12614496/c4ddd118-df4c-464e-b1fe-d43862e5cf25">
+See [Docker deployment docs](https://docs.spreecommerce.org/developer/deployment/docker) for a full `docker-compose.yml` example.
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Yes (production) | PostgreSQL connection URL |
+| `REDIS_URL` | Yes (production) | Redis URL for jobs, caching, and Action Cable |
+| `SECRET_KEY_BASE` | Yes (production) | Generate with `bin/rails secret` |
+| `PORT` | No | Web server port (default: 3000) |
+
+See [Environment Variables docs](https://docs.spreecommerce.org/developer/deployment/environment_variables) for the full list (SMTP, S3, Sentry, SSL, etc.).
+
+## Customization
+
+This is a standard Rails application. Customize it however you need:
+
+- **Add gems** to `Gemfile`
+- **Override models** with decorators in `app/models/`
+- **Add controllers** in `app/controllers/`
+- **Configure Spree** in `config/initializers/spree.rb`
+- **Add migrations** with `bin/rails generate migration`
+
+See the [Spree Customization Guide](https://docs.spreecommerce.org/developer/customization) for details.
+
+## Spree Core Development
+
+To develop against a local checkout of the Spree gems:
+
+```bash
+# Set SPREE_PATH to your local spree monorepo
+echo 'SPREE_PATH=../spree' > .env
+bundle install
+bin/dev
+```
+
+The `Gemfile` automatically uses local gems when `SPREE_PATH` is set.
+
+## License
+
+[MIT](LICENSE.md)

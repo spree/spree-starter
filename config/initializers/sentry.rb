@@ -1,4 +1,4 @@
-if defined?(Sentry) && ENV['SENTRY_DSN'].present?
+if ENV['SENTRY_DSN'].present?
   Sentry.init do |config|
     config.dsn = ENV['SENTRY_DSN']
     config.breadcrumbs_logger = %i[active_support_logger http_logger]
@@ -11,9 +11,7 @@ if defined?(Sentry) && ENV['SENTRY_DSN'].present?
     config.enabled_environments = %w[production staging]
     config.enabled_environments << 'development' if ENV['SENTRY_REPORT_ON_DEVELOPMENT'].present?
 
-    config.release = "spree@#{ENV['RENDER_GIT_COMMIT']}" if ENV['RENDER_GIT_COMMIT'].present?
-
-    config.excluded_exceptions = [
+    config.excluded_exceptions += [
       'ActionController::RoutingError',
       'ActiveRecord::RecordNotFound',
       'Sidekiq::JobRetry::Skip',

@@ -16,24 +16,11 @@ Spree.config do |config|
   # Example:
   # Uncomment to stop tracking inventory levels in the application
   # config.track_inventory_levels = false
+
+  # Silence engine migration warnings - migrations live in engines and are
+  # copied to db/migrate on demand, not checked into the backend app
+  config.disable_migration_check = true
 end
-
-# Background job queue names
-# Spree.queues.default = :default
-# Spree.queues.variants = :default
-# Spree.queues.stock_location_stock_items = :default
-# Spree.queues.coupon_codes = :default
-
-# Use a CDN host for images, eg. Cloudfront
-# This is used in the frontend to generate absolute URLs to images
-# Default is nil and your application host will be used
-# Spree.cdn_host = 'cdn.example.com'
-
-# Use a different service for storage (S3, google, etc)
-# unless Rails.env.test?
-#   Spree.private_storage_service_name = :amazon_public # public assets, such as product images
-#   Spree.public_storage_service_name = :amazon_private # private assets, such as invoices, etc
-# end
 
 # Configure Spree Dependencies
 #
@@ -48,40 +35,19 @@ Spree.dependencies do |dependencies|
   # dependencies.cart_add_item_service = 'MyNewAwesomeService'
 end
 
-# Spree::Api::Dependencies.storefront_cart_serializer = 'MyRailsApp::CartSerializer'
-
-# uncomment lines below to add your own custom business logic
-# such as promotions, shipping methods, etc
 Rails.application.config.after_initialize do
-  # Rails.application.config.spree.shipping_methods << Spree::ShippingMethods::SuperExpensiveNotVeryFastShipping
-  # Rails.application.config.spree.payment_methods << Spree::PaymentMethods::VerySafeAndReliablePaymentMethod
-
-  # Rails.application.config.spree.calculators.tax_rates << Spree::TaxRates::FinanceTeamForcedMeToCodeThis
-
-  # Rails.application.config.spree.stock_splitters << Spree::Stock::Splitters::SecretLogicSplitter
-
-  # Rails.application.config.spree.adjusters << Spree::Adjustable::Adjuster::TaxTheRich
-
-  # Custom promotions
-  # Rails.application.config.spree.calculators.promotion_actions_create_adjustments << Spree::Calculators::PromotionActions::CreateAdjustments::AddDiscountForFriends
-  # Rails.application.config.spree.calculators.promotion_actions_create_item_adjustments << Spree::Calculators::PromotionActions::CreateItemAdjustments::FinanceTeamForcedMeToCodeThis
-  # Rails.application.config.spree.promotions.rules << Spree::Promotions::Rules::OnlyForVIPCustomers
-  # Rails.application.config.spree.promotions.actions << Spree::Promotions::Actions::GiftWithPurchase
-
-  # Rails.application.config.spree.taxon_rules << Spree::TaxonRules::ProductsWithColor
-
-  # Rails.application.config.spree.exports << Spree::Exports::Payments
-  # Rails.application.config.spree.reports << Spree::Reports::MassivelyOvercomplexReportForCfo
-
+  # Role-based permissions
+  Spree.permissions.assign(:default, [Spree::PermissionSets::DefaultCustomer])
+  Spree.permissions.assign(:admin, [Spree::PermissionSets::SuperUser])
 end
 
-Spree.user_class = 'Spree::User'
-# Use a different class for admin users
-Spree.admin_user_class = 'Spree::AdminUser'
-
-Spree.google_places_api_key = ENV['GOOGLE_PLACES_API_KEY'] if ENV['GOOGLE_PLACES_API_KEY'].present?
-Spree.screenshot_api_token = ENV['SCREENSHOT_API_TOKEN'] if ENV['SCREENSHOT_API_TOKEN'].present?
+Spree.user_class = "Spree::User"
+Spree.admin_user_class = "Spree::AdminUser"
 
 Rails.application.config.to_prepare do
   require_dependency 'spree/authentication_helpers'
+end
+
+if defined?(Devise) && Devise.respond_to?(:parent_controller)
+  Devise.parent_controller = "Spree::BaseController"
 end

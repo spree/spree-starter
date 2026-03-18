@@ -1,105 +1,62 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
 
-ruby '4.0.1'
+source 'https://rubygems.org'
+ruby file: '.ruby-version'
 
-# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 8.1.0'
+# Spree Commerce
+spree_path = ENV['SPREE_PATH']
 
-# Use pg as the database for Active Record
-gem "pg", "~> 1.6"
+if spree_path
+  gem 'spree', path: "#{spree_path}/spree"
+  gem 'spree_admin', path: "#{spree_path}/spree/admin"
+  gem 'spree_emails', path: "#{spree_path}/spree/emails"
+else
+  spree_version = '>= 5.4.0.beta8'
+  gem 'spree', spree_version
+  gem 'spree_admin', spree_version
+  gem 'spree_emails', spree_version
+end
 
-# The modern asset pipeline for Rails [https://github.com/rails/propshaft]
-gem "propshaft"
+# Extensions
+gem 'spree_i18n'
+gem 'spree_stripe', github: 'spree/spree_stripe'
 
-# Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
-
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
-
-# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem "turbo-rails"
-
-# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
-
-# Use Redis adapter to run Action Cable in production
-gem "redis", ">= 4.0.1"
-
-# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
-# gem "kredis"
-
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+# Rails & Infrastructure
+gem 'aws-sdk-s3', require: false
+gem 'bootsnap', require: false
+gem 'devise'
+gem 'image_processing', '~> 1.2'
+gem 'importmap-rails'
+gem 'lograge'
+gem 'pg', '~> 1.1'
+gem 'propshaft'
+gem 'puma', '>= 5.0'
+gem 'rails', '~> 8.1.2'
+gem 'redis'
+gem 'sentry-rails'
+gem 'sentry-ruby'
+gem 'sentry-sidekiq'
+gem 'sidekiq'
+gem 'stimulus-rails'
+gem 'tailwindcss-rails'
+gem 'thruster', require: false
+gem 'turbo-rails'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
-
-# Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
-
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.13"
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
 group :development, :test do
-  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
-
-  gem 'brakeman'
-  gem 'dotenv-rails', '~> 3.1'
-  gem 'rubocop', '~> 1.23'
-  gem 'rubocop-performance'
-  gem 'rubocop-rails'
-
-
+  gem 'brakeman', require: false
+  gem 'bundler-audit', require: false
+  gem 'debug', platforms: %i[mri windows], require: 'debug/prelude'
+  gem 'dotenv-rails'
+  gem 'letter_opener'
+  gem 'listen'
+  gem 'rubocop-rails-omakase', require: false
+  gem 'simplecov-cobertura'
+  gem 'spree_dev_tools', '>= 0.6.0.rc1'
 end
 
 group :development do
-  gem "foreman"
-
-  gem 'listen', '>= 3.0'
-
-  # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
-
-  # Preview emails in the browser [https://github.com/plataformatec/letter_opener]
-  gem "letter_opener"
-
-  # LSP support for Ruby
-  gem 'ruby-lsp'
-  gem 'ruby-lsp-rails'
-
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
-  # gem "rack-mini-profiler"
-
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
+  gem 'web-console'
 end
-
-group :test do
-  gem 'spree_dev_tools'
-  gem 'rails-controller-testing'
-end
-
-# Use Sidekiq for background jobs
-gem 'sidekiq'
-gem 'connection_pool', '~> 2.3' # lock to 2.3 to avoid breaking changes
-
-# Use Devise for authentication
-gem "devise"
-
-# Sentry for error/performance monitoring
-gem 'sentry-ruby'
-gem 'sentry-rails'
-gem 'sentry-sidekiq'
-
-# Spree gems
-spree_opts = '>= 5.3.0.rc2'
-gem "spree", spree_opts
-gem "spree_emails", spree_opts
-gem "spree_sample", spree_opts
-gem "spree_admin", spree_opts
-gem "spree_i18n"
-gem "spree_stripe"
-gem "spree_klaviyo"
-gem "spree_paypal_checkout", "~> 0.5"

@@ -18,27 +18,34 @@ Rails.application.configure do
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.asset_host = "http://assets.example.com"
-
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  if ENV["AWS_ACCESS_KEY_ID"].present? && ENV["AWS_SECRET_ACCESS_KEY"].present?
+    config.active_storage.service = :amazon
+  elsif ENV["CLOUDFLARE_ACCESS_KEY_ID"].present? && ENV["CLOUDFLARE_SECRET_ACCESS_KEY"].present? && ENV["CLOUDFLARE_ENDPOINT"].present?
+    config.active_storage.service = :cloudflare
+  else
+    config.active_storage.service = :local
+  end
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  config.assume_ssl = true
+  config.assume_ssl = ENV["RAILS_ASSUME_SSL"] != "false"
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
-
-  # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.force_ssl = ENV["RAILS_FORCE_SSL"] != "false"
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
 
-  # Change to "debug" to log everything (including potentially personally-identifiable information!)
+  # Change to "debug" to log everything (including potentially personally-identifiable information!).
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+
+  # Condensed single-line request logs (e.g. "GET /products 200 12ms")
+  config.lograge.enabled = true
+  config.lograge.formatter = ->(data) {
+    duration = data[:duration].to_i
+    "#{data[:method]} #{data[:path]} #{data[:status]} #{duration}ms"
+  }
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = "/up"
@@ -46,43 +53,29 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Replace the default in-process memory cache store with a durable alternative.
-  # https://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-rediscachestore
-  if ENV['REDIS_CACHE_URL'].present?
-    cache_servers = ENV['REDIS_CACHE_URL'].split(',') # if multiple instances are provided
-    config.cache_store = :redis_cache_store, {
-      url: cache_servers,
-      connect_timeout:    30,  # Defaults to 1 second
-      read_timeout:       0.2, # Defaults to 1 second
-      write_timeout:      0.2, # Defaults to 1 second
-      reconnect_attempts: 2,   # Defaults to 1
-    }
+  # Use Redis for caching if REDIS_URL is set, otherwise fall back to memory store.
+  if ENV["REDIS_URL"].present?
+    config.cache_store = :redis_cache_store, { url: ENV["REDIS_URL"] }
   else
     config.cache_store = :memory_store
   end
 
-  # Replace the default in-process and non-durable queuing backend for Active Job.
-  config.active_job.queue_adapter = :sidekiq
-
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
-
-  # Set host to be used by links generated in mailer templates.
-  # config.action_mailer.default_url_options = { host: "example.com" }
-
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
-  if ENV['SENDGRID_API_KEY'].present?
+  # SMTP configuration via environment variables.
+  # Works with any SMTP provider (Resend, Postmark, Mailgun, SendGrid, SES, etc.)
+  if ENV["SMTP_HOST"].present?
+    config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      user_name: 'apikey', # This is the string literal 'apikey', NOT the ID of your API key
-      password: ENV['SENDGRID_API_KEY'], # This is the secret sendgrid API key which was issued during API key creation
-      domain: ENV.fetch('SENDGRID_DOMAIN', Rails.application.routes.default_url_options[:host]),
-      address: 'smtp.sendgrid.net',
-      port: 587,
-      authentication: :plain,
+      address:              ENV["SMTP_HOST"],
+      port:                 ENV.fetch("SMTP_PORT", 587).to_i,
+      user_name:            ENV["SMTP_USERNAME"],
+      password:             ENV["SMTP_PASSWORD"],
+      authentication:       :plain,
       enable_starttls_auto: true
     }
   end
+
+  config.action_mailer.default_url_options = { host: ENV.fetch("RAILS_HOST", "example.com") }
+  config.action_mailer.default_options = { from: ENV["SMTP_FROM_ADDRESS"] } if ENV["SMTP_FROM_ADDRESS"].present?
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -93,19 +86,4 @@ Rails.application.configure do
 
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
-
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-
-  # Fix for Render deployment
-  # this will set the store URL to the render external URL during db:seeds for the first time
-  if ENV['RENDER_EXTERNAL_URL'].present?
-    Rails.application.routes.default_url_options[:host] = ENV['RENDER_EXTERNAL_URL']
-  end
 end
