@@ -735,8 +735,6 @@ GEM
       spree (>= 5.4.0.alpha)
       timecop
       webdrivers
-    spree_emails (5.4.0.rc3)
-      spree (>= 5.4.0.rc3)
     spree_extension (1.0.2)
       thor (~> 1.0)
     spree_i18n (5.3.2)
@@ -866,7 +864,6 @@ DEPENDENCIES
   spree (>= 5.4.0.beta8)
   spree_admin (>= 5.4.0.beta8)
   spree_dev_tools (>= 0.6.0.rc1)
-  spree_emails (>= 5.4.0.beta8)
   spree_i18n
   spree_stripe!
   stimulus-rails
@@ -1123,7 +1120,6 @@ CHECKSUMS
   spree_api (5.4.0.rc3) sha256=a688f747721da8c8f2dff399718bef49e7151eedec3c9b72f7253272d7214c46
   spree_core (5.4.0.rc3) sha256=285f61f6153a7f7d3a6b8adb15e85d82d6314c106ffe861e7da4990e04285f19
   spree_dev_tools (0.6.0.rc1) sha256=3e2c3fe15f5c1ab2859c4047a1a40b55b22c998570afc6d0d03692bcdc64209f
-  spree_emails (5.4.0.rc3) sha256=1ca189824284ea723f8d65ed0dfb7b894e2aea060bdb14a2a6019080d7c06a7c
   spree_extension (1.0.2) sha256=71725dafe45319a2be1bd2b564a416afe8029af8e18ac703bdb835e09553e1df
   spree_i18n (5.3.2) sha256=03b805235ca156644951f6bc3d07cbe43d0aa01134c4a27e3f3304011956f79b
   spree_stripe (1.6.0.beta)

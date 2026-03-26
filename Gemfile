@@ -21,12 +21,10 @@ spree_path = ENV['SPREE_PATH']
 if spree_path
   gem 'spree', path: "#{spree_path}/spree"
   gem 'spree_admin', path: "#{spree_path}/spree/admin"
-  gem 'spree_emails', path: "#{spree_path}/spree/emails"
 else
   spree_version = '>= 5.4.0.beta8'
   gem 'spree', spree_version
   gem 'spree_admin', spree_version
-  gem 'spree_emails', spree_version
 end
 
 # Extensions
