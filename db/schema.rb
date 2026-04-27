@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_27_130753) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_153526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -511,12 +511,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_130753) do
   end
 
   create_table "spree_imports", force: :cascade do |t|
+    t.integer "completed_groups_count", default: 0
     t.datetime "created_at", null: false
     t.string "number", limit: 32, null: false
     t.bigint "owner_id", null: false
     t.string "owner_type", null: false
     t.text "preferences"
     t.text "processing_errors"
+    t.integer "processing_groups_count", default: 0
     t.integer "rows_count", default: 0, null: false
     t.string "status", null: false
     t.string "type", null: false
@@ -951,6 +953,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_27_130753) do
     t.string "state"
     t.datetime "updated_at", null: false
     t.index ["number"], name: "index_spree_payments_on_number", unique: true
+    t.index ["order_id", "payment_method_id", "response_code"], name: "idx_payments_order_method_response_code", unique: true, where: "(response_code IS NOT NULL)"
     t.index ["order_id"], name: "index_spree_payments_on_order_id"
     t.index ["payment_method_id"], name: "index_spree_payments_on_payment_method_id"
     t.index ["source_id", "source_type"], name: "index_spree_payments_on_source_id_and_source_type"
