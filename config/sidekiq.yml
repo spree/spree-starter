@@ -4,7 +4,7 @@
   - [default, 5]
   - [spree_imports, 5]
   - [spree_payment_webhooks, 5]
-  - [mailers, 3]
+  - [mailers, 5]
   - [spree_events, 3]
   - [spree_exports, 3]
   - [spree_images, 3]
