@@ -48,6 +48,10 @@ services:
   #         name: spree
   #         type: web
   #         envVarKey: SECRET_KEY_BASE
+  #     - key: SIDEKIQ_CONCURRENCY
+  #       value: "25"
+  #     - key: RAILS_MAX_THREADS
+  #       value: "27"
 
   - type: redis
     name: spree-redis

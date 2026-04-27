@@ -72,6 +72,9 @@ services:
   worker:
     <<: *app
     command: bundle exec sidekiq
+    environment:
+      <<: *app-env
+      RAILS_MAX_THREADS: ${SIDEKIQ_DB_POOL:-27}
     volumes:
       - storage_data:/rails/storage
 

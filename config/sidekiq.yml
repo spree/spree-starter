@@ -1,0 +1,23 @@
+---
+:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 25).to_i %>
+:queues:
+  - [default, 5]
+  - [spree_imports, 5]
+  - [spree_payment_webhooks, 5]
+  - [mailers, 3]
+  - [spree_events, 3]
+  - [spree_exports, 3]
+  - [spree_images, 3]
+  - [spree_products, 3]
+  - [spree_reports, 3]
+  - [spree_variants, 3]
+  - [spree_taxons, 3]
+  - [spree_stock_location_stock_items, 3]
+  - [spree_coupon_codes, 3]
+  - [spree_addresses, 3]
+  - [spree_gift_cards, 3]
+  - [spree_webhooks, 3]
+  - [spree_api_keys, 3]
+  - [spree_search, 3]
+  - [active_storage_analysis, 1]
+  - [active_storage_purge, 1]

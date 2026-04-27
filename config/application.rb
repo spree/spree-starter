@@ -41,5 +41,9 @@ module SpreeStarter
 
     # Use Sidekiq for background jobs in all environments.
     config.active_job.queue_adapter = :sidekiq
+
+    config.action_mailer.deliver_later_queue_name = :mailers
+    config.active_storage.queues.purge = :active_storage_purge
+    config.active_storage.queues.analysis = :active_storage_analysis
   end
 end
