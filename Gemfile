@@ -30,6 +30,8 @@ end
 # Extensions
 gem 'spree_i18n'
 gem 'spree_stripe'
+gem 'spree_adyen'
+gem 'spree_paypal_checkout'
 
 # Rails & Infrastructure
 gem 'aws-sdk-s3', require: false

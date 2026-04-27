@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_124032) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_130753) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -165,6 +165,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_124032) do
     t.index ["email"], name: "index_spree_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_spree_admin_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_spree_admin_users_on_unlock_token", unique: true
+  end
+
+  create_table "spree_adyen_payment_sessions", force: :cascade do |t|
+    t.text "adyen_data", null: false
+    t.string "adyen_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.string "channel"
+    t.datetime "created_at", null: false
+    t.string "currency", null: false
+    t.datetime "deleted_at"
+    t.datetime "expires_at", null: false
+    t.bigint "order_id", null: false
+    t.bigint "payment_method_id", null: false
+    t.string "return_url"
+    t.string "status", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["adyen_id"], name: "index_spree_adyen_payment_sessions_on_adyen_id", unique: true
+    t.index ["amount"], name: "index_spree_adyen_payment_sessions_on_amount"
+    t.index ["channel"], name: "index_spree_adyen_payment_sessions_on_channel"
+    t.index ["deleted_at"], name: "index_spree_adyen_payment_sessions_on_deleted_at"
+    t.index ["expires_at"], name: "index_spree_adyen_payment_sessions_on_expires_at"
+    t.index ["order_id"], name: "index_spree_adyen_payment_sessions_on_order_id"
+    t.index ["payment_method_id"], name: "index_spree_adyen_payment_sessions_on_payment_method_id"
+    t.index ["return_url"], name: "index_spree_adyen_payment_sessions_on_return_url"
+    t.index ["status"], name: "index_spree_adyen_payment_sessions_on_status"
+    t.index ["user_id"], name: "index_spree_adyen_payment_sessions_on_user_id"
   end
 
   create_table "spree_allowed_origins", force: :cascade do |t|
@@ -927,6 +954,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_124032) do
     t.index ["order_id"], name: "index_spree_payments_on_order_id"
     t.index ["payment_method_id"], name: "index_spree_payments_on_payment_method_id"
     t.index ["source_id", "source_type"], name: "index_spree_payments_on_source_id_and_source_type"
+  end
+
+  create_table "spree_paypal_checkout_orders", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.jsonb "data"
+    t.bigint "order_id", null: false
+    t.bigint "payment_method_id", null: false
+    t.string "paypal_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id", "paypal_id"], name: "index_spree_paypal_checkout_orders_on_order_id_and_paypal_id", unique: true
+    t.index ["order_id"], name: "index_spree_paypal_checkout_orders_on_order_id"
+    t.index ["payment_method_id"], name: "index_spree_paypal_checkout_orders_on_payment_method_id"
   end
 
   create_table "spree_policies", force: :cascade do |t|
