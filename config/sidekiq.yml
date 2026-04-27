@@ -1,5 +1,5 @@
 ---
-:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 25).to_i %>
+:concurrency: <%= Integer(ENV.fetch('SIDEKIQ_CONCURRENCY', '25')) %>
 :queues:
   - [default, 5]
   - [spree_imports, 5]
