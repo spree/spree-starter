@@ -32,7 +32,7 @@ end
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins allowed_origin_check
-    resource '/api/v3/admin/*', headers: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'X-Spree-Api-Key'],
+    resource '/api/v3/admin/*', headers: :any,
                                 methods: [:get, :post, :patch, :put, :delete, :options, :head],
                                 credentials: true
   end
