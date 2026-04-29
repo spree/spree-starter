@@ -24,7 +24,6 @@ if spree_path
     gem 'spree_admin'
     gem 'spree_core'
     gem 'spree_api'
-    gem 'spree_emails'
   end
 else
   spree_version = '>= 5.4.0'
