@@ -378,7 +378,7 @@ GEM
       net-pop
       net-smtp
     mapkick-rb (0.3.0)
-    marcel (1.1.0)
+    marcel (1.1.1)
     matrix (0.4.3)
     meilisearch (0.33.0)
       httparty (~> 0.24)
@@ -677,7 +677,7 @@ GEM
     spree (5.4.3)
       spree_api (= 5.4.3)
       spree_core (= 5.4.3)
-    spree_admin (5.4.2)
+    spree_admin (5.4.3)
       active_link_to
       breadcrumbs_on_rails (~> 4.1)
       chartkick (~> 5.0)
@@ -688,7 +688,7 @@ GEM
       local_time (~> 3.0)
       mapkick-rb (~> 0.1)
       ruby-oembed (~> 0.18)
-      spree (>= 5.4.2)
+      spree (>= 5.4.3)
       stimulus-rails
       tailwindcss-rails (>= 4.0)
       tailwindcss-ruby (>= 4.0)
@@ -865,7 +865,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml (0.4.0)
-    zeitwerk (2.8.0)
+    zeitwerk (2.8.1)
     zlib (3.2.3)
 
 PLATFORMS
@@ -966,6 +966,7 @@ CHECKSUMS
   brakeman (8.0.4) sha256=7bf921fa9638544835df9aa7b3e720a9a72c0267f34f92135955edd80d4dcf6f
   breadcrumbs_on_rails (4.1.0) sha256=6146ecf669f6251507231028719d51d92b8f42f1f982b83a2481fa1465cb6cee
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
+  bundler (4.0.11) sha256=5bcec0fb78302e48d02ee46f10ee6e6942be647ba5b44a6d1ddfda9a240ce785
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   cancancan (3.6.1) sha256=975c1d5cbf58d5df48a9452a7f61ae3d254608cd87570402f5925a8864c56b62
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
@@ -1056,7 +1057,7 @@ CHECKSUMS
   loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   mapkick-rb (0.3.0) sha256=d2b96122081e79f1f1bfd3c2667885a0723248d37e8f4af71df1049cf975e248
-  marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
+  marcel (1.1.1) sha256=16eb578814fc914a43a48887189568f9eb9a2de8274313050c2b00f0018614f7
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   meilisearch (0.33.0) sha256=a5d3c3f28cdc4394ee4f0f390efe158650f99cfb390fd073f44fc780a2aa41e2
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
@@ -1177,7 +1178,7 @@ CHECKSUMS
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   spree (5.4.3) sha256=ec8d4719a0c3fff464db20746037d61af8b6fdf21f982435e4634980858297a4
-  spree_admin (5.4.2) sha256=9d18e2f3609b458beea01bb62c6a6942e9e6a9fce907619f4d4e1de6aa28b4c7
+  spree_admin (5.4.3) sha256=33ec5a75db0166e71566bd6adcd2fdced99ee9eb21e8bf3c966e8ddf49df737c
   spree_adyen (0.11.0) sha256=f22941571d4cde4ae12fc7aa13f37d85005b71f2c9c2ff50ec8d1dceabfd564a
   spree_api (5.4.3) sha256=2b057be20391fcbf128a23281746f4ca95f80f6abb680b4fd90f9ab5c22c223b
   spree_core (5.4.3) sha256=c234455ab012b4108e2592408f05e624917b7dc01093dc3c7e12fe7e7d677534
@@ -1235,7 +1236,7 @@ CHECKSUMS
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yaml (0.4.0) sha256=240e69d1e6ce3584d6085978719a0faa6218ae426e034d8f9b02fb54d3471942
-  zeitwerk (2.8.0) sha256=474d0a1d2429f635af7c4574f5ddbce0d0cfc286067c7515858b93a26b4f3e3d
+  zeitwerk (2.8.1) sha256=1c85e0f28954d68cd16e575da37f26846f609b68d80b5942ccfd31030c2449d5
   zlib (3.2.3) sha256=5bd316698b32f31a64ab910a8b6c282442ca1626a81bbd6a1674e8522e319c20
 
 RUBY VERSION
