@@ -39,7 +39,31 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/ && \
   SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# Final stage for app image
+# Development stage: inherits the build stage (which has build-essential,
+# libpq-dev, etc. and a full bundle minus dev/test). Adds the dev/test gems
+# on top so native-extension gems compile against the build tooling that's
+# already present. Targeted by docker-compose.dev.yml via `target: dev`.
+FROM build AS dev
+
+ENV RAILS_ENV="development" \
+  BUNDLE_DEPLOYMENT="0" \
+  BUNDLE_WITHOUT=""
+
+# Install dev/test gems on top of the production bundle from the build stage.
+RUN bundle install && \
+  rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
+
+# Match the production image's user setup so file ownership (bind-mount,
+# bundle volume) is consistent across dev and prod.
+RUN groupadd --system --gid 1000 rails && \
+  useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+  chown -R rails:rails "${BUNDLE_PATH}" /rails
+USER 1000:1000
+
+EXPOSE 3000
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
+
+# Final stage for app image (production)
 FROM base
 
 # Run and own only the runtime files as a non-root user for security

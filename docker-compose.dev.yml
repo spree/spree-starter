@@ -1,9 +1,23 @@
-# Development: docker compose -f docker-compose.dev.yml up --build
-# Builds from the local Dockerfile — use after customizing gems or app code.
+# Development: bind-mounts the app source into the container. Edits are hot.
+# Use `spree dev` (which runs `docker compose up -d` against this file)
+# or `docker compose -f docker-compose.dev.yml up -d`.
+#
+# All rails/rake/bundle/generator commands run INSIDE the container via
+# `docker compose exec web …` (the @spree/cli wraps this). The host never
+# executes Ruby or writes through these volumes, which is why this compose
+# doesn't need a UID-matching entrypoint, init service, or chown step:
+# container writes happen as UID 1000 (rails user), and Docker Desktop /
+# OrbStack on macOS map bind-mount UIDs to the host user automatically;
+# on Linux the host user is typically UID 1000 too.
+#
+# Adding a gem: `spree bundle add <gem>` — gems persist in the bundle_cache volume.
+# Changing the Dockerfile or .ruby-version: `spree build` to rebuild the image.
+
 x-app: &app
   build:
     context: .
     dockerfile: Dockerfile
+    target: dev
   depends_on:
     postgres:
       condition: service_healthy
@@ -13,12 +27,25 @@ x-app: &app
       condition: service_healthy
   env_file: .env
   environment: &app-env
-    DATABASE_URL: postgres://postgres@postgres:5432/spree_production
+    DATABASE_URL: postgres://postgres@postgres:5432/spree_development
     REDIS_URL: redis://redis:6379/0
     SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     RAILS_FORCE_SSL: "false"
     RAILS_ASSUME_SSL: "false"
     MEILISEARCH_URL: http://meilisearch:7700
+    # RAILS_ENV / BUNDLE_* are baked into the dev image (Dockerfile dev stage).
+    BOOTSNAP_CACHE_DIR: /rails/tmp/cache/bootsnap
+  volumes:
+    # Bind-mount the source so host edits are live in the container.
+    - .:/rails
+    # Named volume over BUNDLE_PATH so the bind-mount doesn't shadow the gems
+    # installed in the image, and so `bundle add` persists across container
+    # restarts without a rebuild.
+    - bundle_cache:/usr/local/bundle
+    # Storage (ActiveStorage local disk, uploads).
+    - storage_data:/rails/storage
+    # Bootsnap + Rails tmp/cache don't churn the host filesystem.
+    - tmp_cache:/rails/tmp
 
 services:
   postgres:
@@ -26,6 +53,10 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
       PGDATA: /var/lib/postgresql/18/docker
+    ports:
+      # Forwarded for native DB clients (TablePlus, DataGrip, psql on host).
+      # Default 5433 avoids collision with a host-native Postgres on 5432.
+      - "${SPREE_DB_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
@@ -58,10 +89,13 @@ services:
 
   web:
     <<: *app
+    # The dev stage already has dev/test gems installed, so no runtime
+    # bundle install is needed. We do bypass bin/docker-entrypoint (it runs
+    # db:prepare + assets:precompile, which is wrong for dev — first-time
+    # setup goes through `spree init`).
+    command: ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
     ports:
       - "${SPREE_PORT:-3000}:3000"
-    volumes:
-      - storage_data:/rails/storage
     healthcheck:
       test: curl -f http://localhost:3000/up || exit 1
       interval: 10s
@@ -71,15 +105,15 @@ services:
 
   worker:
     <<: *app
-    command: bundle exec sidekiq
+    command: ["bundle", "exec", "sidekiq"]
     environment:
       <<: *app-env
       RAILS_MAX_THREADS: ${SIDEKIQ_DB_POOL:-27}
-    volumes:
-      - storage_data:/rails/storage
 
 volumes:
   postgres_data:
   redis_data:
   meilisearch_data:
   storage_data:
+  bundle_cache:
+  tmp_cache:
