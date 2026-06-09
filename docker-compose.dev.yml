@@ -96,12 +96,6 @@ services:
     command: ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
     ports:
       - "${SPREE_PORT:-3000}:3000"
-    healthcheck:
-      test: curl -f http://localhost:3000/up || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
 
   worker:
     <<: *app
