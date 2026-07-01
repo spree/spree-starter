@@ -46,6 +46,13 @@ x-app: &app
     - storage_data:/rails/storage
     # Bootsnap + Rails tmp/cache don't churn the host filesystem.
     - tmp_cache:/rails/tmp
+  # Empty tmpfs over public/assets so dev never serves the image's precompiled
+  # manifest — Propshaft stays in Dynamic mode and compiles live, so admin CSS
+  # rebuilds are served without a restart. tmpfs (not a volume) is used because a
+  # fresh anonymous volume inherits the image's baked public/assets via copy-up,
+  # which reintroduces the frozen manifest; tmpfs is always empty on start.
+  tmpfs:
+    - /rails/public/assets
 
 services:
   postgres:
