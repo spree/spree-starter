@@ -71,7 +71,6 @@ group :development, :test do
   gem 'debug', platforms: %i[mri windows], require: 'debug/prelude'
   gem 'dotenv-rails'
   gem 'letter_opener'
-  gem 'listen'
   gem 'rubocop-rails-omakase', require: false
   gem 'simplecov-cobertura'
   gem 'spree_dev_tools'
