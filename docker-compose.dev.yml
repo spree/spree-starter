@@ -89,10 +89,9 @@ services:
     image: getmeili/meilisearch:latest
     volumes:
       - meilisearch_data:/meili_data
-    ports:
-      # Forwarded for the Meilisearch dashboard / host debugging. Loopback for
-      # the same reason as postgres: no API key is set in dev.
-      - "127.0.0.1:${SPREE_MEILISEARCH_PORT:-7700}:7700"
+    # No host port: the app reaches Meilisearch over the compose network at
+    # meilisearch:7700. Not published to the host — like redis, it runs
+    # without an API key in dev and has no reason to be host-reachable.
     healthcheck:
       test: curl -f http://localhost:7700/health || exit 1
       interval: 5s

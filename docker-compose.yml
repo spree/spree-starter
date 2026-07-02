@@ -47,11 +47,9 @@ services:
     image: getmeili/meilisearch:latest
     volumes:
       - meilisearch_data:/meili_data
-    ports:
-      # Loopback-only: the app reaches Meilisearch over the compose network;
-      # the host port is for debugging and must not be LAN-reachable (Docker's
-      # NAT rules bypass host firewalls on Linux, and no API key is set).
-      - "127.0.0.1:${SPREE_MEILISEARCH_PORT:-7700}:7700"
+    # No host port: the app reaches Meilisearch over the compose network at
+    # meilisearch:7700. Not published to the host — like redis, it runs
+    # without an API key in dev and has no reason to be host-reachable.
     healthcheck:
       test: curl -f http://localhost:7700/health || exit 1
       interval: 5s

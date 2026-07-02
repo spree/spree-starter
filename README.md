@@ -83,10 +83,9 @@ If this is verbose, install the [`@spree/cli`](https://www.npmjs.com/package/@sp
 | `SECRET_KEY_BASE` | Yes | Generate any 64-byte hex string. Stable across restarts so cookies/sessions survive. |
 | `SPREE_PORT` | No | Host port for the web service (default `3000`) |
 | `SPREE_DB_PORT` | No | Host port for Postgres (default `5433`, bound to `127.0.0.1`) |
-| `SPREE_MEILISEARCH_PORT` | No | Host port for Meilisearch (default `7700`, bound to `127.0.0.1`) |
 | `SIDEKIQ_DB_POOL` | No | Worker thread pool size (default `27`) |
 
-Postgres and Meilisearch run passwordless in dev, so their host ports bind to loopback only — set the `SPREE_*_PORT` variables to run multiple projects side by side instead of exposing them beyond `localhost`.
+Postgres runs passwordless in dev, so its host port binds to loopback only — set `SPREE_DB_PORT` to run multiple projects side by side instead of exposing it beyond `localhost`. Redis and Meilisearch aren't published to the host at all; the app reaches them over the compose network.
 
 For production deployments (S3, SMTP, Sentry, etc.) see [the environment variables docs](https://docs.spreecommerce.org/developer/deployment/environment_variables).
 
