@@ -33,7 +33,7 @@ The app is now running at [http://localhost:3000](http://localhost:3000):
 - **Store API:** [http://localhost:3000/api/v3/store/products](http://localhost:3000/api/v3/store/products)
 - **Sidekiq:** [http://localhost:3000/sidekiq](http://localhost:3000/sidekiq)
 - **Health:** [http://localhost:3000/up](http://localhost:3000/up)
-- **PostgreSQL (host):** `localhost:5433` (user: `postgres`, db: `spree_development`) — connect with TablePlus, DataGrip, or `psql`
+- **PostgreSQL (host):** `localhost:5433` (user: `postgres`, db: `spree_development`) — connect with TablePlus, DataGrip, or `psql`. Bound to `127.0.0.1` only; override the port with `SPREE_DB_PORT` when running several projects side by side.
 
 ### How development works
 
@@ -82,8 +82,11 @@ If this is verbose, install the [`@spree/cli`](https://www.npmjs.com/package/@sp
 |---|---|---|
 | `SECRET_KEY_BASE` | Yes | Generate any 64-byte hex string. Stable across restarts so cookies/sessions survive. |
 | `SPREE_PORT` | No | Host port for the web service (default `3000`) |
-| `SPREE_DB_PORT` | No | Host port for Postgres (default `5433`) |
+| `SPREE_DB_PORT` | No | Host port for Postgres (default `5433`, bound to `127.0.0.1`) |
+| `SPREE_MEILISEARCH_PORT` | No | Host port for Meilisearch (default `7700`, bound to `127.0.0.1`) |
 | `SIDEKIQ_DB_POOL` | No | Worker thread pool size (default `27`) |
+
+Postgres and Meilisearch run passwordless in dev, so their host ports bind to loopback only — set the `SPREE_*_PORT` variables to run multiple projects side by side instead of exposing them beyond `localhost`.
 
 For production deployments (S3, SMTP, Sentry, etc.) see [the environment variables docs](https://docs.spreecommerce.org/developer/deployment/environment_variables).
 

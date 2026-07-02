@@ -63,7 +63,10 @@ services:
     ports:
       # Forwarded for native DB clients (TablePlus, DataGrip, psql on host).
       # Default 5433 avoids collision with a host-native Postgres on 5432.
-      - "${SPREE_DB_PORT:-5433}:5432"
+      # Bound to loopback: this postgres runs passwordless (trust auth), and a
+      # 0.0.0.0 publish bypasses host firewalls on Linux (Docker inserts its
+      # NAT rules ahead of ufw/firewalld), exposing it to the local network.
+      - "127.0.0.1:${SPREE_DB_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
@@ -87,7 +90,9 @@ services:
     volumes:
       - meilisearch_data:/meili_data
     ports:
-      - "7700:7700"
+      # Forwarded for the Meilisearch dashboard / host debugging. Loopback for
+      # the same reason as postgres: no API key is set in dev.
+      - "127.0.0.1:${SPREE_MEILISEARCH_PORT:-7700}:7700"
     healthcheck:
       test: curl -f http://localhost:7700/health || exit 1
       interval: 5s
