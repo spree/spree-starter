@@ -84,11 +84,19 @@ If this is verbose, install the [`@spree/cli`](https://www.npmjs.com/package/@sp
 | `SPREE_PORT` | No | Host port for the web service (default `3000`) |
 | `SPREE_DB_PORT` | No | Host port for Postgres (default `5433`, bound to `127.0.0.1`) |
 | `SPREE_MEILISEARCH_PORT` | No | Host port for Meilisearch (default `7700`, bound to `127.0.0.1`) |
+| `MAILPIT_UI_PORT` | No | Host port for the Mailpit web UI (default `8025`, bound to `127.0.0.1`) |
+| `MAILPIT_SMTP_PORT` | No | Host port for Mailpit's SMTP endpoint (default `1025`, bound to `127.0.0.1`) |
 | `SIDEKIQ_DB_POOL` | No | Worker thread pool size (default `27`) |
 
 Postgres and Meilisearch run passwordless in dev, so their host ports bind to loopback only — set the `SPREE_*_PORT` variables to run multiple projects side by side instead of exposing them beyond `localhost`.
 
 For production deployments (S3, SMTP, Sentry, etc.) see [the environment variables docs](https://docs.spreecommerce.org/developer/deployment/environment_variables).
+
+### Emails in development
+
+All outgoing mail is captured by [Mailpit](https://mailpit.axllent.org/) — nothing is ever delivered externally. Open **http://localhost:8025** to read every email the app sends (order confirmations, password resets, invitations, …). No configuration needed; it works out of the box with both compose files.
+
+To deliver through a real SMTP provider instead, set `SMTP_HOST` (and `SMTP_USERNAME`/`SMTP_PASSWORD`/`SMTP_PORT`) in `.env` — those take precedence over the Mailpit default.
 
 ## Customization
 

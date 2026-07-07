@@ -5,14 +5,20 @@ Rails.application.configure do
   # Otherwise use Letter Opener to preview emails in the browser.
   if ENV["SMTP_HOST"].present?
     config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
+    smtp_settings = {
       address:              ENV["SMTP_HOST"],
       port:                 ENV.fetch("SMTP_PORT", 1025).to_i,
-      user_name:            ENV["SMTP_USERNAME"],
-      password:             ENV["SMTP_PASSWORD"],
-      authentication:       :plain,
       enable_starttls_auto: true
     }
+    # Only request SMTP-AUTH when credentials are provided. Local mail catchers
+    # (Mailpit, MailHog) accept anonymous delivery; requesting auth with a nil
+    # user raises "SMTP-AUTH requested but missing user name" before connecting.
+    if ENV["SMTP_USERNAME"].present?
+      smtp_settings[:user_name]      = ENV["SMTP_USERNAME"]
+      smtp_settings[:password]       = ENV["SMTP_PASSWORD"]
+      smtp_settings[:authentication] = :plain
+    end
+    config.action_mailer.smtp_settings = smtp_settings
     config.action_mailer.default_options = { from: ENV["SMTP_FROM_ADDRESS"] } if ENV["SMTP_FROM_ADDRESS"].present?
     config.action_mailer.raise_delivery_errors = true
   else

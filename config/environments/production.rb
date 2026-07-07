@@ -66,14 +66,19 @@ Rails.application.configure do
   # Works with any SMTP provider (Resend, Postmark, Mailgun, SendGrid, SES, etc.)
   if ENV["SMTP_HOST"].present?
     config.action_mailer.delivery_method = :smtp
-    config.action_mailer.smtp_settings = {
+    smtp_settings = {
       address:              ENV["SMTP_HOST"],
       port:                 ENV.fetch("SMTP_PORT", 587).to_i,
-      user_name:            ENV["SMTP_USERNAME"],
-      password:             ENV["SMTP_PASSWORD"],
-      authentication:       :plain,
       enable_starttls_auto: true
     }
+    # Only request SMTP-AUTH when credentials are provided — the quick-start
+    # compose delivers to Mailpit anonymously; real providers set SMTP_USERNAME.
+    if ENV["SMTP_USERNAME"].present?
+      smtp_settings[:user_name]      = ENV["SMTP_USERNAME"]
+      smtp_settings[:password]       = ENV["SMTP_PASSWORD"]
+      smtp_settings[:authentication] = :plain
+    end
+    config.action_mailer.smtp_settings = smtp_settings
   end
 
   config.action_mailer.default_url_options = { host: ENV.fetch("RAILS_HOST", "example.com") }

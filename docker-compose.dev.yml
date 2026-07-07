@@ -25,6 +25,8 @@ x-app: &app
       condition: service_healthy
     meilisearch:
       condition: service_healthy
+    mailpit:
+      condition: service_started
   env_file: .env
   environment: &app-env
     DATABASE_URL: postgres://postgres@postgres:5432/spree_development
@@ -33,6 +35,10 @@ x-app: &app
     RAILS_FORCE_SSL: "false"
     RAILS_ASSUME_SSL: "false"
     MEILISEARCH_URL: http://meilisearch:7700
+    # All outgoing mail is captured by Mailpit — read it at http://localhost:8025.
+    # Set SMTP_HOST (and friends) in .env to deliver through a real provider instead.
+    SMTP_HOST: ${SMTP_HOST:-mailpit}
+    SMTP_PORT: ${SMTP_PORT:-1025}
     # RAILS_ENV / BUNDLE_* are baked into the dev image (Dockerfile dev stage).
     BOOTSNAP_CACHE_DIR: /rails/tmp/cache/bootsnap
   volumes:
@@ -98,6 +104,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      # Loopback-only, matching meilisearch: reachable from the host browser
+      # but not the LAN (Docker's NAT rules bypass host firewalls on Linux).
+      # 8025 = web UI — open http://localhost:8025 to read captured mail.
+      # 1025 = SMTP endpoint the app delivers to (in-cluster as mailpit:1025).
+      - "127.0.0.1:${MAILPIT_UI_PORT:-8025}:8025"
+      - "127.0.0.1:${MAILPIT_SMTP_PORT:-1025}:1025"
+    environment:
+      MP_MAX_MESSAGES: "500"
+      MP_SMTP_AUTH_ACCEPT_ANY: "true"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "true"
 
   web:
     <<: *app
