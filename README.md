@@ -74,6 +74,24 @@ dc down
 
 If this is verbose, install the [`@spree/cli`](https://www.npmjs.com/package/@spree/cli) which wraps these as `spree exec`, `spree rails`, `spree generate`, `spree migrate`, etc.
 
+### Running tests
+
+Tests run inside the web container against a dedicated `spree_test` database — your development data is never touched. Create the test database once, then run RSpec:
+
+```bash
+dc exec web bin/rails db:test:prepare        # one-time test database setup
+dc exec -e RAILS_ENV=test web bundle exec rspec
+dc exec -e RAILS_ENV=test web bundle exec rspec spec/models/my_model_spec.rb:15
+```
+
+With the [`@spree/cli`](https://www.npmjs.com/package/@spree/cli) this is `spree rails db:test:prepare` and `spree rspec` (which sets `RAILS_ENV=test` for you):
+
+```bash
+spree rspec                                  # full suite
+spree rspec spec/models/my_model_spec.rb:15  # one example
+spree rspec --format documentation
+```
+
 ### Environment variables
 
 `docker-compose.dev.yml` sets sensible dev defaults for `DATABASE_HOST`, `REDIS_URL`, and `MEILISEARCH_URL`, while `RAILS_ENV` is baked into the Dockerfile `dev` stage. (It deliberately avoids `DATABASE_URL`, which would override `database.yml` for every Rails env and point the test suite at the development database.) Most of `.env.example` is production-shaped and ignored in dev. The only variable you must set is:

@@ -150,8 +150,12 @@ bin/rails db:seed      # Seed the databases
 
 ## Testing
 
+Native (host Ruby):
+
 ```bash
 bundle exec rspec                           # Full test suite
 bundle exec rspec spec/models/              # Model specs only
 bundle exec rspec spec/models/my_model.rb   # Single file
 ```
+
+Docker (via `@spree/cli`): `spree rspec …` runs the same commands inside the web container with `RAILS_ENV=test`, against the `spree_test` database. First run: `spree rails db:test:prepare`.
