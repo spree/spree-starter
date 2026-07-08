@@ -76,7 +76,7 @@ If this is verbose, install the [`@spree/cli`](https://www.npmjs.com/package/@sp
 
 ### Environment variables
 
-`docker-compose.dev.yml` sets sensible dev defaults for `DATABASE_URL`, `REDIS_URL`, and `MEILISEARCH_URL`, while `RAILS_ENV` is baked into the Dockerfile `dev` stage. Most of `.env.example` is production-shaped and ignored in dev. The only variable you must set is:
+`docker-compose.dev.yml` sets sensible dev defaults for `DATABASE_HOST`, `REDIS_URL`, and `MEILISEARCH_URL`, while `RAILS_ENV` is baked into the Dockerfile `dev` stage. (It deliberately avoids `DATABASE_URL`, which would override `database.yml` for every Rails env and point the test suite at the development database.) Most of `.env.example` is production-shaped and ignored in dev. The only variable you must set is:
 
 | Variable | Required | Notes |
 |---|---|---|

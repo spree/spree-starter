@@ -29,7 +29,13 @@ x-app: &app
       condition: service_started
   env_file: .env
   environment: &app-env
-    DATABASE_URL: postgres://postgres@postgres:5432/spree_development
+    # database.yml builds dev/test configs from DATABASE_HOST/DATABASE_USERNAME
+    # (port 5432 is its default). Deliberately NOT DATABASE_URL: a URL overrides
+    # database.yml for every Rails env, so in-container rspec would hit the dev
+    # DB and trip DatabaseCleaner's remote-URL safeguard. Both are pinned here
+    # so native-dev values in .env (env_file above) can't leak into the container.
+    DATABASE_HOST: postgres
+    DATABASE_USERNAME: postgres
     REDIS_URL: redis://redis:6379/0
     SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     RAILS_FORCE_SSL: "false"
