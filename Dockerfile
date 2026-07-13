@@ -2,6 +2,48 @@
 # check=error=true
 
 ARG RUBY_VERSION=4.0.1
+ARG NODE_VERSION=22
+# Which React Dashboard the image bakes (served by Rails at /dashboard —
+# the single-node topology: same origin as the Admin API, so no CORS or
+# cookie configuration). Only dist/ reaches the final image; the Node
+# toolchain never does.
+#
+#   stock  (default) — the template published inside @spree/cli, with
+#                      dependency pins matching that CLI release
+#   custom           — your own dashboard app, provided as a named build
+#                      context (`spree build --production` does this):
+#
+#     docker build backend/ \
+#       --build-arg DASHBOARD_SOURCE=custom \
+#       --build-context dashboard-src=./apps/dashboard
+ARG DASHBOARD_SOURCE=stock
+
+FROM docker.io/library/node:$NODE_VERSION-slim AS dashboard-stock
+
+WORKDIR /dashboard
+RUN npm pack @spree/cli --pack-destination /tmp && \
+  tar -xzf /tmp/spree-cli-*.tgz -C /tmp && \
+  cp -r /tmp/package/dist/templates/dashboard-starter/. . && \
+  corepack enable pnpm && \
+  pnpm install && \
+  VITE_BASE_PATH=/dashboard/ pnpm build
+
+FROM docker.io/library/node:$NODE_VERSION-slim AS dashboard-custom
+
+WORKDIR /dashboard
+COPY --from=dashboard-src . .
+# Defensive: host node_modules/build output must never leak into the image
+# build (wrong platform, stale artifacts).
+RUN rm -rf node_modules dist .tanstack && \
+  corepack enable pnpm && \
+  pnpm install && \
+  VITE_BASE_PATH=/dashboard/ pnpm build
+
+# BuildKit resolves stages lazily: with the default `stock`, the custom
+# stage (and its dashboard-src context) is never evaluated, so plain
+# `docker build backend/` needs no extra flags.
+FROM dashboard-${DASHBOARD_SOURCE} AS dashboard
+
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
@@ -74,6 +116,11 @@ USER 1000:1000
 # Copy built artifacts: gems, application
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
+
+# Stock React Dashboard, served by Rails at /dashboard (see the dashboard
+# stage above). The bundle is origin-relative — it works on any host.
+COPY --chown=rails:rails --from=dashboard /dashboard/dist /rails/dashboard
+ENV SPREE_DASHBOARD_DIST_PATH="/rails/dashboard"
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]

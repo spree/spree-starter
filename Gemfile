@@ -34,10 +34,13 @@ if spree_path
     gem 'spree_emails'
   end
 else
-  spree_version = '>= 5.5.0.rc3'
+  spree_version = '>= 5.6.0.rc1'
   gem 'spree', spree_version
   gem 'spree_admin', spree_version
   gem 'spree_emails', spree_version
+  # Serves the React Dashboard at /dashboard (see the Dockerfile's dashboard
+  # stage — SPREE_DASHBOARD_DIST_PATH points at the baked build).
+  gem 'spree_dashboard', spree_version
 end
 
 # Extensions
