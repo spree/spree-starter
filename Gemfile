@@ -27,9 +27,10 @@ spree_path = ENV.fetch('SPREE_PATH', nil)
 if spree_path
   path "#{spree_path}/spree" do
     gem 'spree'
-    gem 'spree_admin'
     gem 'spree_core'
     gem 'spree_api'
+    gem 'spree_admin'
+    gem 'spree_dashboard'
     gem 'spree_emails'
   end
 else
