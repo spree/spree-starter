@@ -17,11 +17,17 @@ ARG NODE_VERSION=22
 #       --build-arg DASHBOARD_SOURCE=custom \
 #       --build-context dashboard-src=./apps/dashboard
 ARG DASHBOARD_SOURCE=stock
+# CLI release line the stock template is extracted from. Caret-pinned so
+# template fixes in CLI minors/patches reach image rebuilds automatically
+# while a future CLI major (which may reshape the template layout) requires
+# a deliberate bump here.
+ARG SPREE_CLI_VERSION=^2.4.0
 
 FROM docker.io/library/node:$NODE_VERSION-slim AS dashboard-stock
+ARG SPREE_CLI_VERSION
 
 WORKDIR /dashboard
-RUN npm pack @spree/cli --pack-destination /tmp && \
+RUN npm pack "@spree/cli@${SPREE_CLI_VERSION}" --pack-destination /tmp && \
   tar -xzf /tmp/spree-cli-*.tgz -C /tmp && \
   cp -r /tmp/package/dist/templates/dashboard-starter/. . && \
   corepack enable pnpm && \
