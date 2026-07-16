@@ -33,6 +33,22 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = ENV["RAILS_FORCE_SSL"] != "false"
 
+  # Canonical public host for all generated URLs — Active Storage attachment
+  # URLs in API payloads, links in emails, and any URL built outside a request
+  # context. Without it, URLs fall back to the store's URL setting (which is
+  # "localhost" on a fresh install). Host only, optionally with a port
+  # (e.g. "store.example.com" or "203.0.113.7:8080"). On Render the
+  # platform-provided external hostname is used unless RAILS_HOST is set.
+  public_host = ENV["RAILS_HOST"].presence || ENV["RENDER_EXTERNAL_HOSTNAME"].presence
+  if public_host
+    no_ssl = ENV["RAILS_ASSUME_SSL"] == "false" && ENV["RAILS_FORCE_SSL"] == "false"
+    routes.default_url_options = { host: public_host, protocol: no_ssl ? "http" : "https" }
+  end
+
+  # Serve compiled assets (and, via Spree.cdn_host in config/initializers/spree.rb,
+  # Active Storage attachments) from a CDN. Host only, no protocol.
+  config.asset_host = ENV["CDN_HOST"] if ENV["CDN_HOST"].present?
+
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
@@ -81,7 +97,7 @@ Rails.application.configure do
     config.action_mailer.smtp_settings = smtp_settings
   end
 
-  config.action_mailer.default_url_options = { host: ENV.fetch("RAILS_HOST", "example.com") }
+  config.action_mailer.default_url_options = { host: public_host || "example.com" }
   config.action_mailer.default_options = { from: ENV["SMTP_FROM_ADDRESS"] } if ENV["SMTP_FROM_ADDRESS"].present?
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

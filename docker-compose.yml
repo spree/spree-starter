@@ -17,8 +17,11 @@ x-app: &app
     DATABASE_URL: postgres://postgres@postgres:5432/spree_production
     REDIS_URL: redis://redis:6379/0
     SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-    RAILS_FORCE_SSL: "false"
-    RAILS_ASSUME_SSL: "false"
+    RAILS_FORCE_SSL: ${RAILS_FORCE_SSL:-false}
+    RAILS_ASSUME_SSL: ${RAILS_ASSUME_SSL:-false}
+    # Public host for generated URLs (image/attachment URLs in API responses,
+    # email links). Override in .env when serving from a real domain or IP.
+    RAILS_HOST: ${RAILS_HOST:-localhost:${SPREE_PORT:-3000}}
     MEILISEARCH_URL: http://meilisearch:7700
     # All outgoing mail is captured by Mailpit — read it at http://localhost:8025.
     # Set SMTP_HOST (and friends) in .env to deliver through a real provider instead.

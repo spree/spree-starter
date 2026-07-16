@@ -62,6 +62,11 @@ end
 Spree.user_class = 'Spree::User'
 Spree.admin_user_class = 'Spree::AdminUser'
 
+# Serve Active Storage attachment URLs (product images, logos, etc.) from a CDN
+# host instead of the application host. Host only, no protocol — the scheme
+# comes from routes.default_url_options (see config/environments/production.rb).
+Spree.cdn_host = ENV['CDN_HOST'] if ENV['CDN_HOST'].present?
+
 # Background job queue configuration
 Spree.queues.default = :default
 Spree.queues.events = :spree_events
