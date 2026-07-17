@@ -1,10 +1,19 @@
+# Render Blueprint — authored for the create-spree-app project layout
+# (Rails API in backend/, optional customized React Dashboard in
+# apps/dashboard/); create-spree-app relocates this file to your project
+# root. The web service builds backend/Dockerfile with the repo root as
+# context: your (ejected) backend customizations and your apps/dashboard
+# ship in ONE image, with the dashboard served same-origin at /dashboard —
+# no CORS, no cookie configuration, no second service. Without
+# apps/dashboard the image bakes the stock dashboard. Migrations run from
+# the image entrypoint on boot.
 services:
   - type: web
     name: spree
-    runtime: ruby
+    runtime: docker
     plan: free
-    buildCommand: bundle install && bundle exec rails assets:precompile && bundle exec rails db:prepare
-    startCommand: bundle exec puma -C config/puma.rb
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
     healthCheckPath: /up
     envVars:
       - key: DATABASE_URL
@@ -33,10 +42,11 @@ services:
   # uncomment to add background jobs, requires standard (paid) plan
   # - type: worker
   #   name: spree-worker
-  #   runtime: ruby
+  #   runtime: docker
   #   plan: standard
-  #   buildCommand: bundle install && bundle exec rails assets:precompile
-  #   startCommand: bundle exec sidekiq
+  #   dockerfilePath: ./backend/Dockerfile
+  #   dockerContext: .
+  #   dockerCommand: bundle exec sidekiq
   #   envVars:
   #     - key: DATABASE_URL
   #       fromDatabase:

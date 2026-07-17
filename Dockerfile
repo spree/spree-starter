@@ -3,52 +3,65 @@
 
 ARG RUBY_VERSION=4.0.1
 ARG NODE_VERSION=22
-# Which React Dashboard the image bakes (served by Rails at /dashboard —
-# the single-node topology: same origin as the Admin API, so no CORS or
-# cookie configuration). Only dist/ reaches the final image; the Node
-# toolchain never does.
-#
-#   stock  (default) — the template published inside @spree/cli, with
-#                      dependency pins matching that CLI release
-#   custom           — your own dashboard app, provided as a named build
-#                      context (`spree build --production` does this):
-#
-#     docker build backend/ \
-#       --build-arg DASHBOARD_SOURCE=custom \
-#       --build-context dashboard-src=./apps/dashboard
-ARG DASHBOARD_SOURCE=stock
-# CLI release line the stock template is extracted from. Caret-pinned so
-# template fixes in CLI minors/patches reach image rebuilds automatically
-# while a future CLI major (which may reshape the template layout) requires
-# a deliberate bump here.
+# CLI release line the stock dashboard template is extracted from (only used
+# when the build context has no apps/dashboard). Caret-pinned so template
+# fixes in CLI minors/patches reach image rebuilds automatically while a
+# future CLI major (which may reshape the template layout) requires a
+# deliberate bump here.
 ARG SPREE_CLI_VERSION=^2.4.0
 
-FROM docker.io/library/node:$NODE_VERSION-slim AS dashboard-stock
+# Layout normalization — the same Dockerfile builds from either context shape,
+# detected from the files actually present (no build args, no named contexts,
+# so it behaves identically under plain `docker build`, Render, Railway, and
+# `spree build --production`):
+#
+#   create-spree-app project (the primary production path):
+#     context = repo root; Rails app in backend/ (usually ejected with your
+#     customizations), your customized React Dashboard in apps/dashboard/.
+#
+#   standalone (this repo's CI image, dev-compose / `spree eject` builds):
+#     context = Rails app root, no backend/ or apps/.
+#
+# backend/Gemfile marks the project layout; apps/dashboard/ marks a custom
+# dashboard (without it, the stock template bundled with @spree/cli is baked).
+FROM docker.io/library/alpine:3.21 AS ctx
+COPY . /ctx
+RUN mkdir -p /rails-src /dashboard-src && \
+  if [ -f /ctx/backend/Gemfile ]; then \
+    cp -R /ctx/backend/. /rails-src/; \
+  else \
+    cp -R /ctx/. /rails-src/; \
+  fi && \
+  if [ -f /ctx/apps/dashboard/package.json ]; then \
+    cp -R /ctx/apps/dashboard/. /dashboard-src/ && \
+    rm -rf /dashboard-src/node_modules /dashboard-src/dist /dashboard-src/.tanstack && \
+    touch /dashboard-src/.spree-custom-dashboard; \
+  fi
+
+# Builds the React Dashboard served by Rails at /dashboard (single-node
+# topology: same origin as the Admin API, so no CORS or cookie
+# configuration). Your apps/dashboard when the context has one, the stock
+# template otherwise. Only dist/ reaches the final image; the Node toolchain
+# never does.
+FROM docker.io/library/node:$NODE_VERSION-slim AS dashboard
 ARG SPREE_CLI_VERSION
 
 WORKDIR /dashboard
-RUN npm pack "@spree/cli@${SPREE_CLI_VERSION}" --pack-destination /tmp && \
-  tar -xzf /tmp/spree-cli-*.tgz -C /tmp && \
-  cp -r /tmp/package/dist/templates/dashboard-starter/. . && \
-  corepack enable pnpm && \
-  pnpm install && \
+COPY --from=ctx /dashboard-src /dashboard
+# Custom apps install their committed lockfile verbatim (--frozen-lockfile:
+# drift between package.json and the lockfile fails loudly instead of
+# silently re-resolving inside the image). The stock template ships no
+# lockfile, so it resolves fresh.
+RUN corepack enable pnpm && \
+  if [ -f .spree-custom-dashboard ]; then \
+    pnpm install --frozen-lockfile; \
+  else \
+    npm pack "@spree/cli@${SPREE_CLI_VERSION}" --pack-destination /tmp && \
+    tar -xzf /tmp/spree-cli-*.tgz -C /tmp && \
+    cp -r /tmp/package/dist/templates/dashboard-starter/. . && \
+    pnpm install; \
+  fi && \
   VITE_BASE_PATH=/dashboard/ pnpm build
-
-FROM docker.io/library/node:$NODE_VERSION-slim AS dashboard-custom
-
-WORKDIR /dashboard
-COPY --from=dashboard-src . .
-# Defensive: host node_modules/build output must never leak into the image
-# build (wrong platform, stale artifacts).
-RUN rm -rf node_modules dist .tanstack && \
-  corepack enable pnpm && \
-  pnpm install && \
-  VITE_BASE_PATH=/dashboard/ pnpm build
-
-# BuildKit resolves stages lazily: with the default `stock`, the custom
-# stage (and its dashboard-src context) is never evaluated, so plain
-# `docker build backend/` needs no extra flags.
-FROM dashboard-${DASHBOARD_SOURCE} AS dashboard
 
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
@@ -75,13 +88,13 @@ RUN apt-get update -qq && \
   rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
-COPY .ruby-version Gemfile Gemfile.lock ./
+COPY --from=ctx /rails-src/.ruby-version /rails-src/Gemfile /rails-src/Gemfile.lock ./
 RUN bundle install && \
   rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
   bundle exec bootsnap precompile --gemfile
 
 # Copy application code
-COPY . .
+COPY --from=ctx /rails-src ./
 
 # Precompile bootsnap code for faster boot times and assets
 RUN bundle exec bootsnap precompile app/ lib/ && \
@@ -123,8 +136,8 @@ USER 1000:1000
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
-# Stock React Dashboard, served by Rails at /dashboard (see the dashboard
-# stage above). The bundle is origin-relative — it works on any host.
+# React Dashboard, served by Rails at /dashboard (see the dashboard stage
+# above). The bundle is origin-relative — it works on any host.
 COPY --chown=rails:rails --from=dashboard /dashboard/dist /rails/dashboard
 ENV SPREE_DASHBOARD_DIST_PATH="/rails/dashboard"
 
