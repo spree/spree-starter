@@ -44,6 +44,11 @@ module SpreeStarter
     # SOLID_QUEUE_IN_PUMA=false and running `bin/jobs` as a separate service.
     config.active_job.queue_adapter = :solid_queue
 
+    # The /jobs dashboard is already gated by the admin Devise scope in
+    # routes.rb; Mission Control's built-in HTTP Basic auth would otherwise
+    # 401 every request.
+    config.mission_control.jobs.http_basic_auth_enabled = false
+
     config.action_mailer.deliver_later_queue_name = :mailers
     config.active_storage.queues.purge = :active_storage_purge
     config.active_storage.queues.analysis = :active_storage_analysis
