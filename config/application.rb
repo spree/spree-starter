@@ -52,5 +52,6 @@ module SpreeStarter
     config.action_mailer.deliver_later_queue_name = :mailers
     config.active_storage.queues.purge = :active_storage_purge
     config.active_storage.queues.analysis = :active_storage_analysis
+    config.active_storage.queues.transform = :active_storage_transform
   end
 end

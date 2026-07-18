@@ -23,6 +23,7 @@ default: &default
         - spree_events
         - spree_exports
         - spree_images
+        - active_storage_transform
         - spree_products
         - spree_reports
         - spree_variants
