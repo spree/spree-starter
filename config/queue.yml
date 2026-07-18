@@ -2,14 +2,44 @@
 # Puma (config/puma.rb, SOLID_QUEUE_IN_PUMA) — worker threads share the web
 # process and its DB pool (see config/database.yml). When you split job
 # processing out (`bin/jobs` as its own service), the same file configures
-# the dedicated supervisor; raise JOB_THREADS / add processes there.
+# the dedicated supervisor.
+#
+# JOB_THREADS defaults to 10 — the same concurrency the previous Sidekiq
+# setup ran. Lower it (e.g. 3) on small single-container instances where job
+# throughput matters less than web headroom.
+#
+# The queues list is polled IN ORDER — Solid Queue's equivalent of Sidekiq's
+# queue weights. Checkout-critical and operator-facing work first, bulk
+# catalog churn second, Active Storage housekeeping last; the trailing "*"
+# catches queues added later so nothing starves silently.
 default: &default
   dispatchers:
     - polling_interval: 1
       batch_size: 500
   workers:
-    - queues: "*"
-      threads: <%= ENV.fetch("JOB_THREADS", 3) %>
+    - queues:
+        - default
+        - spree_imports
+        - spree_payment_webhooks
+        - mailers
+        - spree_events
+        - spree_exports
+        - spree_images
+        - spree_products
+        - spree_reports
+        - spree_variants
+        - spree_taxons
+        - spree_stock_location_stock_items
+        - spree_coupon_codes
+        - spree_addresses
+        - spree_gift_cards
+        - spree_webhooks
+        - spree_api_keys
+        - spree_search
+        - active_storage_analysis
+        - active_storage_purge
+        - "*"
+      threads: <%= ENV.fetch("JOB_THREADS", 10) %>
       processes: <%= ENV.fetch("JOB_PROCESSES", 1) %>
       polling_interval: 0.1
 

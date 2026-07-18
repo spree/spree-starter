@@ -6,7 +6,7 @@ default: &default
   # Queue internals (dispatcher, scheduler, supervisor). Undersizing shows up
   # as connection-pool timeouts that look like a Puma problem.
   #   pool = RAILS_MAX_THREADS + (queue.yml worker threads) + 3
-  pool: <%= Integer(ENV.fetch("RAILS_MAX_THREADS", 3)) + Integer(ENV.fetch("JOB_THREADS", 3)) + 3 %>
+  pool: <%= Integer(ENV.fetch("RAILS_MAX_THREADS", 3)) + Integer(ENV.fetch("JOB_THREADS", 10)) + 3 %>
 
 development:
   <<: *default
