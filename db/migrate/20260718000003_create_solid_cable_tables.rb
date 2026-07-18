@@ -1,5 +1,4 @@
 class CreateSolidCableTables < ActiveRecord::Migration[8.1]
-  # Solid Cable messages in the primary database.
   # Schema vendored from the gem's install generator (single-database recipe).
   def change
   create_table "solid_cable_messages", force: :cascade do |t|

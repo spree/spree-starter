@@ -1,11 +1,10 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  # Pool sizing: with the Solid Queue supervisor inside Puma (the default),
-  # this pool serves Puma's threads AND the job worker threads AND ~3 Solid
-  # Queue internals (dispatcher, scheduler, supervisor). Undersizing shows up
-  # as connection-pool timeouts that look like a Puma problem.
-  #   pool = RAILS_MAX_THREADS + (queue.yml worker threads) + 3
+  # With the Solid Queue supervisor inside Puma (the default), this pool
+  # serves Puma's threads, the job worker threads, and ~3 Solid Queue
+  # internals (dispatcher, scheduler, supervisor):
+  #   pool = RAILS_MAX_THREADS + JOB_THREADS + 3
   pool: <%= Integer(ENV.fetch("RAILS_MAX_THREADS", 3)) + Integer(ENV.fetch("JOB_THREADS", 10)) + 3 %>
 
 development:

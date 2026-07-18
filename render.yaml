@@ -1,12 +1,8 @@
-# Render Blueprint — authored for the create-spree-app project layout
-# (Rails API in backend/, optional customized React Dashboard in
-# apps/dashboard/); create-spree-app relocates this file to your project
-# root. The web service builds backend/Dockerfile with the repo root as
-# context: your (ejected) backend customizations and your apps/dashboard
-# ship in ONE image, with the dashboard served same-origin at /dashboard —
-# no CORS, no cookie configuration, no second service. Without
-# apps/dashboard the image bakes the stock dashboard. Migrations run from
-# the image entrypoint on boot.
+# Render Blueprint — one Docker web service plus Postgres. The web service
+# builds backend/Dockerfile with the repo root as context: your backend and
+# apps/dashboard ship in one image, with the dashboard served same-origin at
+# /dashboard (the stock dashboard when apps/dashboard is absent). Migrations
+# run from the image entrypoint on boot.
 services:
   - type: web
     name: spree

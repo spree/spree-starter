@@ -1,5 +1,4 @@
-# Recurring jobs (Solid Queue's cron replacement — no sidekiq-cron/whenever).
-# See https://github.com/rails/solid_queue#recurring-tasks
+# Recurring jobs — see https://github.com/rails/solid_queue#recurring-tasks
 #
 # Add your own like:
 #   nightly_report:
@@ -13,9 +12,8 @@ production:
     class: Spree::StockReservations::ExpireJob
     schedule: every minute
 
-  # EU Omnibus price history: keep the lowest-price window queryable while
-  # pruning records past the retention period (Spree::Config
-  # price_history_retention_days, default 30).
+  # Prune EU Omnibus price history past the retention period
+  # (Spree::Config[:price_history_retention_days], default 30).
   prune_price_history:
     command: "Spree::PriceHistory.where('recorded_at < ?', (Spree::Config[:price_history_retention_days] || 30).days.ago).in_batches(of: 1000).delete_all"
     schedule: at 4am every day

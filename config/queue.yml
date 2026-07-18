@@ -1,17 +1,15 @@
-# Solid Queue process topology. In the default deployment this runs INSIDE
+# Solid Queue process topology. In the default deployment this runs inside
 # Puma (config/puma.rb, SOLID_QUEUE_IN_PUMA) — worker threads share the web
-# process and its DB pool (see config/database.yml). When you split job
-# processing out (`bin/jobs` as its own service), the same file configures
-# the dedicated supervisor.
+# process and its DB pool (see config/database.yml). The same file configures
+# the dedicated supervisor when jobs split out into a `bin/jobs` service.
 #
-# JOB_THREADS defaults to 10 — the same concurrency the previous Sidekiq
-# setup ran. Lower it (e.g. 3) on small single-container instances where job
-# throughput matters less than web headroom.
+# JOB_THREADS sizes the worker pool. Lower it (e.g. 3) on small
+# single-container instances where job throughput matters less than web
+# headroom.
 #
-# The queues list is polled IN ORDER — Solid Queue's equivalent of Sidekiq's
-# queue weights. Checkout-critical and operator-facing work first, bulk
-# catalog churn second, Active Storage housekeeping last; the trailing "*"
-# catches queues added later so nothing starves silently.
+# Queues are polled in order: checkout-critical and operator-facing work
+# first, bulk catalog churn second, Active Storage housekeeping last. The
+# trailing "*" catches queues added later so nothing starves silently.
 default: &default
   dispatchers:
     - polling_interval: 1

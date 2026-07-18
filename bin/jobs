@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 
-# Dedicated Solid Queue supervisor — the scale-out entry point. By default
-# jobs run inside Puma (config/puma.rb); run this as a separate service (same
-# image) with SOLID_QUEUE_IN_PUMA=false on web when job load deserves its own
-# process.
+# Dedicated Solid Queue supervisor. By default jobs run inside Puma
+# (config/puma.rb); run this as a separate service with
+# SOLID_QUEUE_IN_PUMA=false on web to split job processing out.
 require_relative "../config/environment"
 require "solid_queue/cli"
 

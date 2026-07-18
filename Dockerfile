@@ -15,11 +15,11 @@ ARG SPREE_CLI_VERSION=^2.4.0
 # so it behaves identically under plain `docker build`, Render, Railway, and
 # `spree build --production`):
 #
-#   create-spree-app project (the primary production path):
-#     context = repo root; Rails app in backend/ (usually ejected with your
-#     customizations), your customized React Dashboard in apps/dashboard/.
+#   create-spree-app project:
+#     context = repo root; Rails app in backend/, React Dashboard in
+#     apps/dashboard/.
 #
-#   standalone (this repo's CI image, dev-compose / `spree eject` builds):
+#   standalone:
 #     context = Rails app root, no backend/ or apps/.
 #
 # backend/Gemfile marks the project layout; apps/dashboard/ marks a custom

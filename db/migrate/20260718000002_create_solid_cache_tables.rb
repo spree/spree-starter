@@ -1,6 +1,4 @@
 class CreateSolidCacheTables < ActiveRecord::Migration[8.1]
-  # Solid Cache in the primary database — the headless API caches little
-  # (small fetch-memoized values + rate-limit counters).
   # Schema vendored from the gem's install generator (single-database recipe).
   def change
   create_table "solid_cache_entries", force: :cascade do |t|

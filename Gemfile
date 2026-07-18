@@ -60,13 +60,12 @@ gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'sentry-rails'
 gem 'sentry-ruby'
-# The Solid stack: jobs, cache, and Action Cable in Postgres — no Redis in
-# the default deployment. Swap any piece for Redis/Valkey when scale calls
-# for it (see docs/developer/deployment).
+# The Solid stack: jobs, cache, and Action Cable in Postgres. Swap any piece
+# for Redis/Valkey when scale calls for it.
 gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
-# Job dashboard at /jobs (replaces the Sidekiq Web UI)
+# Job dashboard at /jobs
 gem 'mission_control-jobs'
 gem 'stimulus-rails'
 gem 'rack-cors'

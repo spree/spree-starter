@@ -69,12 +69,10 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Solid Cache: the cache lives in Postgres — nothing extra to run. The
-  # headless API caches little (small fetch-memoized values plus rate-limit
-  # counters), so the primary database carries it fine. For high-traffic
-  # installs the one-line swap is:
+  # Solid Cache: the cache lives in Postgres — nothing extra to run. For
+  # high-traffic installs, swap to an in-memory store (Redis or Valkey; add
+  # the `redis` gem to the Gemfile):
   #   config.cache_store = :redis_cache_store, { url: ENV["REDIS_URL"] }
-  # (works with Redis or Valkey; add the `redis` gem back to the Gemfile).
   config.cache_store = :solid_cache_store
 
   # SMTP configuration via environment variables.

@@ -1,7 +1,4 @@
 class CreateSolidQueueTables < ActiveRecord::Migration[8.1]
-  # Solid Queue tables in the primary database (single-DB default — jobs
-  # enqueue atomically with business data). The split-DB layout is a scaling
-  # step: see docs/developer/deployment.
   # Schema vendored from the gem's install generator (single-database recipe).
   def change
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
