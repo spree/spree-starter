@@ -20,6 +20,12 @@ services:
         generateValue: true
       - key: RAILS_LOG_LEVEL
         value: info
+      # /jobs dashboard HTTP Basic auth — password is generated; read it in
+      # the Render dashboard under Environment
+      - key: MISSION_CONTROL_USER
+        value: jobs
+      - key: MISSION_CONTROL_PASSWORD
+        generateValue: true
       # uncomment on plans with 2+ vCPUs (pro and up) to run one Puma process per vCPU;
       # a Spree process needs ~1GB RAM, so this doesn't fit free/starter instances
       # - key: WEB_CONCURRENCY

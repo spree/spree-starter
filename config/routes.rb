@@ -27,10 +27,9 @@ Rails.application.routes.draw do
   devise_for :users, class_name: "Spree::User"
 
   # Job dashboard (Mission Control) — inspect, retry, and discard Solid Queue
-  # jobs at http://localhost:3000/jobs
-  authenticate Spree.admin_user_class.model_name.singular_route_key.to_sym, ->(admin_user) { admin_user.spree_admin? } do
-    mount MissionControl::Jobs::Engine, at: "/jobs"
-  end
+  # jobs at http://localhost:3000/jobs. Guarded by its own HTTP Basic auth
+  # (see config/application.rb), independent of app sessions.
+  mount MissionControl::Jobs::Engine, at: "/jobs"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

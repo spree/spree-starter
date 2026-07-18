@@ -44,10 +44,14 @@ module SpreeStarter
     # SOLID_QUEUE_IN_PUMA=false and running `bin/jobs` as a separate service.
     config.active_job.queue_adapter = :solid_queue
 
-    # The /jobs dashboard is already gated by the admin Devise scope in
-    # routes.rb; Mission Control's built-in HTTP Basic auth would otherwise
-    # 401 every request.
-    config.mission_control.jobs.http_basic_auth_enabled = false
+    # The /jobs dashboard uses Mission Control's HTTP Basic auth, independent
+    # of app sessions. In production set both env vars — without them the
+    # dashboard stays locked. Dev and test fall back to the seed admin
+    # credentials.
+    config.mission_control.jobs.http_basic_auth_user =
+      ENV.fetch("MISSION_CONTROL_USER") { "spree" if Rails.env.local? }
+    config.mission_control.jobs.http_basic_auth_password =
+      ENV.fetch("MISSION_CONTROL_PASSWORD") { "spree123" if Rails.env.local? }
 
     config.action_mailer.deliver_later_queue_name = :mailers
     config.active_storage.queues.purge = :active_storage_purge
