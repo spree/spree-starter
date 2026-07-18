@@ -21,14 +21,12 @@ x-app: &app
   depends_on:
     postgres:
       condition: service_healthy
-    redis:
-      condition: service_healthy
     meilisearch:
       condition: service_healthy
     mailpit:
       condition: service_started
   env_file: .env
-  environment: &app-env
+  environment:
     # database.yml builds dev/test configs from DATABASE_HOST/DATABASE_USERNAME
     # (port 5432 is its default). Deliberately NOT DATABASE_URL: a URL overrides
     # database.yml for every Rails env, so in-container rspec would hit the dev
@@ -36,7 +34,6 @@ x-app: &app
     # so native-dev values in .env (env_file above) can't leak into the container.
     DATABASE_HOST: postgres
     DATABASE_USERNAME: postgres
-    REDIS_URL: redis://redis:6379/0
     SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     RAILS_FORCE_SSL: "false"
     RAILS_ASSUME_SSL: "false"
@@ -87,16 +84,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: redis-cli ping
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   meilisearch:
     image: getmeili/meilisearch:latest
     volumes:
@@ -125,6 +112,8 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: "true"
       MP_SMTP_AUTH_ALLOW_INSECURE: "true"
 
+  # One app container: Puma also runs Solid Queue's job supervisor
+  # in-process (SOLID_QUEUE_IN_PUMA, on by default) — no separate worker.
   web:
     <<: *app
     # The dev stage already has dev/test gems installed, so no runtime
@@ -135,16 +124,8 @@ services:
     ports:
       - "${SPREE_PORT:-3000}:3000"
 
-  worker:
-    <<: *app
-    command: ["bundle", "exec", "sidekiq"]
-    environment:
-      <<: *app-env
-      RAILS_MAX_THREADS: ${SIDEKIQ_DB_POOL:-27}
-
 volumes:
   postgres_data:
-  redis_data:
   meilisearch_data:
   storage_data:
   bundle_cache:

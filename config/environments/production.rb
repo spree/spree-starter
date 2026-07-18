@@ -69,14 +69,13 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Use Redis for caching. REDIS_CACHE_URL allows a dedicated cache Redis,
-  # falling back to REDIS_URL (shared with Sidekiq) if not set.
-  redis_cache_url = ENV["REDIS_CACHE_URL"] || ENV["REDIS_URL"]
-  if redis_cache_url.present?
-    config.cache_store = :redis_cache_store, { url: redis_cache_url }
-  else
-    config.cache_store = :memory_store
-  end
+  # Solid Cache: the cache lives in Postgres — nothing extra to run. The
+  # headless API caches little (small fetch-memoized values plus rate-limit
+  # counters), so the primary database carries it fine. For high-traffic
+  # installs the one-line swap is:
+  #   config.cache_store = :redis_cache_store, { url: ENV["REDIS_URL"] }
+  # (works with Redis or Valkey; add the `redis` gem back to the Gemfile).
+  config.cache_store = :solid_cache_store
 
   # SMTP configuration via environment variables.
   # Works with any SMTP provider (Resend, Postmark, Mailgun, SendGrid, SES, etc.)

@@ -226,6 +226,8 @@ GEM
     drb (2.2.3)
     erb (6.0.5)
     erubi (1.13.1)
+    et-orbi (1.4.0)
+      tzinfo
     factory_bot (6.6.0)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -269,6 +271,9 @@ GEM
     friendly_id-mobility (1.0.5)
       friendly_id (>= 5.0.0, < 5.6)
       mobility (>= 1.0.1, < 2.0)
+    fugit (1.13.0)
+      et-orbi (~> 1.4)
+      raabro (~> 1.4)
     gem-release (2.2.4)
     geocoder (1.8.6)
       base64 (>= 0.1.0)
@@ -386,6 +391,16 @@ GEM
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
+    mission_control-jobs (1.1.0)
+      actioncable (>= 7.1)
+      actionpack (>= 7.1)
+      activejob (>= 7.1)
+      activerecord (>= 7.1)
+      importmap-rails (>= 1.2.1)
+      irb (~> 1.13)
+      railties (>= 7.1)
+      stimulus-rails
+      turbo-rails
     mobility (1.3.2)
       i18n (>= 0.6.10, < 2)
       request_store (~> 1.0)
@@ -491,6 +506,7 @@ GEM
     public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.8.1)
     rack (3.2.6)
     rack-cors (3.0.0)
@@ -555,10 +571,6 @@ GEM
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
       tsort
-    redis (5.4.1)
-      redis-client (>= 0.22.0)
-    redis-client (0.30.0)
-      connection_pool
     regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
@@ -647,20 +659,27 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
-    sentry-sidekiq (6.6.2)
-      sentry-ruby (~> 6.6.2)
-      sidekiq (>= 5.0)
-    sidekiq (8.1.6)
-      connection_pool (>= 3.0.0)
-      json (>= 2.16.0)
-      logger (>= 1.7.0)
-      rack (>= 3.2.0)
-      redis-client (>= 0.29.0)
     simple_po_parser (1.1.6)
     simplecov (1.0.1)
     simplecov-cobertura (4.0.0)
       rexml
       simplecov (~> 1.0)
+    solid_cable (4.0.1)
+      actioncable (>= 7.2)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
+    solid_cache (1.0.10)
+      activejob (>= 7.2)
+      activerecord (>= 7.2)
+      railties (>= 7.2)
+    solid_queue (1.4.0)
+      activejob (>= 7.1)
+      activerecord (>= 7.1)
+      concurrent-ruby (>= 1.3.1)
+      fugit (~> 1.11)
+      railties (>= 7.1)
+      thor (>= 1.3.1)
     spree (5.6.0.rc2)
       spree_api (= 5.6.0.rc2)
       spree_core (= 5.6.0.rc2)
@@ -883,18 +902,19 @@ DEPENDENCIES
   letter_opener
   lograge
   meilisearch (>= 0.28)
+  mission_control-jobs
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
   rack-cors
   rails (~> 8.1.2)
-  redis
   rubocop-rails-omakase
   sentry-rails
   sentry-ruby
-  sentry-sidekiq
-  sidekiq
   simplecov-cobertura
+  solid_cable
+  solid_cache
+  solid_queue
   spree (>= 5.6.0.rc1)
   spree_admin (>= 5.6.0.rc1)
   spree_adyen
@@ -984,6 +1004,7 @@ CHECKSUMS
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   erb (6.0.5) sha256=858e63488cb796c9daba8b6e9ff4b3879c395022049be9a66a8e00980e612eac
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
+  et-orbi (1.4.0) sha256=6c7e3c90779821f9e3b324c5e96fda9767f72995d6ae435b96678a4f3e2de8bc
   factory_bot (6.6.0) sha256=1fc1b3b5620ec980a6a27aec1b6ec8c250ca82962e970e8a40f93e8d388d4b89
   factory_bot_rails (6.5.1) sha256=d3cc4851eae4dea8a665ec4a4516895045e710554d2b5ac9e68b94d351bc6d68
   faraday (2.14.3) sha256=1882247e6766615c8220b4392bf1d27f6ebb63d8e28267587cef1fb0bf37f278
@@ -1008,6 +1029,7 @@ CHECKSUMS
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
   friendly_id (5.5.1) sha256=e018f2b89bfc143276fee6d378a64792385cd4fddd3d4fce501f59ec19c06207
   friendly_id-mobility (1.0.5) sha256=8c0cf4d0a1358311db1b2dcc0e4c33077ae929c7e34749485268d066adbaf2e4
+  fugit (1.13.0) sha256=a4f093fce740da52f216740a5041e2a594ea763cdb89e8b2754ca4399634ab18
   gem-release (2.2.4) sha256=2f11124c1580c811507c3b47e875e420cf3ed792a98105b49df11971e6e94db3
   geocoder (1.8.6) sha256=e0ca1554b499f466de9b003f7dff70f89a5888761c2ca68ed9f86b6e5e24e74c
   github_changelog_generator (1.18.0) sha256=f6ad4c53a14e8d1e440492f5a7b3d0a4c76e072add568e78b437510b2f02d000
@@ -1053,6 +1075,7 @@ CHECKSUMS
   mini_magick (5.3.2) sha256=a7ef54b480b15283c396eb8343d9e088471f54b31d9974cb7e523cc57598609f
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
+  mission_control-jobs (1.1.0) sha256=b13da9cde3344fec7c744b79d2a34c3ecd454f45d4d593d4c968ba762315e84c
   mobility (1.3.2) sha256=32fbbb0e53118ef42de20daa6ac94dbb758c628874092eba311b968a1e1d757b
   mobility-actiontext (1.1.1) sha256=98f8fb9f2d8aa49fce1814eefb2ad8060efdfb89167bc5bd864da0bdd858127d
   mobility-ransack (1.2.2) sha256=8b480ce5bc4937abc37c17b9922d7e41b8a7064a3207b3a64e5aa71e0cb3332b
@@ -1108,6 +1131,7 @@ CHECKSUMS
   pry (0.16.0) sha256=d76c69065698ed1f85e717bd33d7942c38a50868f6b0673c636192b3d1b6054e
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
   puma (8.0.2) sha256=c8ed871dfbbe66448ea9ffd46692342d9804d4071522b52b5331b7b6e7b686fb
+  raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rack (3.2.6) sha256=5ed78e1f73b2e25679bec7d45ee2d4483cc4146eb1be0264fc4d94cb5ef212c2
   rack-cors (3.0.0) sha256=7b95be61db39606906b61b83bd7203fa802b0ceaaad8fcb2fef39e097bf53f68
@@ -1125,8 +1149,6 @@ CHECKSUMS
   ransack (4.4.1) sha256=6aeaac36fc19088570e10da1044e6cfd88c740e20f871b84566fd30e32b7a63d
   rbs (4.0.3) sha256=5a7bf70e2628549d9a1f44eae447b2cfe55968a9c60cfff52693a4bdcc020e14
   rdoc (8.0.0) sha256=03bf8c08a9639658855a0cfd77c0abca8325c227693f7f33f82957811348c469
-  redis (5.4.1) sha256=b5e675b57ad22b15c9bcc765d5ac26f60b675408af916d31527af9bd5a81faae
-  redis-client (0.30.0) sha256=743f11ed42f0a41a0341554087b077479fec7e2d47a7c123fd90a12c0db5e477
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
@@ -1156,11 +1178,12 @@ CHECKSUMS
   selenium-webdriver (4.10.0) sha256=a322af38f9a8966a6c3ab85c365b08c5556cdef72f577905b2b42469faee9d43
   sentry-rails (6.6.2) sha256=cb49aa43e6eb235d162d365c671b3fd24b7f9037df59b4a49af5af60868ab1ed
   sentry-ruby (6.6.2) sha256=a64aaf757d10058598fe5871de925b2a5a3d78273feb9bca23fff843accc6cd6
-  sentry-sidekiq (6.6.2) sha256=0552a74e8e3af7261efb23eebe9e5afb8fe186ec66245e1caaf1c6ff71ad1fa2
-  sidekiq (8.1.6) sha256=be20cd051124b1a16cf97ea9157137abbd30a515c16a5ae9312d2eadd045e40f
   simple_po_parser (1.1.6) sha256=122687d44d3de516a0e69e2f383a4180f5015e8c5ed5a7f2258f2b376f64cbf3
   simplecov (1.0.1) sha256=419d93c40484159d20b40e26e9a83cdd4c3afa2f3fd443bb8946c301cd658d75
   simplecov-cobertura (4.0.0) sha256=e4fb3159b1ecea545b44f5452a8611305323e78ad23eae8aed35924d072e01ea
+  solid_cable (4.0.1) sha256=7d3188edfd547bd933ca52f021d4688ece6f3e062fe9a964ac17e5fb6d8ca717
+  solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
+  solid_queue (1.4.0) sha256=e6a18d196f0b27cb6e3c77c5b31258b05fb634f8ed64fb1866ed164047216c2a
   spree (5.6.0.rc2) sha256=d859464cb287ed1ca62c6f3f2bb940d11dcbc85f2cc6bc4b6699f3b03fc78c8c
   spree_admin (5.6.0.rc2) sha256=c8fda27616d5f92dadc3a1f3497ea831e7ca2942b5d65277d56c91a237397726
   spree_adyen (0.11.0) sha256=f22941571d4cde4ae12fc7aa13f37d85005b71f2c9c2ff50ec8d1dceabfd564a

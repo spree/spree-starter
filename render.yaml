@@ -20,16 +20,6 @@ services:
         fromDatabase:
           name: spree-db
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          name: spree-redis
-          type: redis
-          property: connectionString
-      # - key: REDIS_CACHE_URL
-      #   fromService:
-      #     name: spree-redis-cache
-      #     type: redis
-      #     property: connectionString
       - key: SECRET_KEY_BASE
         generateValue: true
       - key: RAILS_LOG_LEVEL
@@ -39,48 +29,30 @@ services:
       # - key: WEB_CONCURRENCY
       #   value: "2"
 
-  # uncomment to add background jobs, requires standard (paid) plan
+  # Scale-out: uncomment to split job processing into a dedicated worker
+  # (same image, no rebuild) — and set SOLID_QUEUE_IN_PUMA=false on the web
+  # service above so it stops running jobs in-process. Requires a paid plan.
   # - type: worker
   #   name: spree-worker
   #   runtime: docker
   #   plan: standard
   #   dockerfilePath: ./backend/Dockerfile
   #   dockerContext: .
-  #   dockerCommand: bundle exec sidekiq
+  #   dockerCommand: bin/jobs
   #   envVars:
   #     - key: DATABASE_URL
   #       fromDatabase:
   #         name: spree-db
-  #         property: connectionString
-  #     - key: REDIS_URL
-  #       fromService:
-  #         name: spree-redis
-  #         type: redis
   #         property: connectionString
   #     - key: SECRET_KEY_BASE
   #       fromService:
   #         name: spree
   #         type: web
   #         envVarKey: SECRET_KEY_BASE
-  #     - key: SIDEKIQ_CONCURRENCY
-  #       value: "10"
-  #     - key: RAILS_MAX_THREADS
-  #       value: "12"
+  #     - key: JOB_THREADS
+  #       value: "5"
   #     - key: MALLOC_ARENA_MAX
   #       value: "2"
-
-  - type: redis
-    name: spree-redis
-    plan: free
-    # maxmemoryPolicy: noeviction
-    ipAllowList: []
-
-  # uncomment to enable dedicated cache redis
-  # - type: redis
-  #   name: spree-redis-cache
-  #   plan: free
-  #   maxmemoryPolicy: allkeys-lru
-  #   ipAllowList: []
 
 databases:
   - name: spree-db

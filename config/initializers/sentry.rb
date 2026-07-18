@@ -14,8 +14,6 @@ if ENV['SENTRY_DSN'].present?
     config.excluded_exceptions += [
       'ActionController::RoutingError',
       'ActiveRecord::RecordNotFound',
-      'Sidekiq::JobRetry::Skip',
-      'Sidekiq::JobRetry::SilentRetry',
       'Aws::S3::Errors::NoSuchKey',
       'Aws::S3::Errors::NotFound',
       'ActiveStorage::FileNotFoundError'

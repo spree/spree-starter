@@ -1,4 +1,3 @@
-require 'sidekiq/web'
 
 Rails.application.routes.draw do
   Spree::Core::Engine.add_routes do
@@ -27,9 +26,10 @@ Rails.application.routes.draw do
   devise_for :admin_users, class_name: "Spree::AdminUser"
   devise_for :users, class_name: "Spree::User"
 
-  # Sidekiq Web UI
+  # Job dashboard (Mission Control) — inspect, retry, and discard Solid Queue
+  # jobs at http://localhost:3000/jobs
   authenticate Spree.admin_user_class.model_name.singular_route_key.to_sym, ->(admin_user) { admin_user.spree_admin? } do
-    mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
+    mount MissionControl::Jobs::Engine, at: "/jobs"
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

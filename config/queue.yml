@@ -1,0 +1,23 @@
+# Solid Queue process topology. In the default deployment this runs INSIDE
+# Puma (config/puma.rb, SOLID_QUEUE_IN_PUMA) — worker threads share the web
+# process and its DB pool (see config/database.yml). When you split job
+# processing out (`bin/jobs` as its own service), the same file configures
+# the dedicated supervisor; raise JOB_THREADS / add processes there.
+default: &default
+  dispatchers:
+    - polling_interval: 1
+      batch_size: 500
+  workers:
+    - queues: "*"
+      threads: <%= ENV.fetch("JOB_THREADS", 3) %>
+      processes: <%= ENV.fetch("JOB_PROCESSES", 1) %>
+      polling_interval: 0.1
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

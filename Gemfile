@@ -58,11 +58,16 @@ gem 'importmap-rails'
 gem 'lograge'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
-gem 'redis'
 gem 'sentry-rails'
 gem 'sentry-ruby'
-gem 'sentry-sidekiq'
-gem 'sidekiq'
+# The Solid stack: jobs, cache, and Action Cable in Postgres — no Redis in
+# the default deployment. Swap any piece for Redis/Valkey when scale calls
+# for it (see docs/developer/deployment).
+gem 'solid_cable'
+gem 'solid_cache'
+gem 'solid_queue'
+# Job dashboard at /jobs (replaces the Sidekiq Web UI)
+gem 'mission_control-jobs'
 gem 'stimulus-rails'
 gem 'rack-cors'
 gem 'tailwindcss-rails'

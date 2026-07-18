@@ -6,16 +6,13 @@ x-app: &app
   depends_on:
     postgres:
       condition: service_healthy
-    redis:
-      condition: service_healthy
     meilisearch:
       condition: service_healthy
     mailpit:
       condition: service_started
   env_file: .env
-  environment: &app-env
+  environment:
     DATABASE_URL: postgres://postgres@postgres:5432/spree_production
-    REDIS_URL: redis://redis:6379/0
     SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     RAILS_FORCE_SSL: ${RAILS_FORCE_SSL:-false}
     RAILS_ASSUME_SSL: ${RAILS_ASSUME_SSL:-false}
@@ -38,16 +35,6 @@ services:
       - postgres_data:/var/lib/postgresql
     healthcheck:
       test: pg_isready -U postgres
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: redis-cli ping
       interval: 5s
       timeout: 5s
       retries: 5
@@ -81,6 +68,10 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: "true"
       MP_SMTP_AUTH_ALLOW_INSECURE: "true"
 
+  # One app container: Puma serves the web AND runs Solid Queue's job
+  # supervisor in-process (SOLID_QUEUE_IN_PUMA, on by default). To split job
+  # processing out, add a service from the same image with
+  # `command: bin/jobs` and set SOLID_QUEUE_IN_PUMA: "false" here.
   web:
     <<: *app
     ports:
@@ -94,17 +85,7 @@ services:
       retries: 10
       start_period: 30s
 
-  worker:
-    <<: *app
-    command: bundle exec sidekiq
-    environment:
-      <<: *app-env
-      RAILS_MAX_THREADS: ${SIDEKIQ_DB_POOL:-27}
-    volumes:
-      - storage_data:/rails/storage
-
 volumes:
   postgres_data:
-  redis_data:
   meilisearch_data:
   storage_data:

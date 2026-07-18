@@ -39,8 +39,11 @@ module SpreeStarter
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    # Use Sidekiq for background jobs in all environments.
-    config.active_job.queue_adapter = :sidekiq
+    # Solid Queue: jobs live in Postgres and, by default, execute inside the
+    # Puma process (see config/puma.rb) — one process, one container, no
+    # Redis. Scale out by setting SOLID_QUEUE_IN_PUMA=false and running
+    # `bin/jobs` from the same image as a separate service.
+    config.active_job.queue_adapter = :solid_queue
 
     config.action_mailer.deliver_later_queue_name = :mailers
     config.active_storage.queues.purge = :active_storage_purge

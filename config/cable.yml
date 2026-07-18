@@ -1,10 +1,15 @@
+# Dev + test run in-process: with the Solid Queue supervisor inside Puma,
+# jobs broadcast from the same process the browser is connected to, so the
+# async adapter just works.
 development:
-  adapter: redis
-  url: <%= ENV.fetch("REDIS_URL", "redis://localhost:6379/1") %>
+  adapter: async
 
 test:
   adapter: test
 
+# Solid Cable: Action Cable over Postgres (no connects_to — messages live in
+# the primary database alongside everything else).
 production:
-  adapter: redis
-  url: <%= ENV.fetch("REDIS_URL", "redis://localhost:6379/1") %>
+  adapter: solid_cable
+  polling_interval: 0.1.seconds
+  message_retention: 1.day

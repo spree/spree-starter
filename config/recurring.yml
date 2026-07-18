@@ -1,0 +1,15 @@
+# Recurring jobs (Solid Queue's cron replacement) — see
+# https://github.com/rails/solid_queue#recurring-tasks
+#
+# examples:
+#   hourly_cleanup:
+#     class: MyCleanupJob
+#     queue: default
+#     schedule: every hour
+production:
+  clear_solid_queue_finished_jobs:
+    command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
+    schedule: every hour at minute 12
+  clear_solid_cable_messages:
+    command: "SolidCable::Message.prunable.in_batches(of: 1000).delete_all"
+    schedule: every hour at minute 42
