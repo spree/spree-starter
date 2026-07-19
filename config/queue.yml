@@ -3,9 +3,10 @@
 # process and its DB pool (see config/database.yml). The same file configures
 # the dedicated supervisor when jobs split out into a `bin/jobs` service.
 #
-# JOB_THREADS sizes the worker pool. Lower it (e.g. 3) on small
-# single-container instances where job throughput matters less than web
-# headroom.
+# JOB_THREADS sizes the worker pool (default 3, matching Solid Queue —
+# job threads share the process and its GVL with web requests, so more
+# threads trade web latency for job throughput). Raise it on a dedicated
+# `bin/jobs` worker, or scale with JOB_PROCESSES there.
 #
 # Queues are polled in order: checkout-critical and operator-facing work
 # first, bulk catalog churn second, Active Storage housekeeping last. The
@@ -38,7 +39,7 @@ default: &default
         - active_storage_analysis
         - active_storage_purge
         - "*"
-      threads: <%= ENV.fetch("JOB_THREADS", 10) %>
+      threads: <%= ENV.fetch("JOB_THREADS", 3) %>
       processes: <%= ENV.fetch("JOB_PROCESSES", 1) %>
       polling_interval: 0.1
 
