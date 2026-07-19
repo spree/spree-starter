@@ -21,8 +21,9 @@ x-app: &app
   depends_on:
     postgres:
       condition: service_healthy
-    meilisearch:
-      condition: service_healthy
+    # Uncomment when enabling the optional meilisearch service below.
+    # meilisearch:
+    #   condition: service_healthy
     mailpit:
       condition: service_started
   env_file: .env
@@ -40,7 +41,10 @@ x-app: &app
     # Dev runs more job threads than the production default of 3 — imports and
     # image processing finish fast, and there's no checkout traffic to protect.
     JOB_THREADS: ${JOB_THREADS:-10}
-    MEILISEARCH_URL: http://meilisearch:7700
+    # Product search runs on the database by default. To switch to Meilisearch,
+    # uncomment this together with the meilisearch depends_on/service/volume
+    # blocks, then reindex: spree rake spree:search:reindex
+    # MEILISEARCH_URL: http://meilisearch:7700
     # All outgoing mail is captured by Mailpit — read it at http://localhost:8025.
     # Set SMTP_HOST (and friends) in .env to deliver through a real provider instead.
     SMTP_HOST: ${SMTP_HOST:-mailpit}
@@ -87,19 +91,22 @@ services:
       timeout: 5s
       retries: 5
 
-  meilisearch:
-    image: getmeili/meilisearch:latest
-    volumes:
-      - meilisearch_data:/meili_data
-    ports:
-      # Forwarded for the Meilisearch dashboard / host debugging. Loopback for
-      # the same reason as postgres: no API key is set in dev.
-      - "127.0.0.1:${SPREE_MEILISEARCH_PORT:-7700}:7700"
-    healthcheck:
-      test: curl -f http://localhost:7700/health || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # Optional Meilisearch search provider (typo tolerance, instant facets).
+  # Uncomment together with the meilisearch lines under x-app's depends_on and
+  # environment, and the meilisearch_data volume at the bottom.
+  # meilisearch:
+  #   image: getmeili/meilisearch:latest
+  #   volumes:
+  #     - meilisearch_data:/meili_data
+  #   ports:
+  #     # Forwarded for the Meilisearch dashboard / host debugging. Loopback for
+  #     # the same reason as postgres: no API key is set in dev.
+  #     - "127.0.0.1:${SPREE_MEILISEARCH_PORT:-7700}:7700"
+  #   healthcheck:
+  #     test: curl -f http://localhost:7700/health || exit 1
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
   mailpit:
     image: axllent/mailpit:latest
@@ -129,7 +136,7 @@ services:
 
 volumes:
   postgres_data:
-  meilisearch_data:
+  # meilisearch_data:
   storage_data:
   bundle_cache:
   tmp_cache:

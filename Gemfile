@@ -73,7 +73,8 @@ gem 'tailwindcss-rails'
 gem 'thruster', require: false
 gem 'turbo-rails'
 
-# Search
+# Search — client for the optional Meilisearch provider; product search runs
+# on the database unless MEILISEARCH_URL is set
 gem 'meilisearch', '>= 0.28'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
