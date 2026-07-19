@@ -37,6 +37,9 @@ x-app: &app
     SECRET_KEY_BASE: ${SECRET_KEY_BASE}
     RAILS_FORCE_SSL: "false"
     RAILS_ASSUME_SSL: "false"
+    # Dev runs more job threads than the production default of 3 — imports and
+    # image processing finish fast, and there's no checkout traffic to protect.
+    JOB_THREADS: ${JOB_THREADS:-10}
     MEILISEARCH_URL: http://meilisearch:7700
     # All outgoing mail is captured by Mailpit — read it at http://localhost:8025.
     # Set SMTP_HOST (and friends) in .env to deliver through a real provider instead.
