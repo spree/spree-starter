@@ -67,9 +67,11 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
-# Install base packages
+# Install base packages. No postgresql-client: the pg gem vendors its own
+# libpq, and Debian's postgresql-client drags in ~70MB of perl/gnupg
+# dependencies. The dev stage adds it back for psql convenience.
 RUN apt-get update -qq && \
-  apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
+  apt-get install --no-install-recommends -y curl libjemalloc2 libvips && \
   ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
   rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
@@ -110,6 +112,11 @@ ENV RAILS_ENV="development" \
   BUNDLE_DEPLOYMENT="0" \
   BUNDLE_WITHOUT=""
 
+# psql for debugging against the compose postgres (production doesn't need it).
+RUN apt-get update -qq && \
+  apt-get install --no-install-recommends -y postgresql-client && \
+  rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Install dev/test gems on top of the production bundle from the build stage.
 RUN bundle install && \
   rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
@@ -132,8 +139,11 @@ RUN groupadd --system --gid 1000 rails && \
   useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
 USER 1000:1000
 
-# Copy built artifacts: gems, application
-COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+# Copy built artifacts: gems, application. tailwindcss-ruby's exe/ (the
+# ~105MB standalone Tailwind CLI) is excluded — it's only used by
+# assets:precompile in the build stage; the gem's Ruby files stay so
+# Bundler.require keeps working at boot.
+COPY --chown=rails:rails --from=build --exclude=ruby/*/gems/tailwindcss-ruby-*/exe "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
 # React Dashboard, served by Rails at /dashboard (see the dashboard stage
