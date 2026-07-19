@@ -6,7 +6,8 @@
 # JOB_THREADS sizes the worker pool (default 3, matching Solid Queue —
 # job threads share the process and its GVL with web requests, so more
 # threads trade web latency for job throughput). Raise it on a dedicated
-# `bin/jobs` worker, or scale with JOB_PROCESSES there.
+# `bin/jobs` worker, or scale with JOB_CONCURRENCY (worker process count,
+# the standard Rails knob) there.
 #
 # Queues are polled in order: checkout-critical and operator-facing work
 # first, bulk catalog churn second, Active Storage housekeeping last. The
@@ -40,7 +41,7 @@ default: &default
         - active_storage_purge
         - "*"
       threads: <%= ENV.fetch("JOB_THREADS", 3) %>
-      processes: <%= ENV.fetch("JOB_PROCESSES", 1) %>
+      processes: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
       polling_interval: 0.1
 
 development:
