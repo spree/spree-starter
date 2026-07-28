@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_22_142925) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_28_105403) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -823,6 +823,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_22_142925) do
     t.string "name", null: false
     t.string "namespace", null: false
     t.string "resource_type", null: false
+    t.boolean "searchable"
+    t.boolean "sortable"
     t.datetime "updated_at", null: false
     t.index ["display_on"], name: "index_spree_metafield_definitions_on_display_on"
     t.index ["namespace", "key"], name: "index_spree_metafield_definitions_on_namespace_and_key"
@@ -1803,6 +1805,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_22_142925) do
     t.datetime "created_at", precision: nil
     t.string "name"
     t.datetime "updated_at", precision: nil
+    t.index ["country_id", "abbr"], name: "index_spree_states_on_country_id_and_abbr", unique: true
     t.index ["country_id"], name: "index_spree_states_on_country_id"
   end
 
