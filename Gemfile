@@ -16,8 +16,7 @@ if File.exist?(env_file)
 end
 
 # Rails must load before Propshaft (its railtie only registers once Rails is
-# present), and Propshaft before the Spree gems, so that tinymce-rails (loaded
-# by spree_admin) detects it and serves TinyMCE assets in development.
+# present), and Propshaft before the Spree gems.
 gem 'rails', '~> 8.1.2'
 gem 'propshaft'
 
@@ -29,15 +28,17 @@ if spree_path
     gem 'spree'
     gem 'spree_core'
     gem 'spree_api'
-    gem 'spree_admin'
     gem 'spree_dashboard'
     gem 'spree_emails'
   end
 else
   spree_version = '>= 5.6.0.rc1'
   gem 'spree', spree_version
-  gem 'spree_admin', spree_version
   gem 'spree_emails', spree_version
+  # NOTE: spree_admin is gone from this Gemfile (the React Dashboard at
+  # /dashboard is the only admin UI on the 6.0 line) but still appears in the
+  # lockfile — spree_adyen and spree_paypal_checkout list it as a gem
+  # dependency until their 6.0 releases drop it. Installed, never required.
   # Serves the React Dashboard at /dashboard (see the Dockerfile's dashboard
   # stage — SPREE_DASHBOARD_DIST_PATH points at the baked build).
   gem 'spree_dashboard', spree_version
@@ -45,7 +46,8 @@ end
 
 # Extensions
 gem 'spree_i18n'
-gem 'spree_stripe'
+# spree_stripe is off the 6.0 line until Stripe moves into the monorepo with
+# its tax calculator rewritten as a Spree.tax_provider adapter.
 gem 'spree_adyen'
 gem 'spree_paypal_checkout'
 
