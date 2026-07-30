@@ -1,19 +1,4 @@
-
 Rails.application.routes.draw do
-  Spree::Core::Engine.add_routes do
-    # Admin authentication
-    devise_for(
-      Spree.admin_user_class.model_name.singular_route_key,
-      class_name: Spree.admin_user_class.to_s,
-      controllers: {
-        sessions: 'spree/admin/user_sessions',
-        passwords: 'spree/admin/user_passwords'
-      },
-      skip: :registrations,
-      path: :admin_user,
-      router_name: :spree
-    )
-  end
   # This line mounts Spree's routes at the root of your application.
   # This means, any requests to URLs such as /products, will go to
   # Spree::ProductsController.
@@ -23,8 +8,6 @@ Rails.application.routes.draw do
   # We ask that you don't use the :as option here, as Spree relies on it being
   # the default of "spree".
   mount Spree::Core::Engine, at: '/'
-  devise_for :admin_users, class_name: "Spree::AdminUser"
-  devise_for :users, class_name: "Spree::User"
 
   # Job dashboard (Mission Control) — inspect, retry, and discard Solid Queue
   # jobs at http://localhost:3000/jobs. Guarded by its own HTTP Basic auth
@@ -35,5 +18,5 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root to: redirect('/admin')
+  # No root route: this is a headless backend
 end
