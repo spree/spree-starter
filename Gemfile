@@ -54,7 +54,6 @@ gem 'spree_paypal_checkout'
 # Rails & Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
-gem 'devise'
 gem 'image_processing', '~> 1.2'
 gem 'importmap-rails'
 gem 'lograge'

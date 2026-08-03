@@ -59,7 +59,7 @@ Rails.application.config.after_initialize do
   Spree.permissions.assign(:admin, [Spree::PermissionSets::SuperUser])
 end
 
-Spree.user_class = 'Spree::User'
+Spree.customer_class = 'Spree::Customer'
 Spree.admin_user_class = 'Spree::AdminUser'
 
 # Serve Active Storage attachment URLs (product images, logos, etc.) from a CDN
@@ -90,9 +90,3 @@ Spree.queues.search = :spree_search
 if ENV['MEILISEARCH_URL'].present?
   Spree.search_provider = 'Spree::SearchProvider::Meilisearch'
 end
-
-Rails.application.config.to_prepare do
-  require_dependency 'spree/authentication_helpers'
-end
-
-Devise.parent_controller = 'Spree::BaseController' if defined?(Devise) && Devise.respond_to?(:parent_controller)
