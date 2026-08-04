@@ -8,14 +8,7 @@ export PORT="${PORT:-3000}"
 export RUBY_DEBUG_OPEN="true"
 export RUBY_DEBUG_LAZY="true"
 
-if command -v overmind >/dev/null 2>&1; then
-  exec overmind start -f Procfile.dev "$@"
-fi
-
-# Fall back to foreman
-if ! gem list foreman -i --silent; then
-  echo "Installing foreman..."
-  gem install foreman
-fi
-
-exec foreman start -f Procfile.dev "$@"
+# Single process: jobs run inside Puma (see config/puma.rb), so there is
+# nothing to multiplex. Set SOLID_QUEUE_IN_PUMA=false and run bin/jobs
+# separately to split job processing out.
+exec bin/rails server "$@"

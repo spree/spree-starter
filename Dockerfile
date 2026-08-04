@@ -139,11 +139,8 @@ RUN groupadd --system --gid 1000 rails && \
   useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
 USER 1000:1000
 
-# Copy built artifacts: gems, application. tailwindcss-ruby's exe/ (the
-# ~105MB standalone Tailwind CLI) is excluded — it's only used by
-# assets:precompile in the build stage; the gem's Ruby files stay so
-# Bundler.require keeps working at boot.
-COPY --chown=rails:rails --from=build --exclude=ruby/*/gems/tailwindcss-ruby-*/exe "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+# Copy built artifacts: gems, application.
+COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
 # React Dashboard, served by Rails at /dashboard (see the dashboard stage

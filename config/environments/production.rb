@@ -69,10 +69,7 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Solid Cache: the cache lives in Postgres — nothing extra to run. For
-  # high-traffic installs, swap to an in-memory store (Redis or Valkey; add
-  # the `redis` gem to the Gemfile):
-  #   config.cache_store = :redis_cache_store, { url: ENV["REDIS_URL"] }
+  # Solid Cache: the cache lives in Postgres — nothing extra to run.
   config.cache_store = :solid_cache_store
 
   # SMTP configuration via environment variables.

@@ -32,15 +32,9 @@ if spree_path
     gem 'spree_emails'
   end
 else
-  spree_version = '>= 5.6.0.rc1'
+  spree_version = { github: 'spree/spree', branch: 'main', 'glob': 'spree/**/*.gemspec' }
   gem 'spree', spree_version
   gem 'spree_emails', spree_version
-  # NOTE: spree_admin is gone from this Gemfile (the React Dashboard at
-  # /dashboard is the only admin UI on the 6.0 line) but still appears in the
-  # lockfile — spree_adyen and spree_paypal_checkout list it as a gem
-  # dependency until their 6.0 releases drop it. Installed, never required.
-  # Serves the React Dashboard at /dashboard (see the Dockerfile's dashboard
-  # stage — SPREE_DASHBOARD_DIST_PATH points at the baked build).
   gem 'spree_dashboard', spree_version
 end
 
@@ -48,31 +42,27 @@ end
 gem 'spree_i18n'
 # spree_stripe is off the 6.0 line until Stripe moves into the monorepo with
 # its tax calculator rewritten as a Spree.tax_provider adapter.
-gem 'spree_adyen'
-gem 'spree_paypal_checkout'
+# gem 'spree_adyen'
+# gem 'spree_paypal_checkout'
 
 # Rails & Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
 gem 'image_processing', '~> 1.2'
-gem 'importmap-rails'
 gem 'lograge'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
 gem 'sentry-rails'
 gem 'sentry-ruby'
-# The Solid stack: jobs, cache, and Action Cable in Postgres. Swap any piece
-# for Redis/Valkey when scale calls for it.
+# The Solid stack: jobs, cache, and Action Cable in Postgres — no extra
+# service to run.
 gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
 # Job dashboard at /jobs
 gem 'mission_control-jobs'
-gem 'stimulus-rails'
 gem 'rack-cors'
-gem 'tailwindcss-rails'
 gem 'thruster', require: false
-gem 'turbo-rails'
 
 # Search — client for the optional Meilisearch provider; product search runs
 # on the database unless MEILISEARCH_URL is set
@@ -86,7 +76,6 @@ group :development, :test do
   gem 'bundler-audit', require: false
   gem 'debug', platforms: %i[mri windows], require: 'debug/prelude'
   gem 'dotenv-rails'
-  gem 'letter_opener'
   gem 'rubocop-rails-omakase', require: false
   gem 'simplecov-cobertura'
   gem 'spree_dev_tools'
