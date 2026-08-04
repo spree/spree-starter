@@ -27,6 +27,11 @@ Rails.application.configure do
   end
   config.action_mailer.perform_deliveries = true
 
+  # Rails' default ".localhost" rule rejects Host headers that carry a port
+  # (foo.localhost:1355), which is how local https proxies (portless, Caddy)
+  # forward requests. Allow any .localhost host, with or without a port.
+  config.hosts << /\A[a-z0-9-]+(\.[a-z0-9-]+)*\.localhost(:\d+)?\z/i
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Make code changes take effect immediately without server restart.

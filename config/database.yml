@@ -9,14 +9,14 @@ default: &default
 
 development:
   <<: *default
-  database: spree_development
+  database: <%= ENV.fetch("DATABASE_NAME") { "spree_development" } %>
   username: <%= ENV.fetch("DATABASE_USERNAME") { 'postgres' } %>
   host: <%= ENV.fetch("DATABASE_HOST") { "localhost" } %>
   port: <%= ENV.fetch("DATABASE_PORT") { 5432 }.to_i %>
 
 test:
   <<: *default
-  database: spree_test
+  database: <%= ENV.fetch("DATABASE_NAME_TEST") { "spree_test" } %>
   username: <%= ENV.fetch("DATABASE_USERNAME") { 'postgres' } %>
   host: <%= ENV.fetch("DATABASE_HOST") { "localhost" } %>
   port: <%= ENV.fetch("DATABASE_PORT") { 5432 }.to_i %>
