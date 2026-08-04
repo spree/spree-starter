@@ -56,6 +56,7 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 # The Solid stack: jobs, cache, and Action Cable in Postgres — no extra
 # service to run.
+gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
 # Job dashboard at /jobs
