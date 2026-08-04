@@ -22,7 +22,7 @@ Rails.application.configure do
     config.action_mailer.default_options = { from: ENV["SMTP_FROM_ADDRESS"] } if ENV["SMTP_FROM_ADDRESS"].present?
     config.action_mailer.raise_delivery_errors = true
   else
-    config.action_mailer.delivery_method = :letter_opener
+    config.action_mailer.delivery_method = :logger
     config.action_mailer.raise_delivery_errors = false
   end
   config.action_mailer.perform_deliveries = true
@@ -80,9 +80,6 @@ Rails.application.configure do
 
   # Highlight code that triggered redirect in logs.
   config.action_dispatch.verbose_redirect_logs = true
-
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
 
   # Annotate rendered view with file names.
   config.action_view.annotate_rendered_view_with_filenames = true
