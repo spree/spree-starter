@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_04_130054) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_04_130055) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -549,7 +549,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_04_130054) do
   create_table "spree_claims", force: :cascade do |t|
     t.datetime "approved_at"
     t.datetime "canceled_at"
-    t.string "claim_type", null: false
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
     t.datetime "denied_at"
