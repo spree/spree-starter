@@ -53,10 +53,6 @@ Rails.application.config.after_initialize do
 
   # Spree.exports << Spree::Exports::Payments
   # Spree.reports << Spree::Reports::MassivelyOvercomplexReportForCfo
-
-  # Role-based permissions
-  Spree.permissions.assign(:default, [Spree::PermissionSets::DefaultCustomer])
-  Spree.permissions.assign(:admin, [Spree::PermissionSets::SuperUser])
 end
 
 Spree.customer_class = 'Spree::Customer'
