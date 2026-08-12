@@ -32,6 +32,12 @@ Rails.application.configure do
   # forward requests. Allow any .localhost host, with or without a port.
   config.hosts << /\A[a-z0-9-]+(\.[a-z0-9-]+)*\.localhost(:\d+)?\z/i
 
+  # Tunnels that expose this dev server to the outside world, so third-party
+  # webhooks (carriers, payment gateways) can reach it. Each tunnel gets a
+  # fresh random hostname, so the whole domain is allowed rather than one name.
+  config.hosts << /\A[a-z0-9-]+\.trycloudflare\.com\z/i
+  config.hosts << /\A[a-z0-9-]+\.ngrok(-free)?\.(app|io|dev)\z/i
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Make code changes take effect immediately without server restart.
