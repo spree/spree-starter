@@ -39,6 +39,7 @@ else
   gem 'spree', spree_version
   gem 'spree_emails', spree_version
   gem 'spree_dashboard', spree_version
+  gem 'spree_easypost', spree_version
 end
 
 # Extensions
