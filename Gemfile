@@ -24,11 +24,14 @@ gem 'propshaft'
 spree_path = ENV.fetch('SPREE_PATH', nil)
 
 if spree_path
-  path "#{spree_path}/spree" do
+  # Bundler's default path glob stops two levels deep; the extra level
+  # reaches provider gems under spree/providers/*.
+  path "#{spree_path}/spree", glob: '{,*,*/*,*/*/*}.gemspec' do
     gem 'spree'
     gem 'spree_core'
     gem 'spree_api'
     gem 'spree_dashboard'
+    gem 'spree_easypost'
     gem 'spree_emails'
   end
 else
