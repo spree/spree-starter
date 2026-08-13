@@ -23,7 +23,7 @@ Otherwise, refer to:
 - Store API v3 at `/api/v3/store/`
 - Admin API v3 at `/api/v3/admin/`
 - Background jobs via Solid Queue (in Postgres, runs inside Puma by default) — dashboard at `/jobs`
-- Product search runs on the database by default; optional Meilisearch provider activates when `MEILISEARCH_URL` is set (compose service ships commented out)
+- Product search runs on the database by default; the optional Meilisearch provider (`spree_meilisearch`) activates when `MEILISEARCH_URL` is set (compose service ships commented out)
 
 ## Key Files
 

@@ -84,5 +84,5 @@ Spree.queues.search = :spree_search
 
 # Search provider
 if ENV['MEILISEARCH_URL'].present?
-  Spree.search_provider = 'Spree::SearchProvider::Meilisearch'
+  Spree.search_provider = 'SpreeMeilisearch::SearchProvider'
 end

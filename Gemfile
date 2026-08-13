@@ -33,6 +33,9 @@ if spree_path
     gem 'spree_dashboard'
     gem 'spree_easypost'
     gem 'spree_emails'
+    # Optional search provider; product search runs on the database unless
+    # MEILISEARCH_URL is set.
+    gem 'spree_meilisearch'
   end
 else
   spree_version = { github: 'spree/spree', branch: 'main', 'glob': 'spree/**/*.gemspec' }
@@ -40,6 +43,7 @@ else
   gem 'spree_emails', spree_version
   gem 'spree_dashboard', spree_version
   gem 'spree_easypost', spree_version
+  gem 'spree_meilisearch', spree_version
 end
 
 # Extensions
@@ -67,10 +71,6 @@ gem 'solid_queue'
 gem 'mission_control-jobs'
 gem 'rack-cors'
 gem 'thruster', require: false
-
-# Search — client for the optional Meilisearch provider; product search runs
-# on the database unless MEILISEARCH_URL is set
-gem 'meilisearch', '>= 0.28'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[windows jruby]
