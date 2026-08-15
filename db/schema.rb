@@ -2336,7 +2336,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_12_130561) do
     t.datetime "created_at", precision: nil
     t.string "name"
     t.datetime "updated_at", precision: nil
-    t.index ["country_id", "abbr"], name: "index_spree_states_on_country_id_and_abbr", unique: true
     t.index ["country_id"], name: "index_spree_states_on_country_id"
   end
 
