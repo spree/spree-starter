@@ -15,7 +15,7 @@ class AddProductMediaSupport < ActiveRecord::Migration[7.2]
 
     reversible do |dir|
       dir.up do
-        Spree::Asset.unscoped.where(media_type: nil).update_all(media_type: 'image')
+        execute "UPDATE spree_assets SET media_type = 'image' WHERE media_type IS NULL"
       end
     end
   end
