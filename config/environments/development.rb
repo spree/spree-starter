@@ -71,8 +71,20 @@ Rails.application.configure do
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
-  # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  # Canonical public host for all generated URLs — Active Storage attachment
+  # URLs in API payloads, links in emails, and any URL built outside a request
+  # context. Without it those fall back to the store's URL setting, which is
+  # "localhost:3000" on a fresh install, so a dev server on any other host or
+  # port serves payloads whose images 404.
+  #
+  # Host only, optionally with a port ("myapp.localhost", "localhost:4000").
+  # RAILS_PROTOCOL covers a proxy that terminates TLS in front of the dev
+  # server, where the app itself still speaks plain http.
+  public_host = ENV["RAILS_HOST"].presence || "localhost:3000"
+  public_protocol = ENV["RAILS_PROTOCOL"].presence || "http"
+
+  routes.default_url_options = { host: public_host, protocol: public_protocol }
+  config.action_mailer.default_url_options = { host: public_host, protocol: public_protocol }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
