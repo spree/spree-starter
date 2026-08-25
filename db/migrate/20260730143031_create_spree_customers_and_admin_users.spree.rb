@@ -16,8 +16,6 @@ class CreateSpreeCustomersAndAdminUsers < ActiveRecord::Migration[7.2]
         t.integer :failed_attempts
         t.datetime :locked_at
 
-        json_columns(t, :public_metadata, :private_metadata)
-
         t.timestamps
       end
 
@@ -34,13 +32,14 @@ class CreateSpreeCustomersAndAdminUsers < ActiveRecord::Migration[7.2]
       t.string :last_name
       t.string :phone
       t.string :selected_locale
-      t.boolean :accepts_email_marketing
+      t.boolean :accepts_email_marketing, null: false
       t.bigint :bill_address_id
       t.bigint :ship_address_id
       t.integer :failed_attempts
       t.datetime :locked_at
 
-      json_columns(t, :public_metadata, :private_metadata)
+      # jsonb on PostgreSQL (binary, indexable); json on MySQL/SQLite.
+      t.respond_to?(:jsonb) ? t.jsonb(:metadata) : t.json(:metadata)
 
       t.timestamps
     end
@@ -57,12 +56,5 @@ class CreateSpreeCustomersAndAdminUsers < ActiveRecord::Migration[7.2]
     # Leave spree_admin_users and its password_digest column in place — this
     # migration may have found them already present (upgrade / dummy) and must
     # not drop a table or column it did not create.
-  end
-
-  private
-
-  # jsonb on PostgreSQL (binary, indexable); json on MySQL/SQLite.
-  def json_columns(table, *names)
-    names.each { |name| table.respond_to?(:jsonb) ? table.jsonb(name) : table.json(name) }
   end
 end
