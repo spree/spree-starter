@@ -742,7 +742,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.bigint "company_id", null: false
     t.datetime "created_at", null: false
     t.bigint "customer_id", null: false
-    t.string "role"
     t.datetime "updated_at", null: false
     t.index ["company_id", "customer_id"], name: "idx_company_memberships_on_company_and_customer", unique: true
     t.index ["company_id"], name: "index_spree_company_memberships_on_company_id"
