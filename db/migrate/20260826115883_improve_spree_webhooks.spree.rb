@@ -1,6 +1,6 @@
-# This migration comes from spree (originally 20260326000001)
 # frozen_string_literal: true
 
+# This migration comes from spree (originally 20260326000001)
 class ImproveSpreeWebhooks < ActiveRecord::Migration[7.2]
   def change
     # Endpoint name + auto-disable tracking

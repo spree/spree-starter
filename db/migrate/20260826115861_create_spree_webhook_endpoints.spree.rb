@@ -1,6 +1,6 @@
-# This migration comes from spree (originally 20251214000001)
 # frozen_string_literal: true
 
+# This migration comes from spree (originally 20251214000001)
 class CreateSpreeWebhookEndpoints < ActiveRecord::Migration[7.0]
   def change
     create_table :spree_webhook_endpoints do |t|

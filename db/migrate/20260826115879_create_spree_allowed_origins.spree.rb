@@ -1,6 +1,6 @@
-# This migration comes from spree (originally 20260315000000)
 # frozen_string_literal: true
 
+# This migration comes from spree (originally 20260315000000)
 class CreateSpreeAllowedOrigins < ActiveRecord::Migration[7.2]
   def change
     create_table :spree_allowed_origins do |t|

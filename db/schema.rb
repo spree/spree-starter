@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_115998) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -18,20 +18,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
-    t.string "locale", default: "en", null: false
+    t.string "locale", null: false
     t.string "name", null: false
     t.bigint "record_id", null: false
     t.string "record_type", null: false
     t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name", "locale"], name: "index_action_text_rich_texts_uniqueness", unique: true
-  end
-
-  create_table "action_text_video_embeds", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "raw_html", null: false
-    t.string "thumbnail_url", null: false
-    t.datetime "updated_at", null: false
-    t.string "url", null: false
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -229,7 +221,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.string "country_code"
     t.bigint "country_id"
     t.datetime "created_at", null: false
-    t.bigint "customer_id"
     t.datetime "deleted_at", precision: nil
     t.string "firstname"
     t.string "label"
@@ -237,6 +228,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.decimal "latitude"
     t.decimal "longitude"
     t.jsonb "metadata"
+    t.bigint "owner_id"
+    t.string "owner_type"
     t.string "phone"
     t.boolean "quick_checkout", default: false
     t.string "state_code"
@@ -246,10 +239,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.string "zipcode"
     t.index ["country_code"], name: "index_spree_addresses_on_country_code"
     t.index ["country_id"], name: "index_spree_addresses_on_country_id"
-    t.index ["customer_id"], name: "index_spree_addresses_on_customer_id"
     t.index ["deleted_at"], name: "index_spree_addresses_on_deleted_at"
     t.index ["firstname"], name: "index_addresses_on_firstname"
     t.index ["lastname"], name: "index_addresses_on_lastname"
+    t.index ["owner_type", "owner_id"], name: "index_spree_addresses_on_owner"
     t.index ["quick_checkout"], name: "index_spree_addresses_on_quick_checkout"
     t.index ["state_id"], name: "index_spree_addresses_on_state_id"
   end
@@ -286,8 +279,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.string "first_name"
     t.string "last_name"
     t.datetime "locked_at"
-    t.string "login"
-    t.jsonb "metadata"
     t.string "password_digest"
     t.string "selected_locale"
     t.datetime "updated_at", null: false
@@ -695,6 +686,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
 
   create_table "spree_companies", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.bigint "default_bill_address_id"
+    t.bigint "default_ship_address_id"
     t.string "kind", null: false
     t.jsonb "metadata"
     t.string "name", null: false
@@ -703,20 +696,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.datetime "updated_at", null: false
     t.index ["parent_id"], name: "index_spree_companies_on_parent_id"
     t.index ["store_id"], name: "index_spree_companies_on_store_id"
-  end
-
-  create_table "spree_company_addresses", force: :cascade do |t|
-    t.bigint "address_id", null: false
-    t.bigint "company_id", null: false
-    t.datetime "created_at", null: false
-    t.boolean "default_billing", default: false, null: false
-    t.boolean "default_shipping", default: false, null: false
-    t.string "label"
-    t.datetime "updated_at", null: false
-    t.index ["address_id"], name: "index_spree_company_addresses_on_address_id"
-    t.index ["company_id"], name: "idx_company_addresses_default_billing", unique: true, where: "(default_billing = true)"
-    t.index ["company_id"], name: "idx_company_addresses_default_shipping", unique: true, where: "(default_shipping = true)"
-    t.index ["company_id"], name: "index_spree_company_addresses_on_company_id"
   end
 
   create_table "spree_company_invitations", force: :cascade do |t|
@@ -898,12 +877,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.text "internal_note"
     t.string "last_name"
     t.datetime "locked_at"
-    t.string "login"
     t.jsonb "metadata"
     t.string "password_digest"
     t.string "phone"
-    t.jsonb "private_metadata"
-    t.jsonb "public_metadata"
     t.string "selected_locale"
     t.bigint "ship_address_id"
     t.datetime "updated_at", null: false
@@ -2602,11 +2578,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.datetime "holiday_mode_until"
+    t.string "legal_name"
     t.jsonb "metadata"
     t.decimal "minimum_payout_amount", precision: 10, scale: 2
     t.string "name", null: false
     t.string "payouts_schedule_interval"
-    t.bigint "returns_address_id"
+    t.string "registration_number"
     t.string "slug", null: false
     t.string "status", null: false
     t.bigint "store_id", null: false
@@ -2615,7 +2592,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.datetime "updated_at", null: false
     t.index ["billing_address_id"], name: "index_spree_sellers_on_billing_address_id"
     t.index ["deleted_at"], name: "index_spree_sellers_on_deleted_at"
-    t.index ["returns_address_id"], name: "index_spree_sellers_on_returns_address_id"
     t.index ["store_id", "slug"], name: "index_spree_sellers_on_store_id_and_slug", unique: true
     t.index ["store_id", "status"], name: "index_spree_sellers_on_store_id_and_status"
     t.index ["store_id"], name: "index_spree_sellers_on_store_id"
@@ -2693,6 +2669,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.integer "pickup_ready_in_minutes"
     t.string "pickup_stock_policy", default: "local", null: false
     t.boolean "propagate_all_variants", default: false
+    t.bigint "seller_id"
     t.string "state_code"
     t.bigint "state_id"
     t.string "state_name"
@@ -2706,6 +2683,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
     t.index ["kind"], name: "index_spree_stock_locations_on_kind"
     t.index ["pickup_enabled"], name: "index_spree_stock_locations_on_pickup_enabled"
     t.index ["propagate_all_variants"], name: "index_spree_stock_locations_on_propagate_all_variants"
+    t.index ["seller_id"], name: "index_spree_stock_locations_on_seller_id"
     t.index ["state_id"], name: "index_spree_stock_locations_on_state_id"
     t.index ["store_id"], name: "index_spree_stock_locations_on_store_id"
   end
@@ -2988,24 +2966,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_150003) do
   end
 
   create_table "spree_tax_identifiers", force: :cascade do |t|
-    t.bigint "cart_id"
-    t.bigint "company_id"
     t.datetime "created_at", null: false
-    t.bigint "customer_id"
     t.string "kind", null: false
-    t.bigint "order_id"
+    t.bigint "owner_id", null: false
+    t.string "owner_type", null: false
     t.string "source"
     t.datetime "updated_at", null: false
     t.datetime "validated_at"
     t.jsonb "validation_evidence"
     t.string "validation_status"
     t.string "value", null: false
-    t.index ["cart_id"], name: "index_spree_tax_identifiers_on_cart_id"
-    t.index ["company_id", "kind"], name: "index_spree_tax_identifiers_on_company_id_and_kind", unique: true
-    t.index ["company_id"], name: "index_spree_tax_identifiers_on_company_id"
-    t.index ["customer_id", "kind"], name: "index_spree_tax_identifiers_on_customer_id_and_kind", unique: true
-    t.index ["customer_id"], name: "index_spree_tax_identifiers_on_customer_id"
-    t.index ["order_id"], name: "index_spree_tax_identifiers_on_order_id"
+    t.index ["owner_type", "owner_id", "kind"], name: "index_spree_tax_identifiers_on_owner_and_kind", unique: true
+    t.index ["owner_type", "owner_id"], name: "index_spree_tax_identifiers_on_owner"
   end
 
   create_table "spree_tax_lines", force: :cascade do |t|
