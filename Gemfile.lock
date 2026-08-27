@@ -61,6 +61,9 @@ GIT
     spree_meilisearch (6.0.0.alpha)
       meilisearch (>= 0.28)
       spree_core (= 6.0.0.alpha)
+    spree_stripe (6.0.0.alpha)
+      spree_core (>= 6.0.0.alpha)
+      stripe (>= 10.1, < 19)
 
 GEM
   remote: https://rubygems.org/
@@ -712,6 +715,7 @@ GEM
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringex (2.8.6)
+    stripe (18.4.2)
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
     thor (1.5.0)
@@ -798,6 +802,7 @@ DEPENDENCIES
   spree_emails!
   spree_i18n
   spree_meilisearch!
+  spree_stripe!
   thruster
   tzinfo-data
   web-console
@@ -1037,10 +1042,12 @@ CHECKSUMS
   spree_extension (1.0.2) sha256=71725dafe45319a2be1bd2b564a416afe8029af8e18ac703bdb835e09553e1df
   spree_i18n (5.3.3) sha256=e2b75d3174a70d626503827e7fefb3595f92ee41e356dd05a066ced39d562102
   spree_meilisearch (6.0.0.alpha)
+  spree_stripe (6.0.0.alpha)
   sqids (0.2.2) sha256=c2d31e0dfb6c32d17c10b59df059a299af93bef716d700ff70d77156df702d36
   ssrf_filter (1.5.0) sha256=e03dcdb9d1730d7f6710532a606b3543df2a448a0293ce04a2d995523c5a97f6
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   stringex (2.8.6) sha256=c7b382d2b2a47a1e1646f256df201c48d487d6296fbb289d76802f67f5e929c4
+  stripe (18.4.2) sha256=fd08a73ab87fc0b0ad938ca71293e1051e593001b70de5e9fcf12d1097133831
   terminal-table (4.0.0) sha256=f504793203f8251b2ea7c7068333053f0beeea26093ec9962e62ea79f94301d2
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
   thruster (0.1.26) sha256=6e45e807086b29d51404841bd1ad493b67cd95892fd65dc5afcdd32e82e94ce8

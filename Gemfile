@@ -36,6 +36,7 @@ if spree_path
     # Optional search provider; product search runs on the database unless
     # MEILISEARCH_URL is set.
     gem 'spree_meilisearch'
+    gem 'spree_stripe'
   end
 else
   spree_version = { github: 'spree/spree', branch: 'main', 'glob': 'spree/**/*.gemspec' }
@@ -44,12 +45,11 @@ else
   gem 'spree_dashboard', spree_version
   gem 'spree_easypost', spree_version
   gem 'spree_meilisearch', spree_version
+  gem 'spree_stripe', spree_version
 end
 
 # Extensions
 gem 'spree_i18n'
-# spree_stripe is off the 6.0 line until Stripe moves into the monorepo with
-# its tax calculator rewritten as a Spree.tax_provider adapter.
 # gem 'spree_adyen'
 # gem 'spree_paypal_checkout'
 
