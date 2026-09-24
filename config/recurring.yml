@@ -58,5 +58,5 @@ production:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
   clear_solid_cable_messages:
-    command: "SolidCable::Message.prunable.in_batches(of: 1000).delete_all"
+    command: "SolidCable::Message.trimmable.in_batches(of: 1000).delete_all"
     schedule: every hour at minute 42
