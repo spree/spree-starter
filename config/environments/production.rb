@@ -38,8 +38,10 @@ Rails.application.configure do
   # context. Without it, URLs fall back to the store's URL setting (which is
   # "localhost" on a fresh install). Host only, optionally with a port
   # (e.g. "store.example.com" or "203.0.113.7:8080"). On Render the
-  # platform-provided external hostname is used unless RAILS_HOST is set.
-  public_host = ENV["RAILS_HOST"].presence || ENV["RENDER_EXTERNAL_HOSTNAME"].presence
+  # platform-provided external hostname is used unless SPREE_HOST is set.
+  # RAILS_HOST is the former name and still works.
+  public_host = ENV["SPREE_HOST"].presence || ENV["RAILS_HOST"].presence ||
+                ENV["RENDER_EXTERNAL_HOSTNAME"].presence
   if public_host
     no_ssl = ENV["RAILS_ASSUME_SSL"] == "false" && ENV["RAILS_FORCE_SSL"] == "false"
     routes.default_url_options = { host: public_host, protocol: no_ssl ? "http" : "https" }

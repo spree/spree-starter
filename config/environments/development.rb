@@ -80,7 +80,7 @@ Rails.application.configure do
   # Host only, optionally with a port ("myapp.localhost", "localhost:4000").
   # RAILS_PROTOCOL covers a proxy that terminates TLS in front of the dev
   # server, where the app itself still speaks plain http.
-  public_host = ENV["RAILS_HOST"].presence || "localhost:3000"
+  public_host = ENV["SPREE_HOST"].presence || ENV["RAILS_HOST"].presence || "localhost:3000"
   public_protocol = ENV["RAILS_PROTOCOL"].presence || "http"
 
   routes.default_url_options = { host: public_host, protocol: public_protocol }
