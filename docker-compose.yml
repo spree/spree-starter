@@ -43,7 +43,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
-      test: pg_isready -U postgres
+      # Checked over TCP: on a new volume the image first runs a temporary
+      # init server on the unix socket only, then restarts.
+      test: pg_isready -h 127.0.0.1 -U postgres
       interval: 5s
       timeout: 5s
       retries: 5
