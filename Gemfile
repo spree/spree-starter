@@ -49,7 +49,6 @@ else
 end
 
 # Extensions
-gem 'spree_i18n'
 # gem 'spree_adyen'
 # gem 'spree_paypal_checkout'
 

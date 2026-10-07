@@ -272,8 +272,6 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.8, >= 1.8.1)
       terminal-table (>= 1.5.1)
-    i18n_data (1.1.0)
-      simple_po_parser (~> 1.1)
     image_processing (1.14.0)
       mini_magick (>= 4.9.5, < 6)
       ruby-vips (>= 2.0.17, < 3)
@@ -296,21 +294,6 @@ GEM
     json (2.21.2)
     jwt (3.3.0)
       base64
-    kaminari (1.2.2)
-      activesupport (>= 4.1.0)
-      kaminari-actionview (= 1.2.2)
-      kaminari-activerecord (= 1.2.2)
-      kaminari-core (= 1.2.2)
-    kaminari-actionview (1.2.2)
-      actionview
-      kaminari-core (= 1.2.2)
-    kaminari-activerecord (1.2.2)
-      activerecord
-      kaminari-core (= 1.2.2)
-    kaminari-core (1.2.2)
-    kaminari-i18n (0.5.0)
-      kaminari
-      rails
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -632,7 +615,6 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
-    simple_po_parser (1.1.6)
     simplecov (1.3.1)
     simplecov-cobertura (4.0.0)
       rexml
@@ -732,14 +714,6 @@ GEM
       spree_core (= 6.0.0.beta4)
     spree_emails (6.0.0.beta4)
       spree (= 6.0.0.beta4)
-    spree_extension (2.0.0)
-      thor (~> 1.0)
-    spree_i18n (5.3.3)
-      i18n_data
-      kaminari-i18n
-      rails-i18n
-      spree_core (>= 5.4.0.alpha)
-      spree_extension
     spree_meilisearch (6.0.0.beta4)
       meilisearch (>= 0.28)
       spree_core (= 6.0.0.beta4)
@@ -847,7 +821,6 @@ DEPENDENCIES
   spree_dev_tools (>= 1.0.0.beta1)
   spree_easypost (>= 6.0.0.beta1)
   spree_emails (>= 6.0.0.beta1)
-  spree_i18n
   spree_meilisearch (>= 6.0.0.beta1)
   spree_opentelemetry (>= 6.0.0.beta1)
   spree_stripe (>= 6.0.0.beta1)
@@ -953,7 +926,6 @@ CHECKSUMS
   httparty (0.24.2) sha256=8fca6a54aa0c4aa4303a0fd33e5e2156175d6a5334f714263b458abd7fda9c38
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   i18n-tasks (1.1.2) sha256=4dcfba49e52a623f30661cb316cb80d84fbba5cb8c6d88ef5e02545fffa3637a
-  i18n_data (1.1.0) sha256=fb7ae43bd03ec4dc2e6e62e726aac05aa868c170ba1444c056e2ab0d872bb2ed
   image_processing (1.14.0) sha256=754cc169c9c262980889bec6bfd325ed1dafad34f85242b5a07b60af004742fb
   importmap-rails (2.2.3) sha256=7101be2a4dc97cf1558fb8f573a718404c5f6bcfe94f304bf1f39e444feeb16a
   io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
@@ -964,11 +936,6 @@ CHECKSUMS
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
   jwt (3.3.0) sha256=44cc34fbc341c148233cf66641522b4bce0dfb1ce55e8073f05c56f44f4ee546
-  kaminari (1.2.2) sha256=c4076ff9adccc6109408333f87b5c4abbda5e39dc464bd4c66d06d9f73442a3e
-  kaminari-actionview (1.2.2) sha256=1330f6fc8b59a4a4ef6a549ff8a224797289ebf7a3a503e8c1652535287cc909
-  kaminari-activerecord (1.2.2) sha256=0dd3a67bab356a356f36b3b7236bcb81cef313095365befe8e98057dd2472430
-  kaminari-core (1.2.2) sha256=3bd26fec7370645af40ca73b9426a448d09b8a8ba7afa9ba3c3e0d39cdbb83ff
-  kaminari-i18n (0.5.0) sha256=f20efcd31370f07eb423defdb296b8e05e48c8bc897655c636bc1b69b0fbe252
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
@@ -1091,7 +1058,6 @@ CHECKSUMS
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   sentry-rails (7.0.0) sha256=6ac6a010e088632e46710ce42db75aa5281a6b52a547efee10568cc2ed80605a
   sentry-ruby (7.0.0) sha256=e9616ff521355a983fad404ca575d8bb1f1949a8cac42a7a893dd02156bcdb1a
-  simple_po_parser (1.1.6) sha256=122687d44d3de516a0e69e2f383a4180f5015e8c5ed5a7f2258f2b376f64cbf3
   simplecov (1.3.1) sha256=b326d38e819053499aa2ebe35d544d8bd780eba143a50f48a624b450ad87feec
   simplecov-cobertura (4.0.0) sha256=e4fb3159b1ecea545b44f5452a8611305323e78ad23eae8aed35924d072e01ea
   solid_cable (4.1.0) sha256=828e3d509207b82b4f05f4e9c85f696994710679b52d511aa7f97ebd212d3226
@@ -1104,8 +1070,6 @@ CHECKSUMS
   spree_dev_tools (1.0.0.beta2) sha256=93057fc91a384683eb85f458494fb3b22b363349c075c36b9ba44399da40de28
   spree_easypost (6.0.0.beta4) sha256=1c8119f88b4a76dc4fe159cc938df58d956c634b0b5194f2fa33dda9c7e02af7
   spree_emails (6.0.0.beta4) sha256=ee1049de4b6c069311c47ed01ebd23e5cfc936526b5ff566590fc01e3624cac6
-  spree_extension (2.0.0) sha256=0801d15357425b3d2e7e4736bc6de633a8a54ae5e52d347b735ee781e32ead46
-  spree_i18n (5.3.3) sha256=e2b75d3174a70d626503827e7fefb3595f92ee41e356dd05a066ced39d562102
   spree_meilisearch (6.0.0.beta4) sha256=7ed1e86a7e3f0f9d60624d153c0de0a4eed55054da4c9515922cf1f60f33f092
   spree_opentelemetry (6.0.0.beta4) sha256=59bd1228322a69653213fcfbaed48693bb4b4d98c6c2393078e45448ed4d0580
   spree_stripe (6.0.0.beta4) sha256=40191d782008372c742db198bc10785e5ec409b0d13b1e59d5d311f1dbca8288
