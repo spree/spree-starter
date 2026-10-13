@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_13_163711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -45,7 +45,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "key", null: false
     t.text "metadata"
     t.string "service_name", null: false
+    t.bigint "store_id"
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index ["store_id"], name: "index_active_storage_blobs_on_store_id"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
@@ -278,7 +280,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_adjustments", force: :cascade do |t|
     t.bigint "adjustable_id"
     t.string "adjustable_type"
-    t.decimal "amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 19, scale: 4
     t.datetime "created_at", null: false
     t.boolean "eligible", default: true
     t.boolean "included", default: false
@@ -394,17 +396,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "coupon_code"
     t.bigint "gift_card_id"
     t.bigint "preferred_stock_location_id"
-    t.decimal "item_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "adjustment_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "taxable_adjustment_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "non_taxable_adjustment_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "discount_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "fee_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "delivery_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "payment_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "item_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "adjustment_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "taxable_adjustment_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "non_taxable_adjustment_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "discount_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "fee_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "delivery_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "payment_total", precision: 19, scale: 4, default: "0.0"
     t.integer "total_quantity", default: 0
     t.jsonb "metadata"
     t.datetime "created_at", null: false
@@ -437,7 +439,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_catalog_order_minimums", force: :cascade do |t|
     t.bigint "catalog_id", null: false
     t.string "currency", null: false
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["catalog_id", "currency"], name: "idx_catalog_order_minimums_on_catalog_and_currency", unique: true
@@ -566,12 +568,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "replacement_variant_id"
     t.integer "quantity", default: 1, null: false
     t.boolean "send_replacement", default: false, null: false
-    t.decimal "refund_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "refund_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0", null: false
     t.index ["claim_id"], name: "index_spree_claim_line_items_on_claim_id"
     t.index ["line_item_id"], name: "index_spree_claim_line_items_on_line_item_id"
     t.index ["replacement_variant_id"], name: "index_spree_claim_line_items_on_replacement_variant_id"
@@ -669,10 +671,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "commission_rate_id"
     t.decimal "rate", precision: 8, scale: 5, default: "0.0", null: false
     t.string "kind", null: false
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "tax_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "tax_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.decimal "tax_rate", precision: 8, scale: 5, default: "0.0", null: false
-    t.decimal "total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "currency", null: false
     t.string "taxability_reason"
     t.string "country_code"
@@ -694,9 +696,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_commission_rate_values", force: :cascade do |t|
     t.bigint "commission_rate_id", null: false
     t.string "currency", null: false
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "min_amount", precision: 10, scale: 2
-    t.decimal "max_amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "min_amount", precision: 19, scale: 4
+    t.decimal "max_amount", precision: 19, scale: 4
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
@@ -1072,7 +1074,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "carrier", null: false
     t.string "service", null: false
     t.string "label"
-    t.decimal "markup_flat", precision: 10, scale: 2
+    t.decimal "markup_flat", precision: 19, scale: 4
     t.decimal "markup_percent", precision: 8, scale: 2
     t.integer "position", default: 0
     t.datetime "created_at", null: false
@@ -1108,7 +1110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "pickup_point_provider"
     t.bigint "store_id"
     t.string "rate_provider"
-    t.decimal "markup_flat", precision: 10, scale: 2, default: "0.0"
+    t.decimal "markup_flat", precision: 19, scale: 4, default: "0.0"
     t.decimal "markup_percent", precision: 8, scale: 2, default: "0.0"
     t.bigint "delivery_profile_id"
     t.bigint "delivery_origin_group_id"
@@ -1157,7 +1159,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_delivery_rates", force: :cascade do |t|
-    t.decimal "cost", precision: 8, scale: 2, default: "0.0"
+    t.decimal "cost", precision: 19, scale: 4, default: "0.0"
     t.datetime "created_at", null: false
     t.boolean "selected", default: false
     t.bigint "fulfillment_id"
@@ -1240,11 +1242,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "promotion_id"
     t.bigint "line_item_id"
     t.bigint "fulfillment_id"
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "amount", precision: 19, scale: 4, null: false
     t.string "label", null: false
     t.string "kind", null: false
     t.string "code"
-    t.decimal "value", precision: 10, scale: 2
+    t.decimal "value", precision: 19, scale: 4
     t.string "value_type"
     t.jsonb "metadata"
     t.datetime "created_at", null: false
@@ -1322,10 +1324,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.boolean "resellable", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "original_included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "original_additional_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "new_included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "new_additional_tax_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "original_included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "original_additional_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "new_included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "new_additional_tax_total", precision: 19, scale: 4, default: "0.0", null: false
     t.index ["exchange_id"], name: "index_spree_exchange_line_items_on_exchange_id"
     t.index ["fulfillment_item_id"], name: "index_spree_exchange_line_items_on_fulfillment_item_id"
     t.index ["line_item_id"], name: "index_spree_exchange_line_items_on_line_item_id"
@@ -1398,7 +1400,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "order_id"
     t.bigint "line_item_id"
     t.bigint "fulfillment_id"
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "amount", precision: 19, scale: 4, null: false
     t.string "label", null: false
     t.string "kind", null: false
     t.jsonb "metadata"
@@ -1431,22 +1433,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_fulfillments", force: :cascade do |t|
-    t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0"
     t.bigint "address_id"
-    t.decimal "adjustment_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "cost", precision: 10, scale: 2, default: "0.0"
+    t.decimal "adjustment_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "cost", precision: 19, scale: 4, default: "0.0"
     t.datetime "created_at", null: false
-    t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "non_taxable_adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "non_taxable_adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "number"
     t.bigint "order_id"
-    t.decimal "pre_tax_amount", precision: 12, scale: 4, default: "0.0", null: false
+    t.decimal "pre_tax_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.jsonb "metadata"
-    t.decimal "discount_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "discount_total", precision: 19, scale: 4, default: "0.0"
     t.datetime "fulfilled_at", precision: nil
     t.string "status"
     t.bigint "stock_location_id"
-    t.decimal "taxable_adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "taxable_adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "tracking"
     t.datetime "updated_at", null: false
     t.string "fulfillment_type"
@@ -1489,7 +1491,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_gift_card_batches", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "amount", precision: 19, scale: 4, null: false
     t.integer "codes_count", default: 1, null: false
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
@@ -1503,9 +1505,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_gift_cards", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
-    t.decimal "amount_authorized", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "amount_used", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, null: false
+    t.decimal "amount_authorized", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "amount_used", precision: 19, scale: 4, default: "0.0", null: false
     t.string "code", null: false
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
@@ -1623,22 +1625,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_line_items", force: :cascade do |t|
-    t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "adjustment_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "cost_price", precision: 10, scale: 2
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "adjustment_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "cost_price", precision: 19, scale: 4
     t.datetime "created_at", null: false
     t.string "currency"
-    t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "non_taxable_adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "non_taxable_adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.bigint "order_id"
-    t.decimal "pre_tax_amount", precision: 12, scale: 4, default: "0.0", null: false
-    t.decimal "price", precision: 10, scale: 2, null: false
+    t.decimal "pre_tax_amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "price", precision: 19, scale: 4, null: false
     t.bigint "price_list_id"
     t.jsonb "metadata"
-    t.decimal "discount_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "discount_total", precision: 19, scale: 4, default: "0.0"
     t.integer "quantity", null: false
     t.bigint "tax_category_id"
-    t.decimal "taxable_adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "taxable_adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.bigint "variant_id"
     t.bigint "cart_id"
@@ -1886,8 +1888,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
 
   create_table "spree_orders", force: :cascade do |t|
     t.boolean "accept_marketing", default: false
-    t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0"
-    t.decimal "adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0"
+    t.decimal "adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "approved_at", precision: nil
     t.bigint "approver_id"
     t.bigint "bill_address_id"
@@ -1903,36 +1905,36 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "currency"
     t.string "email"
     t.bigint "gift_card_id"
-    t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
     t.text "internal_note"
     t.integer "total_quantity", default: 0
-    t.decimal "item_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "item_total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "last_ip_address"
     t.string "locale"
     t.bigint "market_id"
-    t.decimal "non_taxable_adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "non_taxable_adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "number", limit: 32
     t.string "payment_status"
-    t.decimal "payment_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "payment_total", precision: 19, scale: 4, default: "0.0"
     t.bigint "preferred_stock_location_id"
     t.jsonb "metadata"
-    t.decimal "discount_total", precision: 10, scale: 2, default: "0.0"
+    t.decimal "discount_total", precision: 19, scale: 4, default: "0.0"
     t.bigint "ship_address_id"
     t.string "fulfillment_status"
-    t.decimal "delivery_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "delivery_total", precision: 19, scale: 4, default: "0.0", null: false
     t.boolean "signup_for_an_account", default: false
     t.text "customer_note"
     t.integer "lock_version", default: 0, null: false
     t.string "status", default: "draft", null: false
     t.bigint "store_id"
     t.boolean "store_owner_notification_delivered"
-    t.decimal "taxable_adjustment_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "taxable_adjustment_total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "token"
-    t.decimal "total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "total", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.bigint "customer_id"
     t.bigint "cart_id"
-    t.decimal "fee_total", precision: 10, scale: 2
+    t.decimal "fee_total", precision: 19, scale: 4
     t.string "coupon_code"
     t.bigint "company_id"
     t.bigint "seller_id"
@@ -1940,9 +1942,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "po_number"
     t.bigint "cancel_reason_id"
     t.text "cancel_note"
-    t.decimal "commission_amount_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "commission_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "commission_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "commission_amount_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "commission_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "commission_total", precision: 19, scale: 4, default: "0.0", null: false
     t.string "created_by_type"
     t.string "approver_type"
     t.string "canceler_type"
@@ -2003,7 +2005,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_payment_capture_events", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0"
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0"
     t.datetime "created_at", null: false
     t.bigint "payment_id"
     t.datetime "updated_at", null: false
@@ -2040,7 +2042,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_payment_sessions", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "amount", precision: 19, scale: 4, null: false
     t.datetime "created_at", null: false
     t.string "currency", null: false
     t.string "customer_external_id"
@@ -2107,19 +2109,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_payment_splits", force: :cascade do |t|
     t.bigint "payment_id", null: false
     t.bigint "order_id", null: false
-    t.decimal "authorized_amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "captured_amount", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "refunded_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "authorized_amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "captured_amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "refunded_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.string "currency", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "claimed_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "claimed_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.index ["order_id"], name: "index_spree_payment_splits_on_order_id"
     t.index ["payment_id", "order_id"], name: "index_spree_payment_splits_on_payment_id_and_order_id", unique: true
   end
 
   create_table "spree_payments", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
     t.string "avs_response"
     t.datetime "created_at", null: false
     t.string "cvv_response_code"
@@ -2191,8 +2193,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_price_histories", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, null: false
-    t.decimal "compare_at_amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 19, scale: 4, null: false
+    t.decimal "compare_at_amount", precision: 19, scale: 4
     t.datetime "created_at", null: false
     t.string "currency", null: false
     t.bigint "price_id", null: false
@@ -2239,8 +2241,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_prices", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2
-    t.decimal "compare_at_amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 19, scale: 4
+    t.decimal "compare_at_amount", precision: 19, scale: 4
     t.datetime "created_at", precision: nil, null: false
     t.string "currency"
     t.datetime "deleted_at", precision: nil
@@ -2405,7 +2407,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "primary_media_id"
     t.jsonb "metadata"
     t.boolean "promotionable", default: true
-    t.decimal "revenue", precision: 16, scale: 4, default: "0.0", null: false
+    t.decimal "revenue", precision: 19, scale: 4, default: "0.0", null: false
     t.bigint "delivery_profile_id"
     t.string "slug"
     t.string "status", default: "draft", null: false
@@ -2441,7 +2443,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_products_stores", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.bigint "product_id"
-    t.decimal "revenue", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "revenue", precision: 19, scale: 4, default: "0.0", null: false
     t.bigint "store_id"
     t.integer "units_sold_count", default: 0, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -2563,7 +2565,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "variant_id", null: false
     t.integer "quantity_ordered", default: 0, null: false
     t.integer "quantity_received", default: 0, null: false
-    t.decimal "unit_cost", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "unit_cost", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "quantity_rejected", default: 0, null: false
@@ -2625,7 +2627,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_refunds", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.bigint "payment_id"
     t.jsonb "metadata"
@@ -2638,7 +2640,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "originator_id"
     t.bigint "order_id"
     t.string "refunder_type"
-    t.decimal "tax_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "tax_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.index ["order_id"], name: "index_spree_refunds_on_order_id"
     t.index ["originator_type", "originator_id"], name: "index_spree_refunds_on_originator"
     t.index ["payment_id"], name: "index_spree_refunds_on_payment_id"
@@ -2649,7 +2651,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_reimbursement_credits", force: :cascade do |t|
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "created_at", precision: nil
     t.bigint "creditable_id"
     t.string "creditable_type"
@@ -2677,7 +2679,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "order_id"
     t.bigint "performed_by_id"
     t.string "reimbursement_status"
-    t.decimal "total", precision: 10, scale: 2
+    t.decimal "total", precision: 19, scale: 4
     t.datetime "updated_at", null: false
     t.index ["customer_return_id"], name: "index_spree_reimbursements_on_customer_return_id"
     t.index ["number"], name: "index_spree_reimbursements_on_number", unique: true
@@ -2716,14 +2718,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_return_items", force: :cascade do |t|
     t.string "acceptance_status"
     t.text "acceptance_status_errors"
-    t.decimal "additional_tax_total", precision: 12, scale: 4, default: "0.0", null: false
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.bigint "customer_return_id"
     t.bigint "exchange_variant_id"
-    t.decimal "included_tax_total", precision: 12, scale: 4, default: "0.0", null: false
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
     t.bigint "fulfillment_item_id"
     t.bigint "override_reimbursement_type_id"
-    t.decimal "pre_tax_amount", precision: 12, scale: 4, default: "0.0", null: false
+    t.decimal "pre_tax_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.bigint "preferred_reimbursement_type_id"
     t.string "reception_status"
     t.bigint "reimbursement_id"
@@ -2746,12 +2748,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "variant_id", null: false
     t.integer "quantity", default: 1, null: false
     t.integer "received_quantity", default: 0, null: false
-    t.decimal "pre_tax_amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "pre_tax_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.boolean "resellable", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "included_tax_total", precision: 10, scale: 2, default: "0.0", null: false
-    t.decimal "additional_tax_total", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "included_tax_total", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "additional_tax_total", precision: 19, scale: 4, default: "0.0", null: false
     t.index ["fulfillment_item_id"], name: "index_spree_return_line_items_on_fulfillment_item_id"
     t.index ["line_item_id"], name: "index_spree_return_line_items_on_line_item_id"
     t.index ["return_id"], name: "index_spree_return_line_items_on_return_id"
@@ -2837,7 +2839,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   create_table "spree_seller_payouts", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.bigint "seller_id", null: false
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
     t.string "currency", null: false
     t.string "status", null: false
     t.datetime "period_start"
@@ -2907,7 +2909,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "payout_id"
     t.bigint "reversed_from_id"
     t.bigint "refund_id"
-    t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
     t.string "currency", null: false
     t.string "kind", null: false
     t.string "status", null: false
@@ -2916,7 +2918,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.jsonb "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "settled_amount", precision: 10, scale: 2, null: false
+    t.decimal "settled_amount", precision: 19, scale: 4, null: false
     t.string "settled_currency", null: false
     t.index ["order_id"], name: "index_seller_transfers_on_order_earning", unique: true, where: "((kind)::text = 'earning'::text)"
     t.index ["order_id"], name: "index_spree_seller_transfers_on_order_id"
@@ -2955,7 +2957,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.datetime "terms_accepted_at"
     t.datetime "holiday_mode_until"
     t.string "payouts_schedule_interval"
-    t.decimal "minimum_payout_amount", precision: 10, scale: 2
+    t.decimal "minimum_payout_amount", precision: 19, scale: 4
     t.string "tax_remittance", default: "seller", null: false
     t.jsonb "metadata"
     t.datetime "created_at", null: false
@@ -2981,7 +2983,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "carrier"
     t.string "service"
     t.string "tracking_number"
-    t.decimal "cost", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "cost", precision: 19, scale: 4, default: "0.0", null: false
     t.string "currency"
     t.string "format"
     t.string "status", null: false
@@ -3107,7 +3109,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "exchange_id"
     t.bigint "stock_transfer_id"
     t.bigint "purchase_order_id"
-    t.decimal "unit_cost", precision: 10, scale: 2
+    t.decimal "unit_cost", precision: 19, scale: 4
     t.bigint "stock_receipt_id"
     t.index ["exchange_id"], name: "index_spree_stock_movements_on_exchange_id"
     t.index ["fulfillment_id"], name: "index_spree_stock_movements_on_fulfillment_id"
@@ -3219,7 +3221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
 
   create_table "spree_store_credit_events", force: :cascade do |t|
     t.string "action", null: false
-    t.decimal "amount", precision: 8, scale: 2
+    t.decimal "amount", precision: 19, scale: 4
     t.string "authorization_code", null: false
     t.datetime "created_at", null: false
     t.datetime "deleted_at", precision: nil
@@ -3227,7 +3229,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.string "originator_type"
     t.bigint "store_credit_id", null: false
     t.datetime "updated_at", null: false
-    t.decimal "user_total_amount", precision: 8, scale: 2, default: "0.0", null: false
+    t.decimal "user_total_amount", precision: 19, scale: 4, default: "0.0", null: false
     t.index ["originator_id", "originator_type"], name: "spree_store_credit_events_originator"
     t.index ["store_credit_id"], name: "index_spree_store_credit_events_on_store_credit_id"
   end
@@ -3241,9 +3243,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
   end
 
   create_table "spree_store_credits", force: :cascade do |t|
-    t.decimal "amount", precision: 8, scale: 2, default: "0.0", null: false
-    t.decimal "amount_authorized", precision: 8, scale: 2, default: "0.0", null: false
-    t.decimal "amount_used", precision: 8, scale: 2, default: "0.0", null: false
+    t.decimal "amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "amount_authorized", precision: 19, scale: 4, default: "0.0", null: false
+    t.decimal "amount_used", precision: 19, scale: 4, default: "0.0", null: false
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.bigint "created_by_id"
@@ -3480,7 +3482,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.bigint "line_item_id"
     t.bigint "fulfillment_id"
     t.bigint "fee_id"
-    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "amount", precision: 19, scale: 4, null: false
     t.decimal "rate", precision: 8, scale: 5, null: false
     t.string "label", null: false
     t.boolean "included", null: false
@@ -3631,7 +3633,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_140018) do
     t.integer "backorder_limit"
     t.string "barcode"
     t.string "cost_currency"
-    t.decimal "cost_price", precision: 10, scale: 2
+    t.decimal "cost_price", precision: 19, scale: 4
     t.datetime "created_at", precision: nil, null: false
     t.datetime "deleted_at", precision: nil
     t.decimal "depth", precision: 8, scale: 2
