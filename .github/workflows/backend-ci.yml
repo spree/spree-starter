@@ -33,6 +33,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # libvips, as in the Docker image: uploads and image variants run
+      # through it. libvips-tools pulls in the library under whatever name
+      # the runner's Ubuntu release gives it.
+      - name: Install libvips
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libvips-tools
+
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
