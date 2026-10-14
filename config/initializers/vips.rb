@@ -4,9 +4,15 @@
 # on one thread (VIPS_CONCURRENCY=1): concurrent resizes already use one job
 # thread each, and a second level of parallelism only multiplies the buffers
 # in memory.
-require 'vips'
-
-Vips.cache_set_max(0)
+#
+# Where libvips isn't installed (a CI runner, an app that never resizes
+# images), there is nothing to configure, and booting must not depend on it.
+begin
+  require 'vips'
+  Vips.cache_set_max(0)
+rescue LoadError
+  nil
+end
 
 # Each resize leaves a few MB that only a full garbage collection frees, and
 # Ruby rarely runs one: libvips allocates outside the Ruby heap, so Ruby never
