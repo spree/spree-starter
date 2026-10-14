@@ -81,6 +81,12 @@ services:
   #         envVarKey: ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT
   #     - key: JOB_THREADS
   #       value: "5"
+  #     # Image resizing pool (config/queue.yml): one thread per CPU of the
+  #     # worker's plan, and one libvips thread per resize.
+  #     - key: JOB_IMAGE_THREADS
+  #       value: "1"
+  #     - key: VIPS_CONCURRENCY
+  #       value: "1"
   #     - key: MALLOC_ARENA_MAX
   #       value: "2"
 

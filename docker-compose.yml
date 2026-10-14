@@ -85,7 +85,9 @@ services:
   # One app container: Puma serves the web AND runs Solid Queue's job
   # supervisor in-process (SOLID_QUEUE_IN_PUMA, on by default). To split job
   # processing out, add a service from the same image with
-  # `command: bin/jobs` and set SOLID_QUEUE_IN_PUMA: "false" here.
+  # `command: bin/jobs` and set SOLID_QUEUE_IN_PUMA: "false" here. Give that
+  # service JOB_IMAGE_THREADS (its CPU count) and VIPS_CONCURRENCY: "1" — see
+  # config/queue.yml.
   web:
     <<: *app
     ports:

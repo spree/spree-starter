@@ -10,8 +10,17 @@
 # the standard Rails knob) there.
 #
 # Queues are polled in order: checkout-critical and operator-facing work
-# first, bulk catalog churn second, Active Storage housekeeping last. The
-# trailing "*" catches queues added later so nothing starves silently.
+# first, bulk catalog churn second, Active Storage housekeeping last. There is
+# no "*" catch-all, because it would also take the image queues below — a
+# queue added later must be listed here, or its jobs never run.
+#
+# Resizing and analysing images runs on a worker of its own, sized by
+# JOB_IMAGE_THREADS (default 1). libvips decodes the whole source image, so
+# every concurrent resize holds hundreds of MB; the work is CPU-bound, so more
+# threads than CPUs only add memory, not speed. The default of 1 also keeps
+# resizes from crowding web requests when jobs run inside Puma. On a dedicated
+# `bin/jobs` worker, set it to that machine's CPU count. Downloading images
+# (spree_images) is network-bound and stays on the main pool.
 default: &default
   dispatchers:
     - polling_interval: 1
@@ -26,7 +35,6 @@ default: &default
         - spree_events
         - spree_exports
         - spree_images
-        - active_storage_transform
         - spree_products
         - spree_variants
         - spree_categories
@@ -41,10 +49,15 @@ default: &default
         - spree_tax_identifiers
         - spree_payouts
         - spree_data_requests
-        - active_storage_analysis
         - active_storage_purge
-        - "*"
+        - solid_queue_recurring
       threads: <%= ENV.fetch("JOB_THREADS", 3) %>
+      processes: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
+      polling_interval: 0.1
+    - queues:
+        - active_storage_transform
+        - active_storage_analysis
+      threads: <%= ENV.fetch("JOB_IMAGE_THREADS", 1) %>
       processes: <%= ENV.fetch("JOB_CONCURRENCY", 1) %>
       polling_interval: 0.1
 
