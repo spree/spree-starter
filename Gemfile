@@ -36,6 +36,7 @@ if spree_path
     gem 'spree_meilisearch'
     gem 'spree_stripe'
     gem 'spree_opentelemetry'
+    gem 'spree_mcp'
   end
 else
   spree_version = '>= 6.0.0.beta1'
@@ -46,6 +47,7 @@ else
   gem 'spree_meilisearch', spree_version
   gem 'spree_stripe', spree_version
   gem 'spree_opentelemetry', spree_version
+  gem 'spree_mcp', spree_version
 end
 
 # Extensions
