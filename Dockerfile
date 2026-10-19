@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-ARG RUBY_VERSION=4.0.1
+ARG RUBY_VERSION=4.0.5
 ARG NODE_VERSION=22
 # CLI release line the stock dashboard and seller-panel templates are
 # extracted from (only used when the build context has no apps/dashboard or
