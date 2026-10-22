@@ -23,6 +23,12 @@ Rails.application.configure do
     config.active_storage.service = :amazon
   elsif ENV["CLOUDFLARE_ACCESS_KEY_ID"].present? && ENV["CLOUDFLARE_SECRET_ACCESS_KEY"].present? && ENV["CLOUDFLARE_ENDPOINT"].present?
     config.active_storage.service = :cloudflare
+  elsif ENV["OVH_ACCESS_KEY_ID"].present? && ENV["OVH_SECRET_ACCESS_KEY"].present?
+    config.active_storage.service = :ovh
+  elsif ENV["DO_SPACES_ACCESS_KEY_ID"].present? && ENV["DO_SPACES_SECRET_ACCESS_KEY"].present?
+    config.active_storage.service = :digitalocean
+  elsif ENV["S3_ACCESS_KEY_ID"].present? && ENV["S3_SECRET_ACCESS_KEY"].present? && ENV["S3_ENDPOINT"].present?
+    config.active_storage.service = :s3_compatible
   else
     config.active_storage.service = :local
   end
