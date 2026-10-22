@@ -26,10 +26,10 @@ cloudflare:
 
 ovh:
   service: S3
-  endpoint: <%= ENV.fetch("OVH_ENDPOINT") { "https://s3.#{ENV.fetch("OVH_REGION", "gra")}.io.cloud.ovh.net" } %>
+  endpoint: <%= ENV["OVH_ENDPOINT"].presence || "https://s3.#{ENV["OVH_REGION"].presence || "gra"}.io.cloud.ovh.net" %>
   access_key_id: <%= ENV.fetch("OVH_ACCESS_KEY_ID", "") %>
   secret_access_key: <%= ENV.fetch("OVH_SECRET_ACCESS_KEY", "") %>
-  region: <%= ENV.fetch("OVH_REGION", "gra") %>
+  region: <%= ENV["OVH_REGION"].presence || "gra" %>
   bucket: <%= ENV.fetch("OVH_BUCKET", "spree-#{Rails.env}") %>
   force_path_style: true
   request_checksum_calculation: "when_required"
@@ -37,10 +37,10 @@ ovh:
 
 digitalocean:
   service: S3
-  endpoint: <%= ENV.fetch("DO_SPACES_ENDPOINT") { "https://#{ENV.fetch("DO_SPACES_REGION", "nyc3")}.digitaloceanspaces.com" } %>
+  endpoint: <%= ENV["DO_SPACES_ENDPOINT"].presence || "https://#{ENV["DO_SPACES_REGION"].presence || "nyc3"}.digitaloceanspaces.com" %>
   access_key_id: <%= ENV.fetch("DO_SPACES_ACCESS_KEY_ID", "") %>
   secret_access_key: <%= ENV.fetch("DO_SPACES_SECRET_ACCESS_KEY", "") %>
-  region: <%= ENV.fetch("DO_SPACES_REGION", "nyc3") %>
+  region: <%= ENV["DO_SPACES_REGION"].presence || "nyc3" %>
   bucket: <%= ENV.fetch("DO_SPACES_BUCKET", "spree-#{Rails.env}") %>
   request_checksum_calculation: "when_required"
   response_checksum_validation: "when_required"
