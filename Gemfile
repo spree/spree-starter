@@ -39,7 +39,7 @@ if spree_path
     gem 'spree_mcp'
   end
 else
-  spree_version = '>= 6.0.0.beta1'
+  spree_version = '~> 6.0'
   gem 'spree', spree_version
   gem 'spree_emails', spree_version
   gem 'spree_dashboard', spree_version
