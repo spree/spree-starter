@@ -324,7 +324,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.2.1)
-    mcp (1.8.1)
+    mcp (1.8.2)
       json_schemer (>= 2.4)
     meilisearch (0.33.0)
       httparty (~> 0.24)
@@ -665,13 +665,13 @@ GEM
       fugit (~> 1.11)
       railties (>= 7.1)
       thor (>= 1.3.1)
-    spree (6.0.0.rc7)
-      spree_api (= 6.0.0.rc7)
-      spree_core (= 6.0.0.rc7)
-    spree_api (6.0.0.rc7)
-      spree_core (= 6.0.0.rc7)
+    spree (6.0.0)
+      spree_api (= 6.0.0)
+      spree_core (= 6.0.0)
+    spree_api (6.0.0)
+      spree_core (= 6.0.0)
       typelizer (~> 0.11.0)
-    spree_core (6.0.0.rc7)
+    spree_core (6.0.0)
       active_storage_validations (>= 1.3, < 4)
       acts-as-taggable-on
       acts_as_list (>= 0.8)
@@ -718,8 +718,8 @@ GEM
       validates_zipcode
       valvat (~> 2.0)
       wannabe_bool
-    spree_dashboard (6.0.0.rc7)
-      spree (= 6.0.0.rc7)
+    spree_dashboard (6.0.0)
+      spree (= 6.0.0)
     spree_dev_tools (1.0.0.beta2)
       awesome_print
       brakeman
@@ -743,19 +743,19 @@ GEM
       simplecov
       spree (>= 5.4.0.alpha)
       timecop
-    spree_easypost (6.0.0.rc7)
+    spree_easypost (6.0.0)
       easypost (~> 7.0)
-      spree_core (= 6.0.0.rc7)
-    spree_emails (6.0.0.rc7)
-      spree (= 6.0.0.rc7)
-    spree_mcp (6.0.0.rc7)
+      spree_core (= 6.0.0)
+    spree_emails (6.0.0)
+      spree (= 6.0.0)
+    spree_mcp (6.0.0)
       mcp (~> 1.5)
-      spree_api (= 6.0.0.rc7)
-      spree_core (= 6.0.0.rc7)
-    spree_meilisearch (6.0.0.rc7)
+      spree_api (= 6.0.0)
+      spree_core (= 6.0.0)
+    spree_meilisearch (6.0.0)
       meilisearch (>= 0.28)
-      spree_core (= 6.0.0.rc7)
-    spree_opentelemetry (6.0.0.rc7)
+      spree_core (= 6.0.0)
+    spree_opentelemetry (6.0.0)
       opentelemetry-exporter-otlp (~> 0.26)
       opentelemetry-instrumentation-action_mailer
       opentelemetry-instrumentation-action_pack
@@ -766,9 +766,9 @@ GEM
       opentelemetry-instrumentation-net_http
       opentelemetry-instrumentation-rack
       opentelemetry-sdk (~> 1.0)
-      spree_core (= 6.0.0.rc7)
-    spree_stripe (6.0.0.rc7)
-      spree_core (= 6.0.0.rc7)
+      spree_core (= 6.0.0)
+    spree_stripe (6.0.0)
+      spree_core (= 6.0.0)
       stripe (>= 10.1, < 19)
     sqids (0.2.2)
     ssrf_filter (1.6.0)
@@ -855,15 +855,15 @@ DEPENDENCIES
   solid_cable
   solid_cache
   solid_queue
-  spree (>= 6.0.0.beta1)
-  spree_dashboard (>= 6.0.0.beta1)
+  spree (~> 6.0)
+  spree_dashboard (~> 6.0)
   spree_dev_tools (>= 1.0.0.beta1)
-  spree_easypost (>= 6.0.0.beta1)
-  spree_emails (>= 6.0.0.beta1)
-  spree_mcp (>= 6.0.0.beta1)
-  spree_meilisearch (>= 6.0.0.beta1)
-  spree_opentelemetry (>= 6.0.0.beta1)
-  spree_stripe (>= 6.0.0.beta1)
+  spree_easypost (~> 6.0)
+  spree_emails (~> 6.0)
+  spree_mcp (~> 6.0)
+  spree_meilisearch (~> 6.0)
+  spree_opentelemetry (~> 6.0)
+  spree_stripe (~> 6.0)
   thruster
   tzinfo-data
   web-console
@@ -987,7 +987,7 @@ CHECKSUMS
   loofah (2.25.2) sha256=2007f746959ac65552456e04b433e83deb22759ab38c838b4445c70e43425918
   mail (2.9.1) sha256=06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8
   marcel (1.2.1) sha256=1678e9360e32f9eafa917c80029e2f6d10b2715c66a4b87b6d0da9b9cd1f859f
-  mcp (1.8.1) sha256=1b81902c1edf01775a4bc080af68e84909e2dfe91fffe381f86e5075847ca284
+  mcp (1.8.2) sha256=59843aaceb060260bfcf38692d1c99ec497eefc039a6174237f53a59ee71d323
   meilisearch (0.33.0) sha256=a5d3c3f28cdc4394ee4f0f390efe158650f99cfb390fd073f44fc780a2aa41e2
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mini_magick (5.4.0) sha256=f120af581d9ed4ec52c57f35a67a605d112bb1d8f582d1415b147fda42d11d78
@@ -1118,17 +1118,17 @@ CHECKSUMS
   solid_cable (4.1.0) sha256=828e3d509207b82b4f05f4e9c85f696994710679b52d511aa7f97ebd212d3226
   solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
   solid_queue (1.7.0) sha256=6566b70b801d1c317c81bba7bcdd5677c019afac584a30374b4164002ca356d3
-  spree (6.0.0.rc7) sha256=5d29686ef992e4935b81d6c7e0249a45a46eb1296329309ed2f32fa346bedebb
-  spree_api (6.0.0.rc7) sha256=3f3c538ed06b803dc35ef3c92fe0dfd955ca0a47bbb1ba854d8d2c3638775a42
-  spree_core (6.0.0.rc7) sha256=c7a26acb2f3eac157bbab3875523221a24bf0a0f890a14cfd4f53d7d9d7940e6
-  spree_dashboard (6.0.0.rc7) sha256=64a549ce02aa61aa587d2a40b9d643caef18c20a7bc0e356d4e530bebd55b8c4
+  spree (6.0.0) sha256=00f988e4118e5f6a430a40b5a9627bc4320ba68c4e662432ba4d518e129a60e7
+  spree_api (6.0.0) sha256=1f84ccf0dbe55e4f9e38e9a5db263dd28c79843b026b14fc2abb3e71ef014812
+  spree_core (6.0.0) sha256=86fadda3b1fe93a7a031259fe98ca9c4ed5bdfba8dffcbff3e4cef664a0433a6
+  spree_dashboard (6.0.0) sha256=6ad4a585f0368f35fdf530d135d04898abec1ed3dca4a19c2072562d05fcec8f
   spree_dev_tools (1.0.0.beta2) sha256=93057fc91a384683eb85f458494fb3b22b363349c075c36b9ba44399da40de28
-  spree_easypost (6.0.0.rc7) sha256=132d1345fa490ecd4a879c3717c74a58be123e81812e2c83ff2974847bc81bb0
-  spree_emails (6.0.0.rc7) sha256=bbb430b93bd235a3b0ff2792d9eb9c52ee794b5db8d1e762db11aa5edacd1ce6
-  spree_mcp (6.0.0.rc7) sha256=84a5879036dca73fea9bcc4ffe6bd3c8e1819d920aaf104a974b4f36d8e9dabd
-  spree_meilisearch (6.0.0.rc7) sha256=0a09a20ddf29a6c609b8bfeb3f7cbc3bc8408cd410820921e6f0a7a916350567
-  spree_opentelemetry (6.0.0.rc7) sha256=dd332ae7909e37bb23cf84facb1f99ac1e0d8a9add9d1757cdc2d98f46710e3b
-  spree_stripe (6.0.0.rc7) sha256=2cfd33fb7fbd067561de7056002bacad7d7bf143e7927fbbc1971a362ddbf978
+  spree_easypost (6.0.0) sha256=dba1095cf2eb573b8ca32a110c54eb0f14e91d429c7d53bb501d60af57ded707
+  spree_emails (6.0.0) sha256=93afbe3eacdb7b2a3b97001d21d3326e498cecd35c9d17fe604aebf4951f20f3
+  spree_mcp (6.0.0) sha256=a6549a58e1647e0215d8e18db43f2b3f6b27c247a53449fb0847c56508897fff
+  spree_meilisearch (6.0.0) sha256=ae85687f99363d675ade82c2972479ea4f8063f98318faa60486671abd2b999a
+  spree_opentelemetry (6.0.0) sha256=e400b042737ee89fddab6dd2f06f8176acf0335ddc863d6e82ed4cb724649731
+  spree_stripe (6.0.0) sha256=d035d22a13bf62222066585406c82353695e82d5c9221408dfce3bf67f407fe5
   sqids (0.2.2) sha256=c2d31e0dfb6c32d17c10b59df059a299af93bef716d700ff70d77156df702d36
   ssrf_filter (1.6.0) sha256=78d15bc26d0385c931f46f12a9c1cbb90e6556bd96b95f25e5a5f786c8dcf999
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06

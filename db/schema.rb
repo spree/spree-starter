@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_104523) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_123760) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -1650,6 +1650,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_104523) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["source_id", "source_type"], name: "index_spree_log_entries_on_source_id_and_source_type"
+  end
+
+  create_table "spree_maintenance_task_runs", force: :cascade do |t|
+    t.string "task_name", null: false
+    t.string "status", null: false
+    t.boolean "dry_run", default: false, null: false
+    t.string "cursor"
+    t.integer "tick_count", default: 0, null: false
+    t.integer "tick_total"
+    t.decimal "time_running", precision: 12, scale: 3, default: "0.0", null: false
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.string "error_class"
+    t.text "error_message"
+    t.text "error_backtrace"
+    t.string "job_id"
+    t.string "initiated_via", null: false
+    t.bigint "admin_user_id"
+    t.bigint "api_key_id"
+    t.jsonb "arguments"
+    t.jsonb "tallies"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_user_id"], name: "index_spree_maintenance_task_runs_on_admin_user_id"
+    t.index ["api_key_id"], name: "index_spree_maintenance_task_runs_on_api_key_id"
+    t.index ["created_at"], name: "index_spree_maintenance_task_runs_on_created_at"
+    t.index ["task_name", "status"], name: "index_spree_maintenance_task_runs_on_task_name_and_status"
   end
 
   create_table "spree_market_countries", force: :cascade do |t|
@@ -3633,6 +3660,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_104523) do
     t.datetime "updated_at", null: false
     t.integer "engine", default: 0, null: false
     t.index ["active"], name: "index_spree_trackers_on_active"
+  end
+
+  create_table "spree_upgrade_records", force: :cascade do |t|
+    t.string "version", null: false
+    t.string "source", null: false
+    t.datetime "completed_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["version"], name: "index_spree_upgrade_records_on_version", unique: true
   end
 
   create_table "spree_user_identities", force: :cascade do |t|
