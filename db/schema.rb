@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_19_125117) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_104523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -312,6 +312,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_125117) do
     t.datetime "locked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deactivated_at"
     t.index ["email"], name: "index_spree_admin_users_on_email", unique: true
   end
 
@@ -3301,6 +3302,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_19_125117) do
     t.bigint "store_id"
     t.jsonb "metadata"
     t.bigint "refunded_order_id"
+    t.string "created_by_type"
+    t.index ["created_by_type", "created_by_id"], name: "index_spree_store_credits_on_created_by_actor"
     t.index ["customer_id"], name: "index_spree_store_credits_on_customer_id"
     t.index ["deleted_at"], name: "index_spree_store_credits_on_deleted_at"
     t.index ["originator_id", "originator_type"], name: "spree_store_credits_originator"
