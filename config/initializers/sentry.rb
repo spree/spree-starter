@@ -34,6 +34,9 @@ if ENV['SENTRY_DSN'].present?
 
   Sentry.init do |config|
     config.dsn = ENV['SENTRY_DSN']
+    # Same value the tracing gate above checked, so a blank SENTRY_*_ENV
+    # can't leave errors filtered out while spans are still exported.
+    config.environment = sentry_environment
     config.breadcrumbs_logger = %i[active_support_logger http_logger]
     config.enabled_environments = sentry_environments
 
