@@ -61,10 +61,8 @@ gem 'image_processing', '~> 1.2'
 gem 'lograge'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
-# Sentry: errors, plus opt-in tracing/profiling (config/initializers/sentry.rb).
-# stackprof must load before sentry-ruby for profiling; sentry-opentelemetry
-# exports spree_opentelemetry spans to Sentry (SENTRY_TRACING=otlp).
-gem 'stackprof'
+# Sentry: errors, plus opt-in tracing (config/initializers/sentry.rb).
+# sentry-opentelemetry exports spree_opentelemetry spans to Sentry over OTLP.
 gem 'sentry-ruby'
 gem 'sentry-rails'
 gem 'sentry-opentelemetry'
