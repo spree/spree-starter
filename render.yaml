@@ -39,6 +39,13 @@ services:
         value: jobs
       - key: MISSION_CONTROL_PASSWORD
         generateValue: true
+      # Tracing (spree_opentelemetry) samples half of the traces once it is
+      # on, e.g. via SENTRY_DSN + SENTRY_TRACING=true or an OTLP endpoint.
+      # A trace started upstream keeps its caller's sampling decision.
+      - key: OTEL_TRACES_SAMPLER
+        value: parentbased_traceidratio
+      - key: OTEL_TRACES_SAMPLER_ARG
+        value: "0.5"
       # uncomment on plans with 2+ vCPUs (pro and up) to run one Puma process per vCPU;
       # a Spree process needs ~1GB RAM, so this doesn't fit free/starter instances
       # - key: WEB_CONCURRENCY
@@ -89,6 +96,10 @@ services:
   #       value: "1"
   #     - key: MALLOC_ARENA_MAX
   #       value: "2"
+  #     - key: OTEL_TRACES_SAMPLER
+  #       value: parentbased_traceidratio
+  #     - key: OTEL_TRACES_SAMPLER_ARG
+  #       value: "0.5"
 
 databases:
   - name: spree-db
