@@ -61,8 +61,13 @@ gem 'image_processing', '~> 1.2'
 gem 'lograge'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
-gem 'sentry-rails'
+# Sentry: errors, plus opt-in tracing/profiling (config/initializers/sentry.rb).
+# stackprof must load before sentry-ruby for profiling; sentry-opentelemetry
+# exports spree_opentelemetry spans to Sentry (SENTRY_TRACING=otlp).
+gem 'stackprof'
 gem 'sentry-ruby'
+gem 'sentry-rails'
+gem 'sentry-opentelemetry'
 # The Solid stack: jobs, cache, and Action Cable in Postgres — no extra
 # service to run.
 gem 'solid_cable'
