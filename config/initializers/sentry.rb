@@ -15,17 +15,19 @@ if ENV['SENTRY_DSN'].present?
   sentry_environments = %w[production staging]
   sentry_environments << 'development' if ENV['SENTRY_REPORT_ON_DEVELOPMENT'].present?
 
+  # The environment Sentry itself reports under (same precedence as sentry-ruby).
+  sentry_environment = ENV['SENTRY_CURRENT_ENV'].presence || ENV['SENTRY_ENVIRONMENT'].presence || Rails.env
   sentry_tracing = ActiveModel::Type::Boolean.new.cast(ENV['SENTRY_TRACING'].presence) &&
-                   sentry_environments.include?(Rails.env)
+    sentry_environments.include?(sentry_environment)
 
   if sentry_tracing
     # Sentry registers its OTLP exporter inside Sentry.init, which needs the
     # OpenTelemetry SDK installed first — so install it here instead of
     # waiting for spree_opentelemetry's own after-initializers hook.
-    # Sentry provides the exporter (derived from the DSN); stop the SDK from
-    # wiring its default OTLP exporter as well, unless one is set explicitly
-    # (e.g. to also send traces to a collector).
-    ENV['OTEL_TRACES_EXPORTER'] ||= 'none'
+    # Sentry provides the exporter (derived from the DSN). Unless an OTEL_*
+    # exporter is already configured (e.g. to also send traces to a
+    # collector), stop the SDK from wiring its default OTLP exporter too.
+    ENV['OTEL_TRACES_EXPORTER'] ||= 'none' unless SpreeOpenTelemetry.enabled?
     SpreeOpenTelemetry.configure { |config| config.enabled = true }
     sentry_tracing = SpreeOpenTelemetry.install!
   end
