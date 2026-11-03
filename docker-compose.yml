@@ -26,9 +26,12 @@ x-app: &app
     # email links). Override in .env when serving from a real domain or IP.
     SPREE_HOST: ${SPREE_HOST:-${RAILS_HOST:-localhost:${SPREE_PORT:-3000}}}
     # Product search runs on the database by default. To switch to Meilisearch,
-    # uncomment this together with the meilisearch depends_on/service/volume
+    # uncomment these together with the meilisearch depends_on/service/volume
     # blocks, then reindex: docker compose exec web bin/rails spree:search:reindex
+    # The key must match MEILI_MASTER_KEY on the meilisearch service. The dev
+    # default is public; production sets MEILISEARCH_API_KEY in .env.
     # MEILISEARCH_URL: http://meilisearch:7700
+    # MEILISEARCH_API_KEY: ${MEILISEARCH_API_KEY:-spree-dev-meilisearch-key}
     # All outgoing mail is captured by Mailpit — read it at http://localhost:8025.
     # Set SMTP_HOST (and friends) in .env to deliver through a real provider instead.
     SMTP_HOST: ${SMTP_HOST:-mailpit}
@@ -55,14 +58,21 @@ services:
   # environment, and the meilisearch_data volume at the bottom.
   # meilisearch:
   #   image: getmeili/meilisearch:latest
+  #   environment:
+  #     # Master key, the same value the app sends as MEILISEARCH_API_KEY under
+  #     # x-app. Without one, anyone who can reach port 7700 can read, rewrite
+  #     # or delete the index. The dev default is public — production sets
+  #     # MEILISEARCH_API_KEY in .env (at least 16 bytes).
+  #     MEILI_MASTER_KEY: ${MEILISEARCH_API_KEY:-spree-dev-meilisearch-key}
   #   volumes:
   #     - meilisearch_data:/meili_data
   #   ports:
   #     # Loopback-only: the app reaches Meilisearch over the compose network;
   #     # the host port is for debugging and must not be LAN-reachable (Docker's
-  #     # NAT rules bypass host firewalls on Linux, and no API key is set).
+  #     # NAT rules bypass host firewalls on Linux, and the dev key is public).
   #     - "127.0.0.1:${SPREE_MEILISEARCH_PORT:-7700}:7700"
   #   healthcheck:
+  #     # /health needs no key, so this works with any master key.
   #     test: curl -f http://localhost:7700/health || exit 1
   #     interval: 5s
   #     timeout: 5s
