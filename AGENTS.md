@@ -12,7 +12,7 @@ The API, its database and its background jobs run in Docker containers managed b
 - **Never run `bin/rails`, `bin/rake`, `rake`, `bundle`, `rspec`, `bin/setup`, `bin/dev`, `ruby` or `rails` directly** — not on the host and not through `docker compose exec`. They run against the wrong Ruby, the wrong database, or no database at all. Use the command from the table below.
 - **Never call `docker compose` directly.** The CLI picks the right compose files and environment.
 - **Don't use the project root's `package.json` scripts** (`pnpm dev`, `npm run console`, …). They are shortcuts for humans that wrap the CLI — call the CLI command itself.
-- When no dedicated command exists, fall back to `spree rails <args>`, `spree rake <task>` or `spree exec <command>`, which run inside the container.
+- When no dedicated command exists, fall back to `spree exec <command>` (for example `spree exec bin/rails <args>`), which runs inside the container. `spree rails`, `spree rake`, `spree routes`, `spree rspec` and `spree bundle` are deprecated: they still work but print the command to use instead.
 
 | Instead of | Run |
 | --- | --- |
@@ -23,14 +23,14 @@ The API, its database and its background jobs run in Docker containers managed b
 | `bin/rails db:migrate:status` | `spree migrate:status` |
 | `bin/rails db:seed` | `spree seed` |
 | `bin/rails generate …` | `spree generate …` (Spree generators need no `spree:` prefix) |
-| `bin/rails routes` | `spree routes` |
+| `bin/rails routes` | `spree api endpoints` for the Admin API, `spree exec bin/rails routes` for every Rails route |
 | `bin/rake spree:<task>` | `spree task <task>` |
-| `bundle install` | `spree bundle install` |
+| `bundle install`, `bundle update` | `spree exec bundle install`, `spree exec bundle update` |
 | `bundle add <gem>` | `spree add <extension>` for a Spree extension, `spree add --gem <gem>` for any other gem |
-| `bundle exec rspec …` | `spree rspec …` |
+| `bundle exec rspec …` | `spree test …` |
 | `tail -f log/development.log` | `spree logs` |
 | `psql` | `spree db:console` |
-| Any other `bin/rails` command | `spree rails <args>` |
+| Any other `bin/rails` command | `spree exec bin/rails <args>` |
 
 Full command reference: `spree --help`, or the [CLI guide](https://spreecommerce.org/docs/developer/cli/quickstart).
 
@@ -38,13 +38,13 @@ Full command reference: `spree --help`, or the [CLI guide](https://spreecommerce
 
 - `spree dev` runs in the foreground and streams logs until stopped. The developer usually has it running already — don't start a second copy. If you must start it yourself, run it as a background process (your agent's background mode, or shell job control) and pass `--no-open` so it doesn't open a browser — the flag does not detach it.
 - After changing an initializer or anything else that does not reload on its own: `spree restart`.
-- After changing the `Gemfile`: `spree bundle install`, then stop and start `spree dev` again.
+- After changing the `Gemfile`: `spree exec bundle install`, then stop and start `spree dev` again. To add a gem, use `spree add --gem <gem>`, which does both.
 - After changing the `Dockerfile` or `.ruby-version`: `spree build`.
 - Never run `spree db:reset` or `spree eject` without asking the developer first.
 
 ### Ejected projects
 
-`spree generate` and `spree add` ask before ejecting a project that still runs the prebuilt image; with no terminal they stop and print the `--yes` command to run once the developer agrees. `spree bundle add`, `remove`, `install`, `update` and `lock` refuse to run on a project that is not ejected. Edits you make by hand here take effect only in an ejected project, one whose `docker-compose.yml` mounts the source into the container (`./server:/rails` in a create-spree-app project, `.:/rails` in a bare clone). Ejecting switches the app to a fresh development database, so ask the developer before agreeing to it.
+`spree generate` and `spree add` ask before ejecting a project that still runs the prebuilt image; with no terminal they stop and print the `--yes` command to run once the developer agrees. The deprecated `spree bundle` commands refuse to change a project that is not ejected. Edits you make by hand here take effect only in an ejected project, one whose `docker-compose.yml` mounts the source into the container (`./server:/rails` in a create-spree-app project, `.:/rails` in a bare clone). Ejecting switches the app to a fresh development database, so ask the developer before agreeing to it.
 
 ## Spree Documentation
 
@@ -212,10 +212,10 @@ Solidus is a separate project that forked from Spree in 2015. Its docs, gems (`s
 ## Testing
 
 ```bash
-spree rails db:test:prepare                 # once, to create the test database
-spree rspec                                 # full suite
-spree rspec spec/models/                    # one directory
-spree rspec spec/models/my_model_spec.rb:15 # one file or example
+spree exec bin/rails db:test:prepare        # once, to create the test database
+spree test                                  # full suite
+spree test spec/models/                     # one directory
+spree test spec/models/my_model_spec.rb:15  # one file or example
 ```
 
-`spree rspec` runs inside the container with `RAILS_ENV=test`, against the `spree_test` database — never your development data.
+`spree test` runs inside the container with `RAILS_ENV=test`, against the `spree_test` database — never your development data.
