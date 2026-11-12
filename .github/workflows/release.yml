@@ -13,7 +13,8 @@ env:
   IMAGE_NAME: spree/spree
   # Published to Docker Hub as well, only when these secrets are configured.
   DOCKERHUB_IMAGE: docker.io/spreecommerce/spree
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  # Docker Hub publishing runs only when both secrets are set.
+  DOCKERHUB_ENABLED: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
   # OCI metadata that docker/metadata-action does not derive from the repository.
   IMAGE_METADATA: |
     org.opencontainers.image.title=Spree Commerce
@@ -101,7 +102,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: docker/login-action@v3
-        if: env.DOCKERHUB_USERNAME != ''
+        if: env.DOCKERHUB_ENABLED == 'true'
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -111,7 +112,7 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            name=${{ env.DOCKERHUB_IMAGE }},enable=${{ env.DOCKERHUB_USERNAME != '' }}
+            name=${{ env.DOCKERHUB_IMAGE }},enable=${{ env.DOCKERHUB_ENABLED == 'true' }}
           annotations: ${{ env.IMAGE_METADATA }}
           tags: |
             type=match,pattern=v(.*),group=1
