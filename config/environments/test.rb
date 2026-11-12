@@ -37,6 +37,17 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # A Spree deprecation fails the spec when this app's own code calls the
+  # deprecated API, so it is replaced before a Spree upgrade removes it.
+  # Deprecated calls made inside Spree itself still only print a warning.
+  config.after_initialize do
+    Spree::Deprecation.behavior = lambda do |message, callstack, deprecator|
+      caller_path = callstack.first&.absolute_path.to_s
+      behavior = caller_path.start_with?(Rails.root.to_s) && !caller_path.match?(%r{/(vendor|node_modules)/}) ? :raise : :stderr
+      ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[behavior].call(message, callstack, deprecator)
+    end
+  end
+
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 end

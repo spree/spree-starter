@@ -174,6 +174,31 @@ module Spree
 end
 ```
 
+## Spree 6 is not the Spree you remember
+
+Most Spree code online, and in model training data, is for Spree 4 and 5, and much of it no longer works. Don't write Spree code from memory. Check the docs listed above first. Calling a removed Ruby API raises an error that names its replacement, and the Rails log (`spree logs`) repeats it, so read the whole error message. In specs, calling a deprecated Spree API from this app's code fails the spec: replace it with what the warning names.
+
+The full list of removed Ruby APIs is in `developer/upgrades/removed-apis.md` in the docs above (online: https://spreecommerce.org/docs/developer/upgrades/removed-apis). The table below covers the most common ones.
+
+| Gone in Spree 6 | Use instead |
+| --- | --- |
+| The Rails storefront (`spree_frontend`) and the Rails admin (`spree_backend`, `spree_admin`) | The Store API with the Next.js storefront or `@spree/sdk`; the React Admin Dashboard, extended with dashboard plugins |
+| API v2 (`/api/v2/storefront`, `/api/v2/platform`) | Store API v3 (`/api/v3/store`) and Admin API v3 (`/api/v3/admin`) |
+| The checkout state machine: `order.next`, `order.state`, `checkout_flow`, `insert_checkout_step`, transition callbacks | `Spree::Cart` holds checkout. `Spree::Carts::Complete` turns it into a `Spree::Order`. Add checkout requirements with `Spree::Checkout::Registry`; run side effects of placing an order in an `order.placed` subscriber |
+| Patching `Order#finalize!` or `Spree::OrderUpdater` | An `order.placed` subscriber for anything that must run for every placed order. The `carts.complete.before_finalize` hook runs only when a storefront cart completes, not for admin draft orders or a repeated completion |
+| `order.payment_state`, `order.shipment_state` | `payment_status`, `fulfillment_status` |
+| `Spree::Adjustment`, `order.adjustments` | `tax_lines`, `discounts` and `fees` |
+| `variant.price`, `product.price`, `display_price`, `price=` | Read the base price with `price_in(currency).amount`, and the price a customer pays (including price lists) with `variant.price_for(context)&.amount` (it returns a price or `nil`). Write with `variant.set_price(currency, amount)`; from a product, `product.default_variant.set_price(currency, amount)` |
+| The master variant (`product.master`, deprecated) | `product.default_variant`, a real variant with its own SKU, price and stock |
+| `Spree::ReturnAuthorization`, `Spree::CustomerReturn`, `Spree::Reimbursement` | `Spree::Return`, `Spree::Exchange`, `Spree::Claim` |
+| Taxons and taxonomies, shipments, shipping methods (deprecated aliases) | `Spree::Category`, `Spree::Fulfillment`, `Spree::DeliveryMethod` |
+| Metafields | Custom fields (`Spree::CustomField`) |
+| `Spree::PermissionSets`, `Spree.permissions.assign` | Roles are data: the dashboard (Settings → Roles), the Admin API, or seeds |
+| `Spree::PermittedAttributes` | `Spree::Product.additional_permitted_attributes += [...]` (any model; always `+=`) |
+| The `order.completed` event (deprecated alias) | `order.placed` |
+
+Solidus is a separate project that forked from Spree in 2015. Its docs, gems (`solidus_*`) and APIs do not apply here. Many `spree_*` extensions were written for Spree 4 or 5: check that an extension supports Spree 6 before adding it.
+
 ## Coding Conventions
 
 - All custom code goes in `app/` — never modify gem source
