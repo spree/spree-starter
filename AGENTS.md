@@ -174,6 +174,29 @@ module Spree
 end
 ```
 
+## Spree 6 is not the Spree you remember
+
+Most Spree code online, and in model training data, is for Spree 4 and 5, and much of it no longer works. Don't write Spree code from memory. Check the docs listed above first. Calling a removed Ruby API raises an error that names its replacement, so read the whole error message.
+
+| Gone in Spree 6 | Use instead |
+| --- | --- |
+| The Rails storefront (`spree_frontend`) and the Rails admin (`spree_backend`, `spree_admin`) | The Store API with the Next.js storefront or `@spree/sdk`; the React Admin Dashboard, extended with dashboard plugins |
+| API v2 (`/api/v2/storefront`, `/api/v2/platform`) | Store API v3 (`/api/v3/store`) and Admin API v3 (`/api/v3/admin`) |
+| The checkout state machine: `order.next`, `order.state`, `checkout_flow`, `insert_checkout_step`, transition callbacks | `Spree::Cart` holds checkout. `Spree::Carts::Complete` turns it into a `Spree::Order`. Add checkout requirements with `Spree::Checkout::Registry`; run code at completion with a workflow hook or an `order.placed` subscriber |
+| Patching `Order#finalize!` or `Spree::OrderUpdater` | The `carts.complete.before_finalize` hook, or an `order.placed` subscriber |
+| `order.payment_state`, `order.shipment_state` | `payment_status`, `fulfillment_status` |
+| `Spree::Adjustment`, `order.adjustments` | `tax_lines`, `discounts` and `fees` |
+| `variant.price`, `product.price`, `display_price`, `price=` | `price_in(currency).amount`, `set_price(currency, amount)` |
+| The master variant (`product.master`, deprecated) | `product.default_variant`, a real variant with its own SKU, price and stock |
+| `Spree::ReturnAuthorization`, `Spree::CustomerReturn`, `Spree::Reimbursement` | `Spree::Return`, `Spree::Exchange`, `Spree::Claim` |
+| Taxons and taxonomies, shipments, shipping methods (deprecated aliases) | `Spree::Category`, `Spree::Fulfillment`, `Spree::DeliveryMethod` |
+| Metafields | Custom fields (`Spree::CustomField`) |
+| `Spree::PermissionSets`, `Spree.permissions.assign` | Roles are data: the dashboard (Settings → Roles), the Admin API, or seeds |
+| `Spree::PermittedAttributes` | `Spree::Product.additional_permitted_attributes += [...]` (any model; always `+=`) |
+| The `order.completed` event (deprecated alias) | `order.placed` |
+
+Solidus is a separate project that forked from Spree in 2015. Its docs, gems (`solidus_*`) and APIs do not apply here. Many `spree_*` extensions were written for Spree 4 or 5: check that an extension supports Spree 6 before adding it.
+
 ## Coding Conventions
 
 - All custom code goes in `app/` — never modify gem source
