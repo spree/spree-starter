@@ -176,7 +176,9 @@ end
 
 ## Spree 6 is not the Spree you remember
 
-Most Spree code online, and in model training data, is for Spree 4 and 5, and much of it no longer works. Don't write Spree code from memory. Check the docs listed above first. Calling a removed Ruby API raises an error that names its replacement, so read the whole error message.
+Most Spree code online, and in model training data, is for Spree 4 and 5, and much of it no longer works. Don't write Spree code from memory. Check the docs listed above first. Calling a removed Ruby API raises an error that names its replacement, and the Rails log (`spree logs`) repeats it, so read the whole error message. In specs, calling a deprecated Spree API from this app's code fails the spec: replace it with what the warning names.
+
+The full list of removed Ruby APIs is in `developer/upgrades/removed-apis.md` in the docs above (online: https://spreecommerce.org/docs/developer/upgrades/removed-apis). The table below covers the most common ones.
 
 | Gone in Spree 6 | Use instead |
 | --- | --- |
