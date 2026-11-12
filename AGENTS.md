@@ -186,7 +186,7 @@ Most Spree code online, and in model training data, is for Spree 4 and 5, and mu
 | Patching `Order#finalize!` or `Spree::OrderUpdater` | An `order.placed` subscriber for anything that must run for every placed order. The `carts.complete.before_finalize` hook runs only when a storefront cart completes, not for admin draft orders or a repeated completion |
 | `order.payment_state`, `order.shipment_state` | `payment_status`, `fulfillment_status` |
 | `Spree::Adjustment`, `order.adjustments` | `tax_lines`, `discounts` and `fees` |
-| `variant.price`, `product.price`, `display_price`, `price=` | Read the base price with `price_in(currency).amount`, and the price a customer pays (including price lists) with `variant.price_for(context)`. Write with `variant.set_price(currency, amount)`; from a product, `product.default_variant.set_price(currency, amount)` |
+| `variant.price`, `product.price`, `display_price`, `price=` | Read the base price with `price_in(currency).amount`, and the price a customer pays (including price lists) with `variant.price_for(context)&.amount` (it returns a price or `nil`). Write with `variant.set_price(currency, amount)`; from a product, `product.default_variant.set_price(currency, amount)` |
 | The master variant (`product.master`, deprecated) | `product.default_variant`, a real variant with its own SKU, price and stock |
 | `Spree::ReturnAuthorization`, `Spree::CustomerReturn`, `Spree::Reimbursement` | `Spree::Return`, `Spree::Exchange`, `Spree::Claim` |
 | Taxons and taxonomies, shipments, shipping methods (deprecated aliases) | `Spree::Category`, `Spree::Fulfillment`, `Spree::DeliveryMethod` |
