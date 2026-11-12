@@ -26,7 +26,7 @@ The API, its database and its background jobs run in Docker containers managed b
 | `bin/rails routes` | `spree api endpoints` for the Admin API, `spree exec bin/rails routes` for every Rails route |
 | `bin/rake spree:<task>` | `spree task <task>` |
 | `bundle install`, `bundle update` | `spree exec bundle install`, `spree exec bundle update` |
-| `bundle add <gem>` | `spree add <extension>` for a Spree extension, `spree add --gem <gem>` for any other gem |
+| `bundle add <gem>` | `spree add <extension>` for an extension in the CLI's catalog, `spree add --gem <gem>` for any other gem, including unlisted `spree_*` extensions |
 | `bundle exec rspec …` | `spree test …` |
 | `tail -f log/development.log` | `spree logs` |
 | `psql` | `spree db:console` |
@@ -48,19 +48,19 @@ Full command reference: `spree --help`, or the [CLI guide](https://spreecommerce
 
 ## Spree Documentation
 
-If `@spree/docs` is installed (create-spree-app adds it to the project root's `package.json`), the full developer documentation is available as Markdown in `../node_modules/@spree/docs/dist/`:
+In a create-spree-app project, the full developer documentation for the Spree version this project runs is available as Markdown in `../node_modules/@spree/docs/dist/` (the `@spree/docs` package in the project root's `package.json`). When sources disagree, these docs win over online pages and memory:
 
 - `developer/core-concepts/` — products, orders, payments, inventory, and the rest of the data model
 - `developer/customization/` — events, workflow hooks, dependencies, extensions, decorators
 - `developer/cli/` — every Spree CLI command
 - `api-reference/store.yaml`, `api-reference/admin.yaml` — OpenAPI specs for the Store API and Admin API, with every endpoint, parameter and response schema
 
-Otherwise, use:
+In a bare clone of this template, use:
 
 - https://spreecommerce.org/docs/llms.txt — links to every documentation page as Markdown
 - https://spreecommerce.org/docs/api-reference/store.yaml and https://spreecommerce.org/docs/api-reference/admin.yaml — the API specs
 
-For deeper guidance, install the Spree agent skills from the project root: `npx skills add spree/agent-skills`.
+For deeper guidance, install the Spree agent skills from the project root with `spree add ai`, which picks the skills release that matches this project's Spree version.
 
 ## Architecture
 
