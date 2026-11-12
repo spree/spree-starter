@@ -8,6 +8,20 @@ permissions:
   contents: read
   packages: write
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: spree/spree
+  # Published to Docker Hub as well, only when these secrets are configured.
+  DOCKERHUB_IMAGE: docker.io/spreecommerce/spree
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  # OCI metadata that docker/metadata-action does not derive from the repository.
+  IMAGE_METADATA: |
+    org.opencontainers.image.title=Spree Commerce
+    org.opencontainers.image.description=Spree Commerce: open-source headless commerce platform. REST Store and Admin APIs (OpenAPI), Admin Dashboard, MCP server, webhooks and a built-in marketplace in one image. Integrate with TypeScript SDKs; no Ruby needed.
+    org.opencontainers.image.url=https://spreecommerce.org
+    org.opencontainers.image.documentation=https://spreecommerce.org/docs
+    org.opencontainers.image.vendor=Spree Commerce
+
 jobs:
   release-docker:
     name: "Build (${{ matrix.platform }})"
@@ -19,10 +33,6 @@ jobs:
             runner: ubuntu-latest
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
-
-    env:
-      REGISTRY: ghcr.io
-      IMAGE_NAME: spree/spree
 
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +49,8 @@ jobs:
         id: meta
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          labels: ${{ env.IMAGE_METADATA }}
+          annotations: ${{ env.IMAGE_METADATA }}
 
       - uses: docker/build-push-action@v6
         id: build
@@ -46,6 +58,7 @@ jobs:
           context: .
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
           outputs: type=image,"name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}",push-by-digest=true,name-canonical=true,push=true
@@ -69,8 +82,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REGISTRY: ghcr.io
-      IMAGE_NAME: spree/spree
+      # Multi-platform images carry their description on the image index.
+      DOCKER_METADATA_ANNOTATIONS_LEVELS: index
 
     steps:
       - uses: actions/download-artifact@v4
@@ -87,17 +100,29 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: docker/login-action@v3
+        if: env.DOCKERHUB_USERNAME != ''
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - uses: docker/metadata-action@v5
         id: meta
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            name=${{ env.DOCKERHUB_IMAGE }},enable=${{ env.DOCKERHUB_USERNAME != '' }}
+          annotations: ${{ env.IMAGE_METADATA }}
           tags: |
             type=match,pattern=v(.*),group=1
             type=raw,value=latest
 
       - name: Create and push manifest
         working-directory: /tmp/digests
+        env:
+          META_JSON: ${{ steps.meta.outputs.json }}
         run: |
-          docker buildx imagetools create \
-            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< '${{ steps.meta.outputs.json }}') \
+          mapfile -t tags < <(jq -r '.tags[] | "--tag=" + .' <<< "$META_JSON")
+          mapfile -t annotations < <(jq -r '.annotations[] | "--annotation=" + .' <<< "$META_JSON")
+          docker buildx imagetools create "${tags[@]}" "${annotations[@]}" \
             $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)

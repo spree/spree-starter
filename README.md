@@ -61,6 +61,19 @@ This application builds into a single Docker image: the API, the Admin Dashboard
 
 See the [Deployment Guide](https://spreecommerce.org/docs/developer/deployment/quickstart) for Render, AWS and other Docker hosts.
 
+## Docker image
+
+Every release of this repository is published as [`ghcr.io/spree/spree`](https://github.com/orgs/spree/packages/container/package/spree), tagged with the Spree version and `latest`, for `linux/amd64` and `linux/arm64`. It is built from this repository's [`Dockerfile`](Dockerfile) by [`.github/workflows/release.yml`](.github/workflows/release.yml).
+
+The image holds this application with the Store and Admin APIs, the MCP server, the Admin Dashboard and Seller Panel, and background jobs. It needs Postgres; [`docker-compose.yml`](docker-compose.yml) runs it with Postgres and Mailpit:
+
+```bash
+cp .env.example .env   # then set SECRET_KEY_BASE, e.g. to the output of: openssl rand -hex 64
+docker compose up
+```
+
+The API then listens on <http://localhost:3000> and the Admin Dashboard on <http://localhost:3000/dashboard>. You don't need Ruby to run the image or to integrate with it through the APIs and TypeScript SDKs — only to customize the backend.
+
 ## License
 
 [MIT](LICENSE.md)
