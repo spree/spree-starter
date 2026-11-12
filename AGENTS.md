@@ -25,7 +25,8 @@ The API, its database and its background jobs run in Docker containers managed b
 | `bin/rails generate …` | `spree generate …` (Spree generators need no `spree:` prefix) |
 | `bin/rails routes` | `spree routes` |
 | `bin/rake spree:<task>` | `spree task <task>` |
-| `bundle install`, `bundle add <gem>` | `spree bundle install`, `spree bundle add <gem>` |
+| `bundle install` | `spree bundle install` |
+| `bundle add <gem>` | `spree add <extension>` for a Spree extension, `spree add --gem <gem>` for any other gem |
 | `bundle exec rspec …` | `spree rspec …` |
 | `tail -f log/development.log` | `spree logs` |
 | `psql` | `spree db:console` |
@@ -41,11 +42,9 @@ Full command reference: `spree --help`, or the [CLI guide](https://spreecommerce
 - After changing the `Dockerfile` or `.ruby-version`: `spree build`.
 - Never run `spree db:reset` or `spree eject` without asking the developer first.
 
-### Your code changes only take effect in an ejected project
+### Ejected projects
 
-The Spree CLI runs whatever `docker-compose.yml` describes, and out of the box that is the prebuilt Spree Docker image — both in a new create-spree-app project and in a bare clone of this template. Until the project is ejected, edits to this directory — including files written by `spree generate` and gems added with `spree bundle` — have no effect. `spree eject` switches `docker-compose.yml` to build from this directory, with live reloading. You can tell a project is ejected when its `docker-compose.yml` mounts the source into the container: `./server:/rails` in a create-spree-app project, `.:/rails` in a bare clone.
-
-Ejecting switches the app to a fresh development database, so ask the developer before running it.
+`spree generate` and `spree add` ask before ejecting a project that still runs the prebuilt image; with no terminal they stop and print the `--yes` command to run once the developer agrees. `spree bundle add`, `remove`, `install`, `update` and `lock` refuse to run on a project that is not ejected. Edits you make by hand here take effect only in an ejected project, one whose `docker-compose.yml` mounts the source into the container (`./server:/rails` in a create-spree-app project, `.:/rails` in a bare clone). Ejecting switches the app to a fresh development database, so ask the developer before agreeing to it.
 
 ## Spree Documentation
 
@@ -154,7 +153,7 @@ end
 
 ### 3. Extensions
 
-Add the gem with `spree bundle add <extension>`, run its installer with `spree generate <extension>:install`, then restart `spree dev`.
+Install one with `spree add <extension>` (for example `spree add stripe`). It ejects the project if needed (after asking), adds the gem, runs its installer and migrations, and restarts a running server.
 
 ### 4. Decorators (last resort)
 
@@ -185,7 +184,7 @@ The full list of removed Ruby APIs is in `developer/upgrades/removed-apis.md` in
 | The Rails storefront (`spree_frontend`) and the Rails admin (`spree_backend`, `spree_admin`) | The Store API with the Next.js storefront or `@spree/sdk`; the React Admin Dashboard, extended with dashboard plugins |
 | API v2 (`/api/v2/storefront`, `/api/v2/platform`) | Store API v3 (`/api/v3/store`) and Admin API v3 (`/api/v3/admin`) |
 | The checkout state machine: `order.next`, `order.state`, `checkout_flow`, `insert_checkout_step`, transition callbacks | `Spree::Cart` holds checkout. `Spree::Carts::Complete` turns it into a `Spree::Order`. Add checkout requirements with `Spree::Checkout::Registry`; run side effects of placing an order in an `order.placed` subscriber |
-| Patching `Order#finalize!` or `Spree::OrderUpdater` | An `order.placed` subscriber for anything that must run for every placed order. The `carts.complete.before_finalize` hook runs only when a storefront cart completes, not for admin draft orders or a repeated completion |
+| Patching `Order#finalize!` or `Spree::OrderUpdater` | An `order.placed` subscriber for side effects of placing an order. The event is published after the order is saved, so a process that stops in between never publishes it, and completing the order again does not either: make subscribers idempotent and reconcile from placed orders when a side effect must never be missed. The `carts.complete.before_finalize` hook runs only when a storefront cart completes, not for admin draft orders or a repeated completion |
 | `order.payment_state`, `order.shipment_state` | `payment_status`, `fulfillment_status` |
 | `Spree::Adjustment`, `order.adjustments` | `tax_lines`, `discounts` and `fees` |
 | `variant.price`, `product.price`, `display_price`, `price=` | Read the base price with `price_in(currency).amount`, and the price a customer pays (including price lists) with `variant.price_for(context)&.amount` (it returns a price or `nil`). Write with `variant.set_price(currency, amount)`; from a product, `product.default_variant.set_price(currency, amount)` |
