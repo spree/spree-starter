@@ -10,14 +10,15 @@
 # OrbStack on macOS map bind-mount UIDs to the host user automatically;
 # on Linux the host user is typically UID 1000 too.
 #
+# The container is the Spree base image's build variant: Ruby, Node, compilers
+# and psql, with no gems. Its entrypoint installs the Gemfile's gems into the
+# bundle_cache volume before any command runs.
+#
 # Adding a gem: `spree bundle add <gem>` — gems persist in the bundle_cache volume.
-# Changing the Dockerfile or .ruby-version: `spree build` to rebuild the image.
+# Getting a newer base image (security fixes): `spree build`.
 
 x-app: &app
-  build:
-    context: .
-    dockerfile: Dockerfile
-    target: dev
+  image: ghcr.io/spree/spree-base:6.1-build
   depends_on:
     postgres:
       condition: service_healthy
@@ -54,7 +55,10 @@ x-app: &app
     # Set SMTP_HOST (and friends) in .env to deliver through a real provider instead.
     SMTP_HOST: ${SMTP_HOST:-mailpit}
     SMTP_PORT: ${SMTP_PORT:-1025}
-    # RAILS_ENV / BUNDLE_* are baked into the dev image (Dockerfile dev stage).
+    # The base image is set up for production; these make it a dev container.
+    RAILS_ENV: development
+    BUNDLE_DEPLOYMENT: "0"
+    BUNDLE_WITHOUT: ""
     BOOTSNAP_CACHE_DIR: /rails/tmp/cache/bootsnap
   volumes:
     # Bind-mount the source so host edits are live in the container.
@@ -133,10 +137,9 @@ services:
   # in-process (SOLID_QUEUE_IN_PUMA, on by default) — no separate worker.
   web:
     <<: *app
-    # The dev stage already has dev/test gems installed, so no runtime
-    # bundle install is needed. We do bypass bin/docker-entrypoint (it runs
-    # db:prepare + assets:precompile, which is wrong for dev — first-time
-    # setup goes through `spree init`).
+    # Outside production the image's entrypoint only installs missing gems;
+    # it does not prepare the database — first-time setup goes through
+    # `spree init`.
     command: ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
     ports:
       - "${SPREE_PORT:-3000}:3000"

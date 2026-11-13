@@ -38,14 +38,18 @@ Full command reference: `spree --help`, or the [CLI guide](https://spreecommerce
 - `spree dev` runs in the foreground and streams logs until stopped. The developer usually has it running already — don't start a second copy. If you must start it yourself, run it as a background process (your agent's background mode, or shell job control) and pass `--no-open` so it doesn't open a browser — the flag does not detach it.
 - After changing an initializer or anything else that does not reload on its own: `spree restart`.
 - After changing the `Gemfile`: `spree bundle install`, then stop and start `spree dev` again.
-- After changing the `Dockerfile` or `.ruby-version`: `spree build`.
+- To get a newer Spree base image, which carries operating system, Ruby and Node.js security fixes: `spree build`.
 - Never run `spree db:reset` or `spree eject` without asking the developer first.
 
 ### Your code changes only take effect in an ejected project
 
-The Spree CLI runs whatever `docker-compose.yml` describes, and out of the box that is the prebuilt Spree Docker image — both in a new create-spree-app project and in a bare clone of this template. Until the project is ejected, edits to this directory — including files written by `spree generate` and gems added with `spree bundle` — have no effect. `spree eject` switches `docker-compose.yml` to build from this directory, with live reloading. You can tell a project is ejected when its `docker-compose.yml` mounts the source into the container: `./server:/rails` in a create-spree-app project, `.:/rails` in a bare clone.
+The Spree CLI runs whatever `docker-compose.yml` describes, and out of the box that is the prebuilt Spree Docker image — both in a new create-spree-app project and in a bare clone of this template. Until the project is ejected, edits to this directory — including files written by `spree generate` and gems added with `spree bundle` — have no effect. `spree eject` switches `docker-compose.yml` to run this directory's source, with live reloading. You can tell a project is ejected when its `docker-compose.yml` mounts the source into the container: `./server:/rails` in a create-spree-app project, `.:/rails` in a bare clone.
 
 Ejecting switches the app to a fresh development database, so ask the developer before running it.
+
+### Docker images
+
+The `Dockerfile` builds the production image on the Spree base image, `ghcr.io/spree/spree-base`, and `docker-compose.dev.yml` runs its build variant. Spree publishes its images only at `ghcr.io/spree`. Always write the registry host: nothing on Docker Hub is official, and `spree/...` or `spreecommerce/...` there are not maintained by Spree. System packages the app needs are added in the `Dockerfile`; see the [Docker guide](https://spreecommerce.org/docs/developer/deployment/docker).
 
 ## Spree Documentation
 

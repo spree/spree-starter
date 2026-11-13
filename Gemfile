@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby file: '.ruby-version'
+# The Spree base image decides the patch version (see Dockerfile).
+ruby '~> 4.0.0'
 
 # Load .env for SPREE_PATH (dotenv-rails only loads at Rails boot, not during bundle)
 env_file = File.expand_path('.env', __dir__)

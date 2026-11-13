@@ -1,16 +1,44 @@
 name: Release Docker Image
 
+# Publishes the stock image, ghcr.io/spree/spree: this app built on the Spree
+# base image (see Dockerfile). A version tag publishes that version. The weekly
+# run rebuilds the newest version on the latest base image, so the stock image
+# also gets operating system, Ruby and Node security fixes between releases.
 on:
   push:
     tags: ['v*']
+  schedule:
+    # Mondays, two hours after spree/spree rebuilds the base image.
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
 
 permissions:
   contents: read
   packages: write
 
 jobs:
+  version:
+    name: Pick the version to build
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.pick.outputs.tag }}
+    steps:
+      - id: pick
+        env:
+          PUSHED_TAG: ${{ github.event_name == 'push' && github.ref_name || '' }}
+        run: |
+          tag="$PUSHED_TAG"
+          if [ -z "$tag" ]; then
+            # The newest released version; prereleases (v6.1.0.rc1) are skipped.
+            tag=$(git ls-remote --tags --refs --sort=-v:refname "https://github.com/${GITHUB_REPOSITORY}.git" 'v*' \
+              | sed 's|.*refs/tags/||' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+          fi
+          [ -n "$tag" ] || { echo "::error::no version tag to build"; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
   release-docker:
     name: "Build (${{ matrix.platform }})"
+    needs: version
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
@@ -26,6 +54,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.tag }}
 
       - uses: docker/setup-buildx-action@v3
 
@@ -44,6 +74,8 @@ jobs:
         id: build
         with:
           context: .
+          # Always start from the newest base image, never a cached one.
+          pull: true
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.platform }}
@@ -65,8 +97,13 @@ jobs:
 
   release-docker-manifest:
     name: "Publish manifest"
-    needs: release-docker
+    needs: [version, release-docker]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
 
     env:
       REGISTRY: ghcr.io
@@ -92,12 +129,24 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=match,pattern=v(.*),group=1
+            type=match,pattern=v(.*),group=1,value=${{ needs.version.outputs.tag }}
             type=raw,value=latest
 
       - name: Create and push manifest
+        id: manifest
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create \
             $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< '${{ steps.meta.outputs.json }}') \
             $(printf '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+
+          digest=$(docker buildx imagetools inspect "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" --format '{{json .Manifest}}' | jq -r .digest)
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      # Lets anyone check the image came from this workflow:
+      #   gh attestation verify oci://ghcr.io/spree/spree:latest --repo spree/spree-starter
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.manifest.outputs.digest }}
+          push-to-registry: true
