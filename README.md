@@ -72,7 +72,7 @@ cp .env.example .env   # then set SECRET_KEY_BASE, e.g. to the output of: openss
 docker compose up
 ```
 
-The API then listens on <http://localhost:3000> and the Admin Dashboard on <http://localhost:3000/dashboard>. You don't need Ruby to run the image or to integrate with it through the APIs and TypeScript SDKs — only to customize the backend.
+The API then listens on <http://localhost:3000> and the Admin Dashboard on <http://localhost:3000/dashboard>.
 
 ## License
 

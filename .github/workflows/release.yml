@@ -11,14 +11,10 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: spree/spree
-  # Published to Docker Hub as well, only when these secrets are configured.
-  DOCKERHUB_IMAGE: docker.io/spreecommerce/spree
-  # Docker Hub publishing runs only when both secrets are set.
-  DOCKERHUB_ENABLED: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
   # OCI metadata that docker/metadata-action does not derive from the repository.
   IMAGE_METADATA: |
     org.opencontainers.image.title=Spree Commerce
-    org.opencontainers.image.description=Spree Commerce: open-source headless commerce platform. REST Store and Admin APIs (OpenAPI), Admin Dashboard, MCP server, webhooks and a built-in marketplace in one image. Integrate with TypeScript SDKs; no Ruby needed.
+    org.opencontainers.image.description=Spree Commerce: open-source headless commerce platform. REST Store and Admin APIs (OpenAPI), Admin Dashboard, MCP server, webhooks and a built-in marketplace in one image. Integrate with the TypeScript SDKs.
     org.opencontainers.image.url=https://spreecommerce.org
     org.opencontainers.image.documentation=https://spreecommerce.org/docs
     org.opencontainers.image.vendor=Spree Commerce
@@ -101,18 +97,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/login-action@v3
-        if: env.DOCKERHUB_ENABLED == 'true'
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - uses: docker/metadata-action@v5
         id: meta
         with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            name=${{ env.DOCKERHUB_IMAGE }},enable=${{ env.DOCKERHUB_ENABLED == 'true' }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           annotations: ${{ env.IMAGE_METADATA }}
           tags: |
             type=match,pattern=v(.*),group=1
