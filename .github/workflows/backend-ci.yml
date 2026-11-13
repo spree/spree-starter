@@ -57,3 +57,14 @@ jobs:
 
       - name: Bundle audit
         run: bundle exec bundle-audit check --update
+
+  # Builds the production image the way a project does, on the Spree base
+  # image, so a change that breaks the build is caught before a release.
+  image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the production image
+        run: docker build . --pull --tag spree-starter:ci
