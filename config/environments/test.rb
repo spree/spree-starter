@@ -26,6 +26,12 @@ Rails.application.configure do
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 
+  # config/application.rb sets Solid Queue for every environment, and
+  # ActiveJob::TestHelper keeps an adapter the app configured, so specs would
+  # enqueue into the Solid Queue tables and the Active Job matchers and
+  # perform_enqueued_jobs would not see the jobs. Use the test adapter.
+  config.active_job.queue_adapter = :test
+
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
