@@ -111,6 +111,7 @@ To run your own code inside a Spree flow (validate, react, add data), register a
 ```ruby
 # config/initializers/spree.rb
 Spree.hooks.register('carts.add_item.validate', 'MyApp::CheckPurchaseLimit')
+Spree.hooks.register('carts.upsert_items.validate', 'MyApp::CheckPurchaseLimit') # quantity edits
 ```
 
 ```ruby
@@ -118,7 +119,12 @@ Spree.hooks.register('carts.add_item.validate', 'MyApp::CheckPurchaseLimit')
 module MyApp
   class CheckPurchaseLimit
     def call(workflow)
-      return if workflow.quantity <= 10
+      quantity = (workflow.quantity.presence || 1).to_i
+      # carts.add_item's quantity is the increment; carts.upsert_items' is the line's new total
+      if workflow.class.workflow_key == 'carts.add_item'
+        quantity += workflow.cart.line_items.where(variant_id: workflow.variant.id).sum(:quantity)
+      end
+      return if quantity <= 10
 
       workflow.errors.add(:quantity, :purchase_limit_exceeded, message: 'You can order at most 10 of this item.')
       workflow.reject!
@@ -194,7 +200,7 @@ The full list of removed Ruby APIs is in `developer/upgrades/removed-apis.md` in
 | Taxons and taxonomies, shipments, shipping methods (deprecated aliases) | `Spree::Category`, `Spree::Fulfillment`, `Spree::DeliveryMethod` |
 | Metafields | Custom fields (`Spree::CustomField`) |
 | `Spree::PermissionSets`, `Spree.permissions.assign` | Roles are data: the dashboard (Settings → Roles), the Admin API, or seeds |
-| `Spree::PermittedAttributes` | `Spree::Product.additional_permitted_attributes += [...]` (any model; always `+=`) |
+| `Spree::PermittedAttributes` | `Spree::Product.additional_permitted_attributes += [...]` (any model; always `+=`), inside `Rails.application.config.to_prepare do ... end` in an initializer, where models are not loaded yet |
 | The `order.completed` event (deprecated alias) | `order.placed` |
 
 Solidus is a separate project that forked from Spree in 2015. Its docs, gems (`solidus_*`) and APIs do not apply here. Many `spree_*` extensions were written for Spree 4 or 5: check that an extension supports Spree 6 before adding it.

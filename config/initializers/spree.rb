@@ -50,7 +50,7 @@ Rails.application.config.after_initialize do
   # Exports
   # Spree.export_types << Spree::Exports::Payments
 
-  # Event subscribers (generate with `bin/rails g spree:subscriber`)
+  # Event subscribers (generate with `spree generate subscriber`, which also registers them here)
   # Spree.subscribers << OrderPlacedSubscriber
 end
 
