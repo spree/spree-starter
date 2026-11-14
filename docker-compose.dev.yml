@@ -74,6 +74,11 @@ x-app: &app
   # which reintroduces the frozen manifest; tmpfs is always empty on start.
   tmpfs:
     - /rails/public/assets
+    # Pid files are tmpfs too, so they never outlive the server process. A
+    # server.pid left in the tmp_cache volume by an unclean stop names pid 1 —
+    # the new server itself — and Rails refuses to boot ("A server is already
+    # running").
+    - /rails/tmp/pids:uid=1000,gid=1000
 
 services:
   postgres:
