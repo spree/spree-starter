@@ -2217,19 +2217,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_132858) do
     t.index ["source_id", "source_type"], name: "index_spree_payments_on_source_id_and_source_type"
   end
 
-  create_table "spree_paypal_checkout_orders", force: :cascade do |t|
-    t.bigint "order_id", null: false
-    t.bigint "payment_method_id", null: false
-    t.string "paypal_id", null: false
-    t.decimal "amount", precision: 10, scale: 2, null: false
-    t.jsonb "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["order_id", "paypal_id"], name: "index_spree_paypal_checkout_orders_on_order_id_and_paypal_id", unique: true
-    t.index ["order_id"], name: "index_spree_paypal_checkout_orders_on_order_id"
-    t.index ["payment_method_id"], name: "index_spree_paypal_checkout_orders_on_payment_method_id"
-  end
-
   create_table "spree_policies", force: :cascade do |t|
     t.string "slug", null: false
     t.string "name"

@@ -34,6 +34,7 @@ if spree_path
     gem 'spree_easypost'
     gem 'spree_emails'
     gem 'spree_meilisearch'
+    gem 'spree_paypal_checkout'
     gem 'spree_stripe'
     gem 'spree_opentelemetry'
     gem 'spree_mcp'
@@ -45,6 +46,7 @@ else
   gem 'spree_dashboard', spree_version
   gem 'spree_easypost', spree_version
   gem 'spree_meilisearch', spree_version
+  gem 'spree_paypal_checkout', spree_version
   gem 'spree_stripe', spree_version
   gem 'spree_opentelemetry', spree_version
   gem 'spree_mcp', spree_version
@@ -52,7 +54,6 @@ end
 
 # Extensions
 # gem 'spree_adyen'
-# gem 'spree_paypal_checkout'
 
 # Rails & Infrastructure
 gem 'aws-sdk-s3', require: false
