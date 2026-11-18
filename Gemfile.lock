@@ -90,6 +90,22 @@ GEM
     addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
     alba (4.0.3)
+    apimatic_core (0.3.21)
+      apimatic_core_interfaces (~> 0.2.0)
+      certifi (~> 2018.1, >= 2018.01.18)
+      faraday-multipart (~> 1.0)
+      nokogiri (~> 1.13, >= 1.13.10)
+    apimatic_core_interfaces (0.2.3)
+    apimatic_faraday_client_adapter (0.1.6)
+      apimatic_core_interfaces (~> 0.2.0)
+      certifi (~> 2018.1, >= 2018.01.18)
+      faraday (~> 2.0, >= 2.0.1)
+      faraday-follow_redirects (~> 0.2)
+      faraday-gzip (>= 1, < 4)
+      faraday-http-cache (~> 2.2)
+      faraday-multipart (~> 1.0)
+      faraday-net_http_persistent (~> 2.0)
+      faraday-retry (~> 2.0)
     ar_lazy_preload (2.1.3)
     ast (2.4.3)
     async (2.46.0)
@@ -147,6 +163,7 @@ GEM
       bundler (>= 1.2.0)
       thor (~> 1.0)
     cancancan (3.7.0)
+    certifi (2018.01.18)
     coderay (1.1.3)
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
@@ -191,10 +208,22 @@ GEM
       faraday-net_http (>= 2.0, < 3.6)
       json
       logger
-    faraday-http-cache (3.0.0)
+    faraday-follow_redirects (0.5.0)
+      faraday (>= 1, < 3)
+    faraday-gzip (3.2.0)
+      faraday (>= 2.0, < 3)
+      zlib (~> 3.0)
+    faraday-http-cache (2.8.0)
       faraday (>= 0.8)
+    faraday-multipart (1.2.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.5.0)
       net-http (~> 0.5)
+    faraday-net_http_persistent (2.3.1)
+      faraday (~> 2.5)
+      net-http-persistent (>= 4.0.4, < 5)
+    faraday-retry (2.4.0)
+      faraday (~> 2.0)
     ffaker (2.25.0)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
@@ -368,11 +397,14 @@ GEM
     msgpack (1.8.7)
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
+    multipart-post (2.4.1)
     name_of_person (1.1.3)
       activesupport (>= 5.2.0)
     net-http (0.10.0)
       net-protocol (>= 0.3.0)
       uri (>= 0.11.1)
+    net-http-persistent (4.0.8)
+      connection_pool (>= 2.2.4, < 4)
     net-imap (0.6.8)
       date
       net-protocol
@@ -471,6 +503,10 @@ GEM
     parser (3.3.13.0)
       ast (~> 2.4.1)
       racc
+    paypal-server-sdk (2.4.0)
+      apimatic_core (~> 0.3.20)
+      apimatic_core_interfaces (~> 0.2.3)
+      apimatic_faraday_client_adapter (~> 0.1.6)
     pg (1.7.0)
     pg (1.7.0-aarch64-linux)
     pg (1.7.0-aarch64-linux-musl)
@@ -771,6 +807,9 @@ GEM
       opentelemetry-instrumentation-rack
       opentelemetry-sdk (~> 1.0)
       spree_core (= 6.0.5)
+    spree_paypal_checkout (6.0.5)
+      paypal-server-sdk (~> 2.4)
+      spree_core (= 6.0.5)
     spree_stripe (6.0.5)
       spree_core (= 6.0.5)
       stripe (>= 10.1, < 19)
@@ -824,6 +863,7 @@ GEM
     websocket-extensions (0.1.5)
     yaml (0.4.0)
     zeitwerk (2.8.3)
+    zlib (3.2.4)
 
 PLATFORMS
   aarch64-linux
@@ -867,6 +907,7 @@ DEPENDENCIES
   spree_mcp (~> 6.0)
   spree_meilisearch (~> 6.0)
   spree_opentelemetry (~> 6.0)
+  spree_paypal_checkout (~> 6.0)
   spree_stripe (~> 6.0)
   thruster
   tzinfo-data
@@ -890,6 +931,9 @@ CHECKSUMS
   acts_as_list (1.2.6) sha256=8345380900b7bee620c07ad00991ccee59af3d8c9e8574f426e321da2865fdc8
   addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
   alba (4.0.3) sha256=ad9b87b3fa90051504d89c8739a1a3ce8c0db1388eba8b5dad2c2cfac2d897c7
+  apimatic_core (0.3.21) sha256=b4d43a43ddbb4f52c5e51b8dc596721ff9e352a2448fb2aa8c658dd556a30cb3
+  apimatic_core_interfaces (0.2.3) sha256=01a1cf150c95d674386cfe9958b16ace346c8060d9cfe6fe939b3342d91f4e22
+  apimatic_faraday_client_adapter (0.1.6) sha256=9bc1aad6cf6ae7ad0ec4a8c0878026369fd0bf06301cbf1c547c6b14037a28cd
   ar_lazy_preload (2.1.3) sha256=46e2f29c953f0546fdf9168dcc59df29ab75572d5dca444a9630b888b788a853
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   async (2.46.0) sha256=34f984733dbf63a997376346451ec995e858cacc3105e86ccfeaf8877b4f490b
@@ -914,6 +958,7 @@ CHECKSUMS
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   cancancan (3.7.0) sha256=6dfcc6056cc3d8205446bcb368f50913b6aceec2191b3f4d84e82b5607013722
+  certifi (2018.01.18) sha256=d5aff04a27045255a4829823496a974dc1cc2c04a777675b3056b0c0952ce9e3
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
   concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
@@ -938,8 +983,13 @@ CHECKSUMS
   factory_bot (6.6.0) sha256=1fc1b3b5620ec980a6a27aec1b6ec8c250ca82962e970e8a40f93e8d388d4b89
   factory_bot_rails (6.5.1) sha256=d3cc4851eae4dea8a665ec4a4516895045e710554d2b5ac9e68b94d351bc6d68
   faraday (2.15.1) sha256=8708154deda739c5e86cc42b74960e23e8491fce0eba9e11639a6a34b1ac288f
-  faraday-http-cache (3.0.0) sha256=44e0b5441825b80aa59446fdb0ceb5a1cf83e9f58fc89752b336d87a991c7994
+  faraday-follow_redirects (0.5.0) sha256=5cde93c894b30943a5d2b93c2fe9284216a6b756f7af406a1e55f211d97d10ad
+  faraday-gzip (3.2.0) sha256=bedae115512201df9b9b13c95cb9a1aa4cb8a848286212d593b20e9456c8578f
+  faraday-http-cache (2.8.0) sha256=310bfdbc79488aaab4578e91bd04badfe154ca3d88fc06bfc98e36d42c2dd969
+  faraday-multipart (1.2.0) sha256=7d89a949693714176f612323ca13746a2ded204031a6ba528adee788694ef757
   faraday-net_http (3.5.0) sha256=2e7094c34e38754ee048cc3df47376f8657005d9375f8473bce1c3b526a22e36
+  faraday-net_http_persistent (2.3.1) sha256=23ffba37d6a27807a10f033d01918ec958aa73fa6ff0fccfbcd5ce2d2e68fca3
+  faraday-retry (2.4.0) sha256=7b79c48fb7e56526faf247b12d94a680071ff40c9fda7cf1ec1549439ad11ebe
   ffaker (2.25.0) sha256=e485c5adf8195aac55662875b7f515469bca46d77b60d0e7d08db6861bcbec40
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
   ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
@@ -1012,8 +1062,10 @@ CHECKSUMS
   mrml (1.10.0-x86_64-linux-musl) sha256=909e39241451194cef5c50dddaaaaa938a47e755596c8a2fc4502882b3707672
   msgpack (1.8.7) sha256=dfefec761b5f9047e6e8d95d2c7f8af4b3725d984a01942adc533aa819a2df33
   multi_xml (0.9.1) sha256=7ce766b59c17241ed62976caeae1fae9b2431b263398c35396239a68c4a64e57
+  multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   name_of_person (1.1.3) sha256=e12291250987ef79c413314f698f15d53e7a602c42231de99c276ef9585bc18c
   net-http (0.10.0) sha256=1a2ff6e37a05724973c43f2bf7bf105f59c36a4cd0a7e9b1c021a0a566987c27
+  net-http-persistent (4.0.8) sha256=ef3de8319d691537b329053fae3a33195f8b070bbbfae8bf1a58c796081960e6
   net-imap (0.6.8) sha256=eb30bb62227b64a3af6b518b04b2375113d69f68f15de59b0193b07d98acf6d9
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.4.0) sha256=f9f90c8c6f64794a45160bf422177a336db12809de3beeeaa26b88fcd2e8c853
@@ -1054,6 +1106,7 @@ CHECKSUMS
   parallel_tests (5.9.0) sha256=593169873cfeefe54f233103238cb3b078320e6eac0155d0f1107b39233f98f8
   paranoia (3.1.0) sha256=36574a46e8df663d0da7d9008e987b72a6a9eccee13c058b7094acc810e39f52
   parser (3.3.13.0) sha256=e02f9b63c2fe05b0c68f692ba4df89b3cb113b663964f75d988fbebfd6c3deca
+  paypal-server-sdk (2.4.0) sha256=2a57d5ff27a4233631cd92ccc5e5012424cf37a35cf7b1ea93dfea35548de869
   pg (1.7.0) sha256=f7b536501284e883d4c9ef86dbde0313063e4aaafc23575b0017b0d572a26afb
   pg (1.7.0-aarch64-linux) sha256=101dd3a261000eb64b03ff41a5890674b735b626dbdce88652969b59fb0b1157
   pg (1.7.0-aarch64-linux-musl) sha256=5ca4d4619a1a39fb22de47350130956ece69cf0512858ee68dca926e46f65e4a
@@ -1133,6 +1186,7 @@ CHECKSUMS
   spree_mcp (6.0.5) sha256=1e57d11f32dcea3820d045199950ed4126dd272886c9e98636ec5bcee665dfda
   spree_meilisearch (6.0.5) sha256=6c07366a215edbb2d6172efe676fdc500e97c2ae557f13c2bb54ca65c89878b3
   spree_opentelemetry (6.0.5) sha256=4a3182d226ec974f49a83cbfee99769bc8014844ac34e731ab703a5b009e2750
+  spree_paypal_checkout (6.0.5) sha256=3dde6174681526ab07392c09df51ea9a600871fe51e278ffcf839d350d78fa7e
   spree_stripe (6.0.5) sha256=14522e6e4999b9c0c20dd43f2a1155e3ed1d669c269fb35b3c68d409992c26ce
   sqids (0.2.2) sha256=c2d31e0dfb6c32d17c10b59df059a299af93bef716d700ff70d77156df702d36
   ssrf_filter (1.6.0) sha256=78d15bc26d0385c931f46f12a9c1cbb90e6556bd96b95f25e5a5f786c8dcf999
@@ -1167,6 +1221,7 @@ CHECKSUMS
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   yaml (0.4.0) sha256=240e69d1e6ce3584d6085978719a0faa6218ae426e034d8f9b02fb54d3471942
   zeitwerk (2.8.3) sha256=2c85125a8467ce069e20123d1e709a08955c9d29c118c25b46b7b7fafdbb92e5
+  zlib (3.2.4) sha256=a0d0e5845a18d839c078fb5b6e4ae523ffb918601c2004a77c081ee211f9b038
 
 RUBY VERSION
   ruby 4.0.9
