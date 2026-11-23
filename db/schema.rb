@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_02_132858) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_23_141659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -2079,7 +2079,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_132858) do
     t.bigint "payment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
+    t.string "transaction_id"
     t.index ["payment_id"], name: "index_spree_payment_capture_events_on_payment_id"
+    t.index ["transaction_id"], name: "index_spree_payment_capture_events_on_transaction_id"
   end
 
   create_table "spree_payment_methods", force: :cascade do |t|
@@ -2698,6 +2701,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_132858) do
     t.bigint "order_id"
     t.string "refunder_type"
     t.decimal "tax_amount", precision: 19, scale: 4, default: "0.0", null: false
+    t.string "status"
+    t.string "failure_reason"
     t.index ["order_id"], name: "index_spree_refunds_on_order_id"
     t.index ["originator_type", "originator_id"], name: "index_spree_refunds_on_originator"
     t.index ["payment_id"], name: "index_spree_refunds_on_payment_id"
@@ -2705,6 +2710,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_132858) do
     t.index ["refunder_id"], name: "index_spree_refunds_on_refunder_id"
     t.index ["refunder_type", "refunder_id"], name: "index_spree_refunds_on_refunder_actor"
     t.index ["reimbursement_id"], name: "index_spree_refunds_on_reimbursement_id"
+    t.index ["transaction_id"], name: "index_spree_refunds_on_transaction_id"
   end
 
   create_table "spree_reimbursement_credits", force: :cascade do |t|

@@ -30,6 +30,7 @@ if spree_path
     gem 'spree'
     gem 'spree_core'
     gem 'spree_api'
+    gem 'spree_adyen'
     gem 'spree_dashboard'
     gem 'spree_easypost'
     gem 'spree_emails'
@@ -43,6 +44,7 @@ else
   spree_version = '~> 6.0'
   gem 'spree', spree_version
   gem 'spree_emails', spree_version
+  gem 'spree_adyen', spree_version
   gem 'spree_dashboard', spree_version
   gem 'spree_easypost', spree_version
   gem 'spree_meilisearch', spree_version
@@ -51,9 +53,6 @@ else
   gem 'spree_opentelemetry', spree_version
   gem 'spree_mcp', spree_version
 end
-
-# Extensions
-# gem 'spree_adyen'
 
 # Rails & Infrastructure
 gem 'aws-sdk-s3', require: false
