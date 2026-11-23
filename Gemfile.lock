@@ -89,6 +89,8 @@ GEM
       activesupport (>= 6.1)
     addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
+    adyen-ruby-api-library (12.1.0)
+      faraday
     alba (4.0.3)
     apimatic_core (0.3.21)
       apimatic_core_interfaces (~> 0.2.0)
@@ -710,6 +712,9 @@ GEM
     spree (6.0.6)
       spree_api (= 6.0.6)
       spree_core (= 6.0.6)
+    spree_adyen (6.0.6)
+      adyen-ruby-api-library (~> 12.0)
+      spree_core (= 6.0.6)
     spree_api (6.0.6)
       spree_core (= 6.0.6)
       typelizer (~> 0.15.0)
@@ -901,6 +906,7 @@ DEPENDENCIES
   solid_cache
   solid_queue
   spree (~> 6.0)
+  spree_adyen (~> 6.0)
   spree_dashboard (~> 6.0)
   spree_dev_tools (>= 1.0.0.beta1)
   spree_easypost (~> 6.0)
@@ -931,6 +937,7 @@ CHECKSUMS
   acts-as-taggable-on (13.0.0) sha256=dca776c6ddebc458d175b57554ad692488e283f27047117e01ed871f1cba6135
   acts_as_list (1.2.6) sha256=8345380900b7bee620c07ad00991ccee59af3d8c9e8574f426e321da2865fdc8
   addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
+  adyen-ruby-api-library (12.1.0) sha256=9ac65a3f2b21289dbc65da0271f91eecb5694cdd2d1e5c5e8b23cfe37f9228e3
   alba (4.0.3) sha256=ad9b87b3fa90051504d89c8739a1a3ce8c0db1388eba8b5dad2c2cfac2d897c7
   apimatic_core (0.3.21) sha256=b4d43a43ddbb4f52c5e51b8dc596721ff9e352a2448fb2aa8c658dd556a30cb3
   apimatic_core_interfaces (0.2.3) sha256=01a1cf150c95d674386cfe9958b16ace346c8060d9cfe6fe939b3342d91f4e22
@@ -1178,6 +1185,7 @@ CHECKSUMS
   solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
   solid_queue (1.7.2) sha256=a22685e1d2ee14ce7b4e5d4592c9d8e837951884c51555609dee58679ed03325
   spree (6.0.6) sha256=182eb36c2db79cf7326888249ef97885d1c6e534541d110a08dfc56d8ceab5ea
+  spree_adyen (6.0.6) sha256=0c3f6c2561c815616d051c377509c3f49c52e41fd0fee926b5958834bd21583f
   spree_api (6.0.6) sha256=9f96c8f7619212a7df612d5d9c70bb5d9b7d22288575c906e2c0ec6f1ba9e910
   spree_core (6.0.6) sha256=e3879650b6be88a556161f850fec46a5b20b48544a5a3ce053a26b717dc0f5bb
   spree_dashboard (6.0.6) sha256=4e7bf625bb49b75994b495b2973a69767fdd07c709d16d6ed3e13f9f046e7f2c
