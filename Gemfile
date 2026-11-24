@@ -57,6 +57,9 @@ end
 # Rails & Infrastructure
 gem 'aws-sdk-s3', require: false
 gem 'bootsnap', require: false
+# Resolves the visitor's IP behind Cloudflare (which also fronts Render), so
+# per-IP rate limits count the visitor rather than a Cloudflare edge server.
+gem 'cloudflare-rails'
 gem 'image_processing', '~> 1.2'
 gem 'lograge'
 gem 'pg', '~> 1.1'
