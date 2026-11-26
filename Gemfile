@@ -31,6 +31,7 @@ if spree_path
     gem 'spree_core'
     gem 'spree_api'
     gem 'spree_adyen'
+    gem 'spree_avalara'
     gem 'spree_dashboard'
     gem 'spree_easypost'
     gem 'spree_emails'
@@ -45,6 +46,7 @@ else
   gem 'spree', spree_version
   gem 'spree_emails', spree_version
   gem 'spree_adyen', spree_version
+  gem 'spree_avalara', spree_version
   gem 'spree_dashboard', spree_version
   gem 'spree_easypost', spree_version
   gem 'spree_meilisearch', spree_version
