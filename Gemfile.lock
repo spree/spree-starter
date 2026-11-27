@@ -84,7 +84,7 @@ GEM
     acts-as-taggable-on (13.0.0)
       activerecord (>= 7.1, < 8.2)
       zeitwerk (>= 2.4, < 3.0)
-    acts_as_list (1.2.6)
+    acts_as_list (1.2.7)
       activerecord (>= 6.1)
       activesupport (>= 6.1)
     addressable (2.9.2)
@@ -343,7 +343,7 @@ GEM
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
-    jwt (3.3.0)
+    jwt (3.3.1)
       base64
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
@@ -503,7 +503,7 @@ GEM
     opentelemetry-semantic_conventions (1.45.0)
       opentelemetry-api (~> 1.0)
     ostruct (0.6.3)
-    pagy (43.8.5)
+    pagy (43.8.8)
       json
       uri
       yaml
@@ -719,19 +719,19 @@ GEM
       fugit (~> 1.11)
       railties (>= 7.1)
       thor (>= 1.3.1)
-    spree (6.0.6)
-      spree_api (= 6.0.6)
-      spree_core (= 6.0.6)
-    spree_adyen (6.0.6)
+    spree (6.0.7)
+      spree_api (= 6.0.7)
+      spree_core (= 6.0.7)
+    spree_adyen (6.0.7)
       adyen-ruby-api-library (~> 12.0)
-      spree_core (= 6.0.6)
-    spree_api (6.0.6)
-      spree_core (= 6.0.6)
+      spree_core (= 6.0.7)
+    spree_api (6.0.7)
+      spree_core (= 6.0.7)
       typelizer (~> 0.15.0)
-    spree_avalara (6.0.6)
+    spree_avalara (6.0.7)
       avatax (>= 19.3)
-      spree_core (= 6.0.6)
-    spree_core (6.0.6)
+      spree_core (= 6.0.7)
+    spree_core (6.0.7)
       active_storage_validations (>= 1.3, < 4)
       acts-as-taggable-on
       acts_as_list (>= 0.8)
@@ -776,8 +776,8 @@ GEM
       validates_zipcode
       valvat (~> 2.0)
       wannabe_bool
-    spree_dashboard (6.0.6)
-      spree (= 6.0.6)
+    spree_dashboard (6.0.7)
+      spree (= 6.0.7)
     spree_dev_tools (1.0.1)
       awesome_print
       brakeman
@@ -802,19 +802,19 @@ GEM
       simplecov
       spree (>= 6.0.0.beta1)
       timecop
-    spree_easypost (6.0.6)
+    spree_easypost (6.0.7)
       easypost (~> 7.0)
-      spree_core (= 6.0.6)
-    spree_emails (6.0.6)
-      spree (= 6.0.6)
-    spree_mcp (6.0.6)
+      spree_core (= 6.0.7)
+    spree_emails (6.0.7)
+      spree (= 6.0.7)
+    spree_mcp (6.0.7)
       mcp (~> 1.5)
-      spree_api (= 6.0.6)
-      spree_core (= 6.0.6)
-    spree_meilisearch (6.0.6)
+      spree_api (= 6.0.7)
+      spree_core (= 6.0.7)
+    spree_meilisearch (6.0.7)
       meilisearch (>= 0.28)
-      spree_core (= 6.0.6)
-    spree_opentelemetry (6.0.6)
+      spree_core (= 6.0.7)
+    spree_opentelemetry (6.0.7)
       opentelemetry-exporter-otlp (~> 0.26)
       opentelemetry-instrumentation-action_mailer
       opentelemetry-instrumentation-action_pack
@@ -825,12 +825,12 @@ GEM
       opentelemetry-instrumentation-net_http
       opentelemetry-instrumentation-rack
       opentelemetry-sdk (~> 1.0)
-      spree_core (= 6.0.6)
-    spree_paypal_checkout (6.0.6)
+      spree_core (= 6.0.7)
+    spree_paypal_checkout (6.0.7)
       paypal-server-sdk (~> 2.4)
-      spree_core (= 6.0.6)
-    spree_stripe (6.0.6)
-      spree_core (= 6.0.6)
+      spree_core (= 6.0.7)
+    spree_stripe (6.0.7)
+      spree_core (= 6.0.7)
       stripe (>= 10.1, < 19)
     sqids (0.2.2)
     ssrf_filter (1.6.0)
@@ -867,7 +867,7 @@ GEM
     unicode-emoji (4.3.0)
     uri (1.1.2)
     useragent (0.16.11)
-    validates_zipcode (0.7.0)
+    validates_zipcode (0.7.1)
       activemodel (>= 8.0)
     valvat (2.0.1)
       rexml (>= 3.3.6, < 4.0.0)
@@ -876,13 +876,13 @@ GEM
       actionview (>= 8.0.0)
       bindex (>= 0.4.0)
       railties (>= 8.0.0)
-    websocket-driver (0.9.0)
+    websocket-driver (0.9.1)
       base64
       websocket-extensions (>= 0.2.0)
-    websocket-extensions (0.2.0)
+    websocket-extensions (0.3.0)
     yaml (0.4.0)
     zeitwerk (2.8.3)
-    zlib (3.2.4)
+    zlib (3.3.0)
 
 PLATFORMS
   aarch64-linux
@@ -950,7 +950,7 @@ CHECKSUMS
   activestorage (8.1.4.1) sha256=0f4e2f114f3584723a80a2c089aacc6170e765a0b2c385c9782e26ed78f05c66
   activesupport (8.1.4.1) sha256=16ac4f341ca65c85a1fcdb8ac73f68891aae9e3c4a6f9c3a27daed8b00017ed7
   acts-as-taggable-on (13.0.0) sha256=dca776c6ddebc458d175b57554ad692488e283f27047117e01ed871f1cba6135
-  acts_as_list (1.2.6) sha256=8345380900b7bee620c07ad00991ccee59af3d8c9e8574f426e321da2865fdc8
+  acts_as_list (1.2.7) sha256=f883b8d151802e688de8d836a95c0cb5c74217595078d9b35fa796caf9e9079b
   addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
   adyen-ruby-api-library (12.1.0) sha256=9ac65a3f2b21289dbc65da0271f91eecb5694cdd2d1e5c5e8b23cfe37f9228e3
   alba (4.0.3) sha256=ad9b87b3fa90051504d89c8739a1a3ce8c0db1388eba8b5dad2c2cfac2d897c7
@@ -1058,7 +1058,7 @@ CHECKSUMS
   json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
   json-schema (6.2.1) sha256=c0bf6113d772348bfd159fb096950beeb1e1e25aaeea50b676bd45191d8dbdf3
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
-  jwt (3.3.0) sha256=44cc34fbc341c148233cf66641522b4bce0dfb1ce55e8073f05c56f44f4ee546
+  jwt (3.3.1) sha256=d3f8f74f2a4ba373e0ebf6b756858567a6ce4d2fd150c126f91b82bd1f924d03
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   liquid (5.14.0) sha256=e1020c2b2ee58c7a4d3bfdc7a331537bd27a783353748bff0bf27c6ac0c17065
@@ -1127,7 +1127,7 @@ CHECKSUMS
   opentelemetry-sdk (1.13.1) sha256=91c9cc315ac7ef30243549eeff8b27cd0d39bd02bdf9c9ae481ab96a1cec6754
   opentelemetry-semantic_conventions (1.45.0) sha256=f6a5b5187d3421e125576692be2a1cfd510d07a9abff81a1e71c67dc1a835cb5
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
-  pagy (43.8.5) sha256=ac428e2345af0456170c78a384be3208926f1bee2ebe667eaa3f15047eb94fe7
+  pagy (43.8.8) sha256=a7d4f90549ac0c58ed31cb50d9e7e1736e58949d8b5b0ff451e30b3b78d63933
   parallel (2.3.0) sha256=f75a3e904101ce6a1ccb6b8dc800cbafd42166d83330192438dcf29395167a6f
   parallel_tests (5.9.0) sha256=593169873cfeefe54f233103238cb3b078320e6eac0155d0f1107b39233f98f8
   paranoia (3.1.0) sha256=36574a46e8df663d0da7d9008e987b72a6a9eccee13c058b7094acc810e39f52
@@ -1202,20 +1202,20 @@ CHECKSUMS
   solid_cable (4.1.0) sha256=828e3d509207b82b4f05f4e9c85f696994710679b52d511aa7f97ebd212d3226
   solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
   solid_queue (1.7.2) sha256=a22685e1d2ee14ce7b4e5d4592c9d8e837951884c51555609dee58679ed03325
-  spree (6.0.6) sha256=182eb36c2db79cf7326888249ef97885d1c6e534541d110a08dfc56d8ceab5ea
-  spree_adyen (6.0.6) sha256=0c3f6c2561c815616d051c377509c3f49c52e41fd0fee926b5958834bd21583f
-  spree_api (6.0.6) sha256=9f96c8f7619212a7df612d5d9c70bb5d9b7d22288575c906e2c0ec6f1ba9e910
-  spree_avalara (6.0.6) sha256=4a24d76090bbe8df1b6c19f5f8cc0aedf1c9ecddcdc5dc9126fbdf2dc5b07e1f
-  spree_core (6.0.6) sha256=e3879650b6be88a556161f850fec46a5b20b48544a5a3ce053a26b717dc0f5bb
-  spree_dashboard (6.0.6) sha256=4e7bf625bb49b75994b495b2973a69767fdd07c709d16d6ed3e13f9f046e7f2c
+  spree (6.0.7) sha256=8db43fe1067770845519e12710139f4246fbb32645571d3df6f2aabab0ffddd2
+  spree_adyen (6.0.7) sha256=d6cd0b226028a8a5f0ce5e25ae1b52184c8d473dee4d01b0cc28886a0947b71f
+  spree_api (6.0.7) sha256=2363d0ab8455ff8bdcc4e8b8e8efb4d84108d8668b91480ee91631fed0b2df03
+  spree_avalara (6.0.7) sha256=95c3df9f617398ccb359a931cd3456fdf01b6c5e788dafdc1570760c976fce76
+  spree_core (6.0.7) sha256=7115bd9b5131d9db59b8c442051d4a487d97ed756f68277e8c279a2b9109f458
+  spree_dashboard (6.0.7) sha256=e5ff848747c9c46367796161a44e7add073d30929b65a2afcfbc8985647c1d48
   spree_dev_tools (1.0.1) sha256=c562cb3a8e7c88430f95dfa435cf7eff6156d7c6646dc4a27cd43edfb8020c26
-  spree_easypost (6.0.6) sha256=3de9334aadb532b625d7f0bf3febc59b8ff98a76140749a979ca11a319d835e6
-  spree_emails (6.0.6) sha256=bba8a2859d3c8f158c28bb84eda22d90ec42b51ef4e2a3e5d165ffa72f68156c
-  spree_mcp (6.0.6) sha256=a82c3d1d55011237b1ecbe3bd57ac8f60d24ea517ad42d993463c96ecbb75f05
-  spree_meilisearch (6.0.6) sha256=fdbdd9cdf84599813213a9fe148748130ba5652254af95a187848adb4024335b
-  spree_opentelemetry (6.0.6) sha256=adfbe36d0eb5c60ec46dd22c4b1ac95fdb5990f54a24a113f9bb04d3a577d70c
-  spree_paypal_checkout (6.0.6) sha256=bc6f5fe85412942bd8b54c89f83ae651e139323d26f2d9613bbbbd58f933c1e6
-  spree_stripe (6.0.6) sha256=0c44b0f3c6ba491142199b8ce94d5c841972d53936ac69f5e624b19a57652085
+  spree_easypost (6.0.7) sha256=8d4d51e834c5c30d62d15941eed97f36602cf9052906ee695d8a7efc5bab7a7e
+  spree_emails (6.0.7) sha256=fc6dfdfab9ea4efb2192f4d49adaa40635e8663c9f5ccfe2e6fc564cce60de65
+  spree_mcp (6.0.7) sha256=69f67837d0ae0e7da9f394e2f1aaf826b905210ec2091a83d468ae2a0b719ec3
+  spree_meilisearch (6.0.7) sha256=e818e28927ce608fadada9ce5c405e418ff82263e7485e81852571f63e4b0810
+  spree_opentelemetry (6.0.7) sha256=056b24f6458f2fc4a58c83b09ee98c32db737d2c452b378aadb4ecd3cd122567
+  spree_paypal_checkout (6.0.7) sha256=a166e6a6c5998c2aa7baa87001bd31da1dccfa202f526428c34a91a6442d9be8
+  spree_stripe (6.0.7) sha256=d120ed7ddc749b2cce9e10bcda3e9b2b0faae412ec4984791f92c86ab11a3e4c
   sqids (0.2.2) sha256=c2d31e0dfb6c32d17c10b59df059a299af93bef716d700ff70d77156df702d36
   ssrf_filter (1.6.0) sha256=78d15bc26d0385c931f46f12a9c1cbb90e6556bd96b95f25e5a5f786c8dcf999
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
@@ -1241,15 +1241,15 @@ CHECKSUMS
   unicode-emoji (4.3.0) sha256=11c02fa73290378c066bb0562cd4c87d8e1b706fbbe0059ca12746a4244de8ce
   uri (1.1.2) sha256=89292e98eabbef6248b0a0ed5e7e398e152f83f17560023a6d94a7f492b169fb
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
-  validates_zipcode (0.7.0) sha256=21864150080f15a67883c97ff3e6fe20c546858d127e8be1f56345c1c8026db3
+  validates_zipcode (0.7.1) sha256=b833b8614eb3672167d518228185ad0a979823893c8f6162f92a0f0d76beecca
   valvat (2.0.1) sha256=f148079e08bf290a7be4c1d30463c8ce44f3788260d724d33cdb43832575fc06
   wannabe_bool (0.7.1) sha256=838ef671066868424de888fb22eeae57c7012709aabd5d17141ea6fea964c61f
   web-console (4.3.0) sha256=e13b71301cdfc2093f155b5aa3a622db80b4672d1f2f713119cc7ec7ac6a6da4
-  websocket-driver (0.9.0) sha256=4dfcc6ac0ea1b6771daf5fb54cbbca131e4d5922ea0a65ba2da980370dadbe9f
-  websocket-extensions (0.2.0) sha256=6fb0d0f687aa8adc8eafa5ce68db36dfd6a8ebf232515040ce27c33c1291e589
+  websocket-driver (0.9.1) sha256=8b6c5c0834f77f53b86d486cc761c99d60df807a8264267ea52fca0da660bb1e
+  websocket-extensions (0.3.0) sha256=1492aabd79218294b564e67e9ee6a90abdac1a2981d35a49848bbc39754f0752
   yaml (0.4.0) sha256=240e69d1e6ce3584d6085978719a0faa6218ae426e034d8f9b02fb54d3471942
   zeitwerk (2.8.3) sha256=2c85125a8467ce069e20123d1e709a08955c9d29c118c25b46b7b7fafdbb92e5
-  zlib (3.2.4) sha256=a0d0e5845a18d839c078fb5b6e4ae523ffb918601c2004a77c081ee211f9b038
+  zlib (3.3.0) sha256=4903a845a9a6dbd9585ce9bdc4c0f3502ef7296becd3c314d2545dbc01476560
 
 RUBY VERSION
   ruby 4.0.10
