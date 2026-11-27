@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_23_141659) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_27_154337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -343,6 +343,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_141659) do
     t.string "token_prefix"
     t.jsonb "scopes"
     t.bigint "channel_id"
+    t.string "created_by_ip_address"
     t.index ["channel_id"], name: "index_spree_api_keys_on_channel_id"
     t.index ["created_by_type", "created_by_id"], name: "index_spree_api_keys_on_created_by"
     t.index ["key_type"], name: "index_spree_api_keys_on_key_type"
@@ -2003,7 +2004,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_141659) do
     t.bigint "preferred_stock_location_id"
     t.bigint "channel_id"
     t.bigint "cart_id"
-    t.decimal "fee_total", precision: 19, scale: 4
+    t.decimal "fee_total", precision: 19, scale: 4, default: "0.0"
     t.string "coupon_code"
     t.bigint "company_id"
     t.bigint "seller_id"
